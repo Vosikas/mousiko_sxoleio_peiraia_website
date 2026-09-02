@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { markIntroSeen, revealPage, useIntroSeen } from "@/hooks/useIntro";
 import { playFlourish, playNote } from "@/lib/audio";
 
 /* --------------------------------------------------------------- πλήκτρα */
@@ -41,22 +42,22 @@ export default function LoadingScreen() {
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [hidden, setHidden] = useState(true);
   const [active, setActive] = useState<string | null>(null);
   const [notes, setNotes] = useState<FloatingNote[]>([]);
   const [played, setPlayed] = useState(0);
   const noteId = useRef(0);
 
-  /* Εμφανίζεται μία φορά ανά επίσκεψη. */
+  /* Εμφανίζεται μία φορά ανά επίσκεψη — η πληροφορία ζει στο sessionStorage. */
+  const hidden = useIntroSeen();
+
+  /* Κλείδωμα της κύλισης όσο παίζει η intro. */
   useEffect(() => {
-    if (sessionStorage.getItem("msp:intro")) return;
-    sessionStorage.setItem("msp:intro", "1");
-    setHidden(false);
+    if (hidden) return;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [hidden]);
 
   /* Μπάρα προόδου με ελαφρώς ανομοιόμορφο ρυθμό — μοιάζει «ζωντανή». */
   useEffect(() => {
@@ -124,8 +125,8 @@ export default function LoadingScreen() {
     if (leaving) return;
     playFlourish();
     setLeaving(true);
-    document.body.style.overflow = "";
-    setTimeout(() => setHidden(true), 900);
+    revealPage();
+    setTimeout(markIntroSeen, 900);
   }, [leaving]);
 
   /* Αυτόματη έξοδος λίγο μετά την ολοκλήρωση, με περιθώριο αν παίζει ο χρήστης. */
@@ -203,13 +204,13 @@ export default function LoadingScreen() {
         >
           Πειραιάς · Μουσική Παιδεία
         </p>
-        <h1
+        <p
           className="font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl"
           style={{ animation: "rise 1s 0.3s both" }}
         >
           <span className="block text-gradient-brass">Μουσικό Σχολείο</span>
           <span className="block text-cream/95">Πειραιά</span>
-        </h1>
+        </p>
         <p
           className="mx-auto mt-6 h-10 max-w-sm text-sm text-muted"
           style={{ animation: "rise 1s 0.5s both" }}

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { EB_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
 import LoadingScreen from "@/components/LoadingScreen";
@@ -7,11 +7,11 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { site } from "@/lib/site";
 
-const cormorant = Cormorant_Garamond({
+const garamond = EB_Garamond({
   subsets: ["greek", "latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
+  variable: "--font-garamond",
   display: "swap",
 });
 
@@ -53,8 +53,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="el" className={cormorant.variable + " " + inter.variable}>
+    <html lang="el" className={garamond.variable + " " + inter.variable}>
       <body className="grain min-h-screen antialiased">
+        {/* Τρέχει πριν την πρώτη ζωγραφιά: αποφασίζει αν θα παίξει η intro. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(!sessionStorage.getItem('msp:intro')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},6000)}}catch(e){}",
+          }}
+        />
         <LoadingScreen />
         <SiteHeader />
         <main id="main">{children}</main>

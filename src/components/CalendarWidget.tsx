@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
+import { useNow } from "@/hooks/useNow";
 import { WidgetLabel } from "./ClockWidget";
 
 const MONTHS = [
@@ -41,25 +42,26 @@ const iso = (y: number, m: number, d: number) =>
   y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
 
 export default function CalendarWidget() {
-  const [today, setToday] = useState<Date | null>(null);
-  const [cursor, setCursor] = useState({ year: 2026, month: 8 });
+  // Ανανέωση ανά λεπτό: αρκεί για να «γυρίσει» το σημερινό κελί τα μεσάνυχτα.
+  const today = useNow(60_000);
 
-  useEffect(() => {
-    const d = new Date();
-    setToday(d);
-    setCursor({ year: d.getFullYear(), month: d.getMonth() });
-  }, []);
+  // Όσο ο χρήστης δεν έχει αλλάξει μήνα, ακολουθούμε τον τρέχοντα.
+  const [cursor, setCursor] = useState<{ year: number; month: number } | null>(null);
+  const view = cursor ?? {
+    year: today?.getFullYear() ?? 2026,
+    month: today?.getMonth() ?? 0,
+  };
 
   const grid = useMemo(() => {
-    const first = new Date(cursor.year, cursor.month, 1);
-    const daysInMonth = new Date(cursor.year, cursor.month + 1, 0).getDate();
+    const first = new Date(view.year, view.month, 1);
+    const daysInMonth = new Date(view.year, view.month + 1, 0).getDate();
     // getDay(): 0=Κυριακή → μετατροπή σε εβδομάδα που ξεκινά Δευτέρα.
     const offset = (first.getDay() + 6) % 7;
     const cells: (number | null)[] = Array(offset).fill(null);
     for (let d = 1; d <= daysInMonth; d++) cells.push(d);
     while (cells.length % 7 !== 0) cells.push(null);
     return cells;
-  }, [cursor]);
+  }, [view.year, view.month]);
 
   const eventsByDate = useMemo(() => {
     const map = new Map<string, SchoolEvent[]>();
@@ -73,17 +75,19 @@ export default function CalendarWidget() {
 
   const upcoming = useMemo(() => {
     if (!today) return EVENTS.slice(0, 3);
-    const t = today.toISOString().slice(0, 10);
+    // Τοπική ημερομηνία, όχι UTC — αλλιώς μετά τα μεσάνυχτα «χάνεται» μια μέρα.
+    const t = iso(today.getFullYear(), today.getMonth(), today.getDate());
     return EVENTS.filter((e) => e.date >= t).slice(0, 3);
   }, [today]);
 
-  const shift = (delta: number) =>
-    setCursor((c) => {
-      const m = c.month + delta;
-      return { year: c.year + Math.floor(m / 12), month: ((m % 12) + 12) % 12 };
-    });
+  const shift = (delta: number) => {
+    const m = view.month + delta;
+    setCursor({ year: view.year + Math.floor(m / 12), month: ((m % 12) + 12) % 12 });
+  };
 
-  const todayIso = today ? iso(today.getFullYear(), today.getMonth(), today.getDate()) : "";
+  if (!today) return <CalendarSkeleton />;
+
+  const todayIso = iso(today.getFullYear(), today.getMonth(), today.getDate());
 
   return (
     <article className="glass rounded-xl2 p-6">
@@ -99,7 +103,7 @@ export default function CalendarWidget() {
           ‹
         </button>
         <p className="font-display text-lg tracking-wide text-cream">
-          {MONTHS[cursor.month]} <span className="text-brass-400">{cursor.year}</span>
+          {MONTHS[view.month]} <span className="text-brass-400">{view.year}</span>
         </p>
         <button
           type="button"
@@ -120,7 +124,7 @@ export default function CalendarWidget() {
 
         {grid.map((day, i) => {
           if (day === null) return <span key={"e" + i} />;
-          const key = iso(cursor.year, cursor.month, day);
+          const key = iso(view.year, view.month, day);
           const isToday = key === todayIso;
           const dayEvents = eventsByDate.get(key);
           const weekend = i % 7 >= 5;
@@ -179,6 +183,21 @@ export default function CalendarWidget() {
           })}
         </ul>
       </div>
+    </article>
+  );
+}
+
+function CalendarSkeleton() {
+  return (
+    <article className="glass rounded-xl2 p-6">
+      <WidgetLabel>Ημερολόγιο</WidgetLabel>
+      <div className="mx-auto mt-5 h-7 w-40 animate-pulse rounded bg-ink-850" />
+      <div className="mt-5 grid grid-cols-7 gap-1.5">
+        {Array.from({ length: 35 }, (_, i) => (
+          <div key={i} className="h-8 animate-pulse rounded-full bg-ink-850" />
+        ))}
+      </div>
+      <div className="mt-6 h-24 animate-pulse rounded bg-ink-850" />
     </article>
   );
 }

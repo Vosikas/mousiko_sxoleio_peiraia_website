@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useNow } from "@/hooks/useNow";
 import { site } from "@/lib/site";
 
 const DAYS = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
@@ -22,13 +22,7 @@ const MONTHS = [
 const pad = (n: number) => String(n).padStart(2, "0");
 
 export default function ClockWidget() {
-  const [now, setNow] = useState<Date | null>(null);
-
-  useEffect(() => {
-    setNow(new Date());
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
+  const now = useNow(1000);
 
   // Ο server δεν ξέρει την ώρα του επισκέπτη — κρατάμε τον χώρο και γεμίζουμε μετά.
   if (!now) return <ClockSkeleton />;

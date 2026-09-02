@@ -22,7 +22,7 @@
   --color-cream: #f4f1ea;
   --color-muted: #9aa2b4;
 
-  --font-display: var(--font-cormorant), "Georgia", serif;
+  --font-display: var(--font-garamond), "Georgia", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --radius-xl2: 1.75rem;
@@ -217,4 +217,17 @@ body {
   to {
     transform: translateX(-100%);
   }
+}
+
+/* Κάλυμμα πριν το hydration: κρύβει τη σελίδα μέχρι να μπει η intro,
+   ώστε να μην «αναβοσβήνει» το hero. Το αφαιρεί το useIntro. */
+html[data-intro]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: #06070a;
+}
+html[data-intro] body {
+  overflow: hidden;
 }
