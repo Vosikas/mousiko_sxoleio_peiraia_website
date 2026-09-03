@@ -76,8 +76,9 @@ export default function LoadingScreen({
   }, []);
 
   const enableSound = useCallback(() => {
-    const intro = audioRef.current;
-    if (!intro || soundRef.current === "on") return;
+    if (soundRef.current === "on") return;
+    const intro = audioRef.current ?? playBandIntro();
+    audioRef.current = intro;
     const elapsed = (performance.now() - startedRef.current) / 1000;
     void intro.unlock(elapsed).then((ok) => {
       soundRef.current = ok ? "on" : "off";
@@ -148,7 +149,7 @@ export default function LoadingScreen({
     });
 
     const onKey = (event: KeyboardEvent) => {
-      if (sound === "blocked") enableSound();
+      if (soundRef.current === "blocked") enableSound();
       if (event.key === "Escape") dismiss();
     };
     window.addEventListener("keydown", onKey);
@@ -275,8 +276,6 @@ export default function LoadingScreen({
       <div aria-hidden className="haze pointer-events-none absolute inset-0" />
       <div aria-hidden className="grain pointer-events-none absolute inset-0 mix-blend-overlay" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(2,5,10,0.86))]" />
-      <div aria-hidden className="flash pointer-events-none absolute inset-0 bg-white" />
-
       {/* --- lower third --- */}
       <div className="pointer-events-none absolute inset-x-0 bottom-[9vh] px-6 sm:px-12">
         {onFinale ? (
@@ -338,7 +337,16 @@ export default function LoadingScreen({
 
       <button
         type="button"
-        onClick={sound === "on" ? () => { audioRef.current?.stop(); setSound("off"); } : enableSound}
+        onClick={
+          sound === "on"
+            ? () => {
+                audioRef.current?.stop();
+                audioRef.current = null;
+                soundRef.current = "off";
+                setSound("off");
+              }
+            : enableSound
+        }
         aria-label={sound === "on" ? "Σίγαση ήχου" : "Ενεργοποίηση ήχου"}
         className={
           "absolute right-6 top-6 flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs text-[#f7f3e9] backdrop-blur-sm transition sm:right-12 " +
@@ -378,10 +386,6 @@ const STAGE_CSS = `
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.55'/></svg>");
   animation: grain-jitter 0.55s steps(3) infinite;
 }
-.intro-stage .flash {
-  opacity: 0; mix-blend-mode: screen;
-  animation: hit-flash 0.42s ease-out 0s both, hit-flash 0.6s ease-out 4.6875s both;
-}
 .intro-stage .crowd-head { animation: crowd-bob 0.9375s ease-in-out infinite; }
 .intro-stage .torch {
   position: absolute; top: -10px; left: 50%; width: 7px; height: 7px; border-radius: 999px;
@@ -402,7 +406,6 @@ const STAGE_CSS = `
   0% { transform: translate3d(0,0,0); } 33% { transform: translate3d(-6px,4px,0); }
   66% { transform: translate3d(5px,-5px,0); } 100% { transform: translate3d(0,0,0); }
 }
-@keyframes hit-flash { 0% { opacity: 0.5; } 100% { opacity: 0; } }
 @keyframes crowd-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 @keyframes caption-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes cymbal-sway { 0% { transform: rotate(0deg); } 18% { transform: rotate(-2.6deg); } 100% { transform: rotate(0deg); } }
@@ -413,7 +416,7 @@ const STAGE_CSS = `
 @keyframes singer-lift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro-stage .beam, .intro-stage .haze, .intro-stage .grain, .intro-stage .flash,
+  .intro-stage .beam, .intro-stage .haze, .intro-stage .grain,
   .intro-stage .crowd-head, .intro-stage .cymbal, .intro-stage .kick, .intro-stage .sticks,
   .intro-stage .strings, .intro-stage .key-press, .intro-stage .singer { animation: none !important; }
   .intro-stage .caption { animation-duration: 1ms; }
