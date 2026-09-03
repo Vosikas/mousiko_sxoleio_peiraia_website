@@ -40,6 +40,11 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
   const pageCount = Math.max(1, Math.ceil(filteredPosts.length / PAGE_SIZE));
   const visiblePosts = filteredPosts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  const goToPage = (nextPage: number) => {
+    setPage(nextPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   useEffect(() => {
     setPage(1);
   }, [category, query, sort]);
@@ -118,7 +123,7 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
         <nav aria-label={t("Σελιδοποίηση")} className="mt-10 flex items-center justify-center gap-2">
           <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-brass-500 disabled:cursor-not-allowed disabled:opacity-35">←</button>
           {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
-            <button key={number} type="button" onClick={() => setPage(number)} aria-current={page === number ? "page" : undefined} className={"h-9 w-9 rounded-full text-sm transition " + (page === number ? "bg-brass-600 text-white" : "border border-cream/15 bg-white text-cream hover:border-brass-500")}>{number}</button>
+            <button key={number} type="button" onClick={() => goToPage(number)} aria-current={page === number ? "page" : undefined} className={"h-9 w-9 rounded-full text-sm transition " + (page === number ? "bg-brass-600 text-white" : "border border-cream/15 bg-white text-cream hover:border-brass-500")}>{number}</button>
           ))}
           <button type="button" disabled={page === pageCount} onClick={() => setPage((current) => current + 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-brass-500 disabled:cursor-not-allowed disabled:opacity-35">→</button>
         </nav>
