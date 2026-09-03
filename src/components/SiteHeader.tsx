@@ -84,8 +84,8 @@ export default function SiteHeader() {
 
   return (
     <header ref={headerRef} className="sticky inset-x-0 top-0 z-50 px-4 py-3 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-5 rounded-2xl border border-cream/15 bg-white/95 px-4 py-2.5 shadow-[0_12px_35px_rgba(16,42,67,0.12)] backdrop-blur-xl lg:px-5">
-        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3" onClick={closeMobile}>
+      <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-5 rounded-2xl border border-cream/15 bg-white/95 px-4 py-2.5 shadow-[0_12px_35px_rgba(16,42,67,0.12)] backdrop-blur-xl min-[900px]:max-w-fit min-[900px]:justify-center min-[900px]:rounded-full lg:px-5">
+        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3 min-[900px]:hidden" onClick={closeMobile}>
           <Logo className="h-10 w-10" />
           <span className="hidden max-w-[180px] font-display text-sm font-semibold leading-tight text-cream sm:block lg:max-w-none">Μουσικό Σχολείο Πειραιά</span>
         </Link>
