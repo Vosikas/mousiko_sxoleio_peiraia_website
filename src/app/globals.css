@@ -2,15 +2,15 @@
 
 /* ------------------------------------------------------------------
    Μουσικό Σχολείο Πειραιά — Design tokens
-  Bright conservatory palette: white, sea glass, coral accents.
+  Bright conservatory palette: white, deep blue, sea glass, and amber accents.
 ------------------------------------------------------------------- */
 @theme {
-  --color-ink-950: #f7fbfb;
-  --color-ink-900: #ffffff;
-  --color-ink-850: #ffffff;
-  --color-ink-800: #eef6f5;
-  --color-ink-700: #dcebea;
-  --color-ink-600: #b7cecc;
+  --color-ink-950: #ffffff;
+  --color-ink-900: #f7fbff;
+  --color-ink-850: #f1f7fa;
+  --color-ink-800: #e5f0f3;
+  --color-ink-700: #d0e1e7;
+  --color-ink-600: #9bb7c1;
 
   --color-brass-100: #e8fbfa;
   --color-brass-200: #c7f1ee;
@@ -19,8 +19,11 @@
   --color-brass-500: #0e938c;
   --color-brass-600: #08716d;
 
-  --color-cream: #14383b;
-  --color-muted: #5b7779;
+  --color-cream: #102a43;
+  --color-muted: #4b6474;
+  --color-sun-100: #fff3cf;
+  --color-sun-300: #f4b942;
+  --color-sun-500: #d98c00;
 
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -104,6 +107,26 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes camera-pan {
+  0%,
+  100% {
+    transform: translateX(-3%) scale(1);
+  }
+  50% {
+    transform: translateX(3%) scale(1.03);
+  }
+}
+
+@keyframes instrument-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
   }
 }
 

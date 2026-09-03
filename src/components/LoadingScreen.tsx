@@ -5,10 +5,10 @@ import { markIntroSeen, revealPage, useIntroSeen } from "@/hooks/useIntro";
 import { playBandIntro } from "@/lib/audio";
 
 const INSTRUMENTS = [
-  { name: "Έγχορδα", detail: "χρώμα", symbol: "∿", tone: "from-brass-200 to-brass-400" },
-  { name: "Πνευστά", detail: "ανάσα", symbol: "◌", tone: "from-cyan-100 to-brass-300" },
-  { name: "Κρουστά", detail: "ρυθμός", symbol: "◉", tone: "from-rose-200 to-orange-300" },
-  { name: "Πιάνο", detail: "αρμονία", symbol: "⌁", tone: "from-brass-300 to-teal-500" },
+  { name: "Έγχορδα", detail: "χρώμα", symbol: "∿", tone: "from-brass-200 to-brass-500" },
+  { name: "Πνευστά", detail: "ανάσα", symbol: "◌", tone: "from-sky-200 to-brass-400" },
+  { name: "Κρουστά", detail: "ρυθμός", symbol: "◉", tone: "from-sun-100 to-sun-500" },
+  { name: "Πιάνο", detail: "αρμονία", symbol: "⌁", tone: "from-brass-300 to-brass-600" },
 ];
 
 export default function LoadingScreen() {
@@ -62,39 +62,47 @@ export default function LoadingScreen() {
         (leaving ? "pointer-events-none -translate-y-full opacity-0" : "")
       }
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(53,183,174,0.16),transparent_48%),linear-gradient(135deg,rgba(239,132,110,0.08),transparent_45%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(53,183,174,0.16),transparent_48%),linear-gradient(135deg,rgba(244,185,66,0.10),transparent_45%)]" />
       <div className="relative z-10 w-full max-w-3xl text-center">
-        <p className="text-[0.62rem] uppercase tracking-[0.5em] text-brass-500">Μουσική παιδεία · Πειραιάς</p>
+        <p className="text-[0.62rem] uppercase tracking-[0.5em] text-brass-600">Μουσική παιδεία · Πειραιάς</p>
         <h1 className="mt-5 font-display text-4xl font-semibold tracking-tight text-cream sm:text-6xl">
           Μια ορχήστρα ξεκινά
         </h1>
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
-          Ένα σύντομο μουσικό καλωσόρισμα από τις ομάδες του σχολείου.
+          Η κάμερα κινείται μέσα σε μια μπάντα καθώς το σχολείο βρίσκει τον ρυθμό του.
         </p>
 
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="relative mx-auto mt-12 max-w-2xl overflow-hidden rounded-[2rem] border border-cream/15 bg-ink-900 px-4 py-7 shadow-[0_24px_80px_rgba(16,42,67,0.14)] sm:px-8">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_15%,rgba(53,183,174,0.24),transparent_48%)]" />
+          <div className="relative flex items-end justify-between gap-2 sm:gap-5" style={{ animation: "camera-pan 4s ease-in-out infinite" }}>
           {INSTRUMENTS.map((instrument, index) => (
             <div
               key={instrument.name}
               className={
-                "relative overflow-hidden rounded-2xl border p-5 text-left transition-all duration-500 " +
+                "relative flex min-h-36 flex-1 flex-col justify-end overflow-hidden rounded-xl border p-3 text-left transition-all duration-500 sm:min-h-44 sm:p-5 " +
                 (active === index
-                  ? "border-brass-400/70 bg-white shadow-[0_12px_45px_rgba(14,147,140,0.16)]"
-                  : "border-cream/10 bg-ink-900/70")
+                  ? "-translate-y-3 border-brass-500 bg-white shadow-[0_16px_40px_rgba(14,147,140,0.22)]"
+                  : "border-cream/15 bg-white/70")
               }
             >
-              <span className={`bg-gradient-to-br ${instrument.tone} bg-clip-text font-display text-4xl text-transparent`}>
+              <span className={`mb-auto bg-gradient-to-br ${instrument.tone} bg-clip-text font-display text-5xl text-transparent sm:text-6xl`} style={{ animation: `instrument-bob ${2.2 + index * 0.3}s ease-in-out infinite` }}>
                 {instrument.symbol}
               </span>
-              <span className="mt-4 block text-sm font-semibold text-cream">{instrument.name}</span>
+              <span className="mt-4 block text-xs font-semibold text-cream sm:text-sm">{instrument.name}</span>
               <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.2em] text-muted">{instrument.detail}</span>
             </div>
           ))}
+          </div>
+          <div className="relative mt-7 flex items-center justify-center gap-3 text-[0.58rem] uppercase tracking-[0.32em] text-brass-600">
+            <span className="h-px w-8 bg-brass-400/60" />
+            Τώρα παίζουν όλοι
+            <span className="h-px w-8 bg-brass-400/60" />
+          </div>
         </div>
 
         <div className="mx-auto mt-12 max-w-xs">
           <div className="h-1 overflow-hidden rounded-full bg-ink-700">
-            <div className="h-full rounded-full bg-gradient-to-r from-brass-500 via-brass-300 to-rose-300 transition-[width] duration-150" style={{ width: `${progress}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-brass-600 via-brass-400 to-sun-500 transition-[width] duration-150" style={{ width: `${progress}%` }} />
           </div>
           <p className="mt-4 text-[0.62rem] uppercase tracking-[0.3em] text-muted">Η σελίδα ετοιμάζεται · {progress}%</p>
         </div>
