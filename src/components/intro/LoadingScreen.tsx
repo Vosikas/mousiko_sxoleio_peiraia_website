@@ -30,6 +30,14 @@ const seeded = (i: number) => {
   return value - Math.floor(value);
 };
 
+const MOBILE_INSTRUMENTS = [
+  ["Ντραμς", "◉"],
+  ["Μπάσο", "∿"],
+  ["Κιθάρα", "⌁"],
+  ["Πιάνο", "▥"],
+  ["Φωνή", "◌"],
+] as const;
+
 type Props = { schoolName?: string; tagline?: string };
 
 export default function LoadingScreen({
@@ -181,7 +189,25 @@ export default function LoadingScreen({
       <style dangerouslySetInnerHTML={{ __html: STAGE_CSS }} />
       <StageDefs />
 
-      <div ref={cameraRef} className="absolute inset-0 will-change-transform">
+      <div className="mobile-scene absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+        <div className="mobile-stage relative w-full max-w-sm overflow-hidden rounded-[2rem] border border-white/15 bg-[#0b1826]/90 px-5 py-8 shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(53,183,174,0.28),transparent_55%)]" />
+          <div className="relative flex h-44 items-center justify-center">
+            <span className="mobile-instrument text-8xl text-[#f4b942]" key={active.id}>{MOBILE_INSTRUMENTS[Math.min(panel, MOBILE_INSTRUMENTS.length - 1)][1]}</span>
+          </div>
+          <div className="relative border-t border-white/10 pt-5">
+            <p className="text-[0.58rem] uppercase tracking-[0.35em] text-[#35b7ae]">Η μπάντα παίζει</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-[#f7f3e9]">{MOBILE_INSTRUMENTS[Math.min(panel, MOBILE_INSTRUMENTS.length - 1)][0]}</h2>
+            <div className="mt-5 flex justify-center gap-2">
+              {MOBILE_INSTRUMENTS.map(([name], index) => (
+                <span key={name} className={"h-1.5 w-1.5 rounded-full " + (index === Math.min(panel, MOBILE_INSTRUMENTS.length - 1) ? "bg-[#f4b942]" : "bg-white/20")} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ref={cameraRef} className="desktop-scene absolute inset-0 will-change-transform">
         {/* --- lights and back wall, panning slowly --- */}
         <div ref={backRef} className="absolute inset-0 flex w-[600vw] will-change-transform">
           {Array.from({ length: PANEL_COUNT }, (_, i) => (
@@ -367,6 +393,14 @@ export default function LoadingScreen({
 
 const STAGE_CSS = `
 .intro-stage { --pulse: 0; }
+.mobile-scene { display: none; }
+.mobile-instrument { animation: mobile-instrument-pulse 1.2s ease-in-out infinite; }
+@media (max-width: 639px) {
+  .intro-stage .desktop-scene { display: none; }
+  .intro-stage .mobile-scene { display: flex; }
+  .intro-stage .haze { opacity: 0.65; }
+  .intro-stage .grain { opacity: 0.08; }
+}
 .intro-stage:not(.is-leaving)[style] { opacity: calc(1 - var(--transition-progress, 0) * 0.92); transform: scale(calc(1 + var(--transition-progress, 0) * 0.035)); }
 .intro-stage .beam {
   position: absolute; top: 0; width: 16vw; height: 78vh; filter: blur(28px);
@@ -401,6 +435,7 @@ const STAGE_CSS = `
 .intro-stage .singer { animation: singer-lift 1.875s ease-in-out infinite; }
 
 @keyframes beam-swing { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+@keyframes mobile-instrument-pulse { 0%, 100% { transform: translateY(0) scale(0.96); opacity: 0.75; } 50% { transform: translateY(-8px) scale(1.04); opacity: 1; } }
 @keyframes haze-drift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-7%, 2%, 0); } }
 @keyframes grain-jitter {
   0% { transform: translate3d(0,0,0); } 33% { transform: translate3d(-6px,4px,0); }
