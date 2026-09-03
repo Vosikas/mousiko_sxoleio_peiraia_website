@@ -158,7 +158,7 @@ function normalize(raw: WPRawPost): Post {
     image: imageSrc
       ? {
           src: imageSrc,
-          alt: decodeHtml(media.alt_text || stripHtml(raw.title?.rendered ?? "")),
+          alt: decodeHtml(media?.alt_text || stripHtml(raw.title?.rendered ?? "")),
         }
       : null,
     readingMinutes: Math.max(1, Math.round(words / 200)),
