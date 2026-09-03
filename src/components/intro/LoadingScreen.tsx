@@ -96,6 +96,10 @@ export default function LoadingScreen({
 
   useEffect(() => {
     if (hidden) return;
+    if (window.matchMedia("(max-width: 639px)").matches) {
+      markIntroSeen();
+      return;
+    }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.body.style.overflow = "hidden";
 
@@ -184,7 +188,7 @@ export default function LoadingScreen({
       onPointerDown={(event) => {
         if (sound === "blocked") enableSound();
       }}
-      className={"intro-stage fixed inset-0 z-[100] overflow-hidden bg-[#04080f] transition-[opacity,transform,filter] duration-[620ms] ease-[cubic-bezier(0.7,0,0.2,1)] " + (leaving ? "is-leaving pointer-events-none scale-[1.06] opacity-0 blur-[2px]" : "")}
+      className={"intro-stage mobile-device-intro fixed inset-0 z-[100] overflow-hidden bg-[#04080f] transition-[opacity,transform,filter] duration-[620ms] ease-[cubic-bezier(0.7,0,0.2,1)] " + (leaving ? "is-leaving pointer-events-none scale-[1.06] opacity-0 blur-[2px]" : "")}
     >
       <style dangerouslySetInnerHTML={{ __html: STAGE_CSS }} />
       <StageDefs />
@@ -396,6 +400,7 @@ const STAGE_CSS = `
 .mobile-scene { display: none; }
 .mobile-instrument { animation: mobile-instrument-pulse 1.2s ease-in-out infinite; }
 @media (max-width: 639px) {
+  .intro-stage.mobile-device-intro { display: none !important; }
   .intro-stage .desktop-scene { display: none; }
   .intro-stage .mobile-scene { display: flex; }
   .intro-stage .haze { opacity: 0.65; }
