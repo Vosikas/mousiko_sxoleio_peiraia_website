@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
       { label: "Σχέδιο Πολιτικής Προστασίας – Μνημόνιο Ενεργειών", href: "/to-scholeio#politiki-prostasias" },
     ],
   },
-  { label: "Νέα – Ανακοινώσεις", href: "/nea", children: [{ label: "Όλες οι αναρτήσεις", href: "/nea" }] },
+  { label: "Νέα – Ανακοινώσεις", href: "/nea" },
   {
     label: "Δράσεις", href: "/ekdiloseis", children: [
       { label: "Παρουσιάσεις Εργαστηρίων", href: "/ekdiloseis#ergastiria" },
