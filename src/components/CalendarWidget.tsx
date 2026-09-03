@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useNow } from "@/hooks/useNow";
+import { useLanguage } from "@/hooks/useLanguage";
 import { WidgetLabel } from "./ClockWidget";
 
 const MONTHS = [
@@ -42,6 +43,7 @@ const iso = (y: number, m: number, d: number) =>
   y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
 
 export default function CalendarWidget() {
+  const { language, t } = useLanguage();
   // Ανανέωση ανά λεπτό: αρκεί για να «γυρίσει» το σημερινό κελί τα μεσάνυχτα.
   const today = useNow(60_000);
 
@@ -103,7 +105,9 @@ export default function CalendarWidget() {
           ‹
         </button>
         <p className="font-display text-lg tracking-wide text-cream">
-          {MONTHS[view.month]} <span className="text-brass-400">{view.year}</span>
+          {new Intl.DateTimeFormat(language === "EN" ? "en-US" : "el-GR", { month: "long" }).format(
+            new Date(view.year, view.month, 1),
+          )} <span className="text-brass-400">{view.year}</span>
         </p>
         <button
           type="button"
@@ -160,10 +164,10 @@ export default function CalendarWidget() {
       </div>
 
       <div className="mt-6 border-t border-cream/8 pt-5">
-        <h3 className="text-[0.6rem] uppercase tracking-[0.28em] text-brass-300">Προσεχώς</h3>
+        <h3 className="text-[0.6rem] uppercase tracking-[0.28em] text-brass-300">{t("Προσεχώς")}</h3>
         <ul className="mt-4 space-y-3.5">
           {upcoming.length === 0 && (
-            <li className="text-xs text-muted">Δεν υπάρχουν προγραμματισμένες εκδηλώσεις.</li>
+            <li className="text-xs text-muted">{t("Δεν υπάρχουν προγραμματισμένες εκδηλώσεις.")}</li>
           )}
           {upcoming.map((e) => {
             const d = new Date(e.date);
@@ -174,7 +178,9 @@ export default function CalendarWidget() {
                     {d.getDate()}
                   </span>
                   <span className="mt-0.5 text-[0.5rem] uppercase tracking-wider text-muted">
-                    {MONTHS[d.getMonth()].slice(0, 3)}
+                    {new Intl.DateTimeFormat(language === "EN" ? "en-US" : "el-GR", { month: "short" }).format(
+                      d,
+                    )}
                   </span>
                 </span>
                 <span className="text-[0.78rem] leading-snug text-cream/80">{e.title}</span>

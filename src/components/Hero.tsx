@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { site } from "@/lib/site";
 import Logo from "@/components/Logo";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const STATS = [
   { value: "420", label: "μαθητές & μαθήτριες" },
@@ -17,6 +20,8 @@ const FLOATING = [
 ];
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative flex min-h-[92svh] items-center overflow-hidden pt-28">
       {/* Φόντο */}
@@ -68,7 +73,7 @@ export default function Hero() {
             style={{ animation: "rise 0.9s 0.1s both" }}
           >
             <span className="h-px w-10 bg-brass-400/60" />
-            Γυμνάσιο &amp; Λύκειο · Δημόσια μουσική εκπαίδευση
+            {t("Γυμνάσιο & Λύκειο · Δημόσια μουσική εκπαίδευση")}
           </p>
 
           <div className="relative mt-7">
@@ -77,8 +82,8 @@ export default function Hero() {
             className="relative z-10 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light leading-[0.94] tracking-[-0.02em]"
             style={{ animation: "rise 1.1s 0.25s both" }}
             >
-              <span className="block text-cream">Μουσικό Σχολείο</span>
-              <span className="block text-gradient-brass italic">Πειραιά</span>
+              <span className="block text-cream">{t("Μουσικό Σχολείο")}</span>
+              <span className="block text-gradient-brass italic">{t("Πειραιά")}</span>
             </h1>
           </div>
 
@@ -86,7 +91,7 @@ export default function Hero() {
             className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
             style={{ animation: "rise 1.1s 0.45s both" }}
           >
-            {site.description}
+            {t(site.description)}
           </p>
 
           <div
@@ -97,7 +102,7 @@ export default function Hero() {
               href="/to-scholeio"
               className="group relative overflow-hidden rounded-full bg-gradient-to-r from-brass-300 to-brass-500 px-8 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink-950 transition-transform duration-300 hover:scale-[1.03]"
             >
-              <span className="relative z-10">Γνωρίστε το σχολείο</span>
+              <span className="relative z-10">{t("Γνωρίστε το σχολείο")}</span>
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
             </Link>
 
@@ -110,7 +115,7 @@ export default function Hero() {
                   <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.29-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
                 </svg>
               </span>
-              Δείτε το βίντεο
+              {t("Δείτε το βίντεο")}
             </a>
           </div>
 
@@ -125,7 +130,7 @@ export default function Hero() {
                 <dd>
                   <span className="block font-display text-4xl text-brass-600">{s.value}</span>
                   <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.22em] text-muted">
-                    {s.label}
+                    {t(s.label)}
                   </span>
                 </dd>
               </div>

@@ -6,6 +6,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { site } from "@/lib/site";
+import { LanguageProvider } from "@/hooks/useLanguage";
 
 const manrope = Manrope({
   subsets: ["greek", "latin"],
@@ -60,10 +61,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "try{if(!sessionStorage.getItem('msp:intro')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},6000)}}catch(e){}",
           }}
         />
-        <LoadingScreen />
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        <LanguageProvider>
+          <LoadingScreen />
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </LanguageProvider>
       </body>
     </html>
   );

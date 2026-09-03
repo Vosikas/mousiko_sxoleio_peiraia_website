@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { markIntroSeen, revealPage, useIntroSeen } from "@/hooks/useIntro";
 import { playBandIntro } from "@/lib/audio";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const INSTRUMENTS = [
   { name: "Έγχορδα", detail: "χρώμα", symbol: "∿", tone: "from-brass-200 to-brass-500" },
@@ -13,6 +14,7 @@ const INSTRUMENTS = [
 
 export default function LoadingScreen() {
   const hidden = useIntroSeen();
+  const { t } = useLanguage();
   const [progress, setProgress] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [active, setActive] = useState(0);
@@ -64,12 +66,12 @@ export default function LoadingScreen() {
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(53,183,174,0.16),transparent_48%),linear-gradient(135deg,rgba(244,185,66,0.10),transparent_45%)]" />
       <div className="relative z-10 w-full max-w-3xl text-center">
-        <p className="text-[0.62rem] uppercase tracking-[0.5em] text-brass-600">Μουσική παιδεία · Πειραιάς</p>
+        <p className="text-[0.62rem] uppercase tracking-[0.5em] text-brass-600">{t("Μουσική παιδεία · Πειραιάς")}</p>
         <h1 className="mt-5 font-display text-4xl font-semibold tracking-tight text-cream sm:text-6xl">
-          Μια ορχήστρα ξεκινά
+          {t("Μια ορχήστρα ξεκινά")}
         </h1>
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
-          Η κάμερα κινείται μέσα σε μια μπάντα καθώς το σχολείο βρίσκει τον ρυθμό του.
+          {t("Η κάμερα κινείται μέσα σε μια μπάντα καθώς το σχολείο βρίσκει τον ρυθμό του.")}
         </p>
 
         <div className="relative mx-auto mt-12 max-w-2xl overflow-hidden rounded-[2rem] border border-cream/15 bg-ink-900 px-4 py-7 shadow-[0_24px_80px_rgba(16,42,67,0.14)] sm:px-8">
@@ -88,14 +90,14 @@ export default function LoadingScreen() {
               <span className={`mb-auto bg-gradient-to-br ${instrument.tone} bg-clip-text font-display text-5xl text-transparent sm:text-6xl`} style={{ animation: `instrument-bob ${2.2 + index * 0.3}s ease-in-out infinite` }}>
                 {instrument.symbol}
               </span>
-              <span className="mt-4 block text-xs font-semibold text-cream sm:text-sm">{instrument.name}</span>
-              <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.2em] text-muted">{instrument.detail}</span>
+              <span className="mt-4 block text-xs font-semibold text-cream sm:text-sm">{t(instrument.name)}</span>
+              <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.2em] text-muted">{t(instrument.detail)}</span>
             </div>
           ))}
           </div>
           <div className="relative mt-7 flex items-center justify-center gap-3 text-[0.58rem] uppercase tracking-[0.32em] text-brass-600">
             <span className="h-px w-8 bg-brass-400/60" />
-            Τώρα παίζουν όλοι
+            {t("Τώρα παίζουν όλοι")}
             <span className="h-px w-8 bg-brass-400/60" />
           </div>
         </div>
@@ -104,7 +106,7 @@ export default function LoadingScreen() {
           <div className="h-1 overflow-hidden rounded-full bg-ink-700">
             <div className="h-full rounded-full bg-gradient-to-r from-brass-600 via-brass-400 to-sun-500 transition-[width] duration-150" style={{ width: `${progress}%` }} />
           </div>
-          <p className="mt-4 text-[0.62rem] uppercase tracking-[0.3em] text-muted">Η σελίδα ετοιμάζεται · {progress}%</p>
+          <p className="mt-4 text-[0.62rem] uppercase tracking-[0.3em] text-muted">{t("Η σελίδα ετοιμάζεται")} · {progress}%</p>
         </div>
       </div>
 
@@ -113,7 +115,7 @@ export default function LoadingScreen() {
         onClick={dismiss}
         className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 rounded-full border border-brass-400/40 px-5 py-2.5 text-[0.62rem] uppercase tracking-[0.25em] text-brass-600 transition hover:border-brass-500 hover:bg-brass-100"
       >
-        Παράλειψη intro
+        {t("Παράλειψη intro")}
       </button>
     </div>
   );

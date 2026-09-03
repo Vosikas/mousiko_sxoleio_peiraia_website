@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { site } from "@/lib/site";
+import { useLanguage } from "@/hooks/useLanguage";
 
 /**
  * Πρότυπο (template) για το βίντεο του σχολείου.
@@ -11,6 +12,7 @@ import { site } from "@/lib/site";
  */
 export default function VideoFeature() {
   const [playing, setPlaying] = useState(false);
+  const { t } = useLanguage();
   const { youtubeId, mp4, title, subtitle } = site.video;
   const poster = process.env.NEXT_PUBLIC_SCHOOL_VIDEO_POSTER ?? "";
 
@@ -22,13 +24,13 @@ export default function VideoFeature() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[0.62rem] uppercase tracking-[0.34em] text-brass-400">
-            Βίντεο παρουσίασης
+            {t("Βίντεο παρουσίασης")}
           </p>
           <h2 id="video-title" className="mt-3 font-display text-3xl text-cream sm:text-4xl">
-            {title}
+            {t(title)}
           </h2>
         </div>
-        <p className="max-w-xs text-sm leading-relaxed text-muted">{subtitle}</p>
+        <p className="max-w-xs text-sm leading-relaxed text-muted">{t(subtitle)}</p>
       </div>
 
       {/* Κορνίζα */}
@@ -85,9 +87,9 @@ export default function VideoFeature() {
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-7">
                 <div>
                   <p className="text-[0.6rem] uppercase tracking-[0.3em] text-brass-300">
-                    {site.shortName} · Φιλμ
+                    {site.shortName} · {t("Φιλμ")}
                   </p>
-                  <p className="mt-1.5 font-display text-lg text-cream sm:text-xl">{title}</p>
+                  <p className="mt-1.5 font-display text-lg text-cream sm:text-xl">{t(title)}</p>
                 </div>
                 <Equalizer />
               </div>

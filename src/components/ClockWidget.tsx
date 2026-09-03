@@ -1,6 +1,7 @@
 "use client";
 
 import { useNow } from "@/hooks/useNow";
+import { useLanguage } from "@/hooks/useLanguage";
 import { site } from "@/lib/site";
 
 const DAYS = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
@@ -23,6 +24,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 export default function ClockWidget() {
   const now = useNow(1000);
+  const { language, t } = useLanguage();
 
   // Ο server δεν ξέρει την ώρα του επισκέπτη — κρατάμε τον χώρο και γεμίζουμε μετά.
   if (!now) return <ClockSkeleton />;
@@ -118,7 +120,11 @@ export default function ClockWidget() {
           <span className="ml-1 align-top text-sm text-muted">{pad(s)}</span>
         </p>
         <p className="mt-1 text-xs uppercase tracking-[0.22em] text-muted">
-          {DAYS[now.getDay()]} {now.getDate()} {MONTHS[now.getMonth()]}
+          {new Intl.DateTimeFormat(language === "EN" ? "en-US" : "el-GR", {
+            weekday: "long",
+            day: "numeric",
+            month: "short",
+          }).format(now)}
         </p>
       </div>
 
@@ -135,12 +141,12 @@ export default function ClockWidget() {
           />
         </span>
         <span className={isOpen ? "text-emerald-300" : "text-muted"}>
-          {isOpen ? "Ανοιχτά τώρα" : "Εκτός ωραρίου"}
+          {t(isOpen ? "Ανοιχτά τώρα" : "Εκτός ωραρίου")}
         </span>
       </div>
 
       <p className="mt-3 text-center text-[0.62rem] leading-relaxed text-muted/70">
-        Δευτέρα – Παρασκευή · {pad(site.hours.openHour)}:00 – {pad(site.hours.closeHour)}:00
+        {t("Δευτέρα – Παρασκευή")} · {pad(site.hours.openHour)}:00 – {pad(site.hours.closeHour)}:00
       </p>
     </article>
   );
@@ -159,10 +165,12 @@ function ClockSkeleton() {
 }
 
 export function WidgetLabel({ children }: { children: React.ReactNode }) {
+  const { t } = useLanguage();
+
   return (
     <div className="flex items-center gap-3">
       <span className="h-px flex-1 bg-gradient-to-r from-brass-400/50 to-transparent" />
-      <h2 className="text-[0.6rem] uppercase tracking-[0.32em] text-brass-300">{children}</h2>
+      <h2 className="text-[0.6rem] uppercase tracking-[0.32em] text-brass-300">{t(String(children))}</h2>
       <span className="h-px flex-1 bg-gradient-to-l from-brass-400/50 to-transparent" />
     </div>
   );

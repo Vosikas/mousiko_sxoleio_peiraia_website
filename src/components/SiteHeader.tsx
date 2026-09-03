@@ -3,18 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [language, setLanguage] = useState<"GR" | "EN">("GR");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -22,14 +15,10 @@ export default function SiteHeader() {
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 px-4 py-4 transition-all duration-500 lg:px-8"
+      className="absolute inset-x-0 top-0 z-50 px-4 py-4 lg:px-8"
     >
-      <div
-        className={
-          "mx-auto flex max-w-fit items-center gap-2 rounded-full border px-2 py-2 shadow-[0_12px_35px_rgba(16,42,67,0.10)] backdrop-blur-xl transition-all duration-500 " +
-          (scrolled ? "border-cream/20 bg-white/95" : "border-cream/12 bg-white/80")
-        }
-      >
+      <div className="relative mx-auto flex max-w-[1500px] justify-center">
+        <div className="flex max-w-fit items-center gap-2 rounded-full border border-cream/15 bg-white/90 px-2 py-2 shadow-[0_12px_35px_rgba(16,42,67,0.10)] backdrop-blur-xl">
         <nav className="hidden items-center gap-1 lg:flex">
           {site.nav.map((item) => (
             <Link
@@ -37,7 +26,7 @@ export default function SiteHeader() {
               href={item.href}
               className="group relative rounded-full px-3.5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-cream/70 transition-colors hover:bg-ink-850 hover:text-cream"
             >
-              {item.label}
+              {t(item.label)}
               <span className="absolute inset-x-3.5 bottom-1 h-px origin-left scale-x-0 bg-brass-400 transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           ))}
@@ -61,13 +50,6 @@ export default function SiteHeader() {
             ))}
           </div>
 
-          <Link
-            href="/epikoinonia"
-            className="hidden rounded-full bg-brass-500 px-5 py-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brass-600 md:inline-block"
-          >
-            Εγγραφές
-          </Link>
-
           <button
             type="button"
             aria-label={open ? "Κλείσιμο μενού" : "Άνοιγμα μενού"}
@@ -89,6 +71,12 @@ export default function SiteHeader() {
             />
           </button>
         </div>
+        <Link
+          href="/epikoinonia"
+          className="absolute left-full top-1/2 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-full bg-brass-500 px-5 py-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brass-600 md:inline-block"
+        >
+          {t("Εγγραφές")}
+        </Link>
       </div>
 
       {/* Μενού κινητού */}
@@ -107,7 +95,7 @@ export default function SiteHeader() {
               style={{ transitionDelay: i * 40 + "ms" }}
               className="border-b border-cream/6 py-4 text-sm uppercase tracking-[0.22em] text-cream/80 transition-colors last:border-0 hover:text-brass-600"
             >
-              {item.label}
+              {t(item.label)}
             </Link>
           ))}
         </nav>

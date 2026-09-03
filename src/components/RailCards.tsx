@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { WidgetLabel } from "./ClockWidget";
 import { site } from "@/lib/site";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const ENSEMBLES = [
   { name: "Συμφωνική Ορχήστρα", href: "/tmimata#orchestra" },
@@ -12,6 +15,8 @@ const ENSEMBLES = [
 
 /** Αριστερή στήλη: γρήγορη πρόσβαση στα μουσικά σύνολα. */
 export function EnsemblesCard() {
+  const { t } = useLanguage();
+
   return (
     <article className="glass rounded-xl2 p-6">
       <WidgetLabel>Μουσικά σύνολα</WidgetLabel>
@@ -26,7 +31,7 @@ export function EnsemblesCard() {
                 <span className="text-brass-400/70 transition-transform duration-300 group-hover:scale-125">
                   ♪
                 </span>
-                {e.name}
+                {t(e.name)}
               </span>
               <span className="text-muted/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-brass-300">
                 →
@@ -41,14 +46,16 @@ export function EnsemblesCard() {
 
 /** Δεξιά στήλη: επικοινωνία με μια ματιά. */
 export function ContactCard() {
+  const { t } = useLanguage();
+
   return (
     <article className="relative overflow-hidden rounded-xl2 border border-brass-400/25 bg-gradient-to-br from-brass-400/12 via-ink-850/70 to-ink-900 p-6">
       <span className="pointer-events-none absolute -right-8 -top-8 font-display text-[8rem] leading-none text-brass-400/10">
         𝄞
       </span>
-      <h2 className="relative font-display text-xl text-cream">Εγγραφές &amp; πληροφορίες</h2>
+      <h2 className="relative font-display text-xl text-cream">{t("Εγγραφές & πληροφορίες")}</h2>
       <p className="relative mt-3 text-[0.78rem] leading-relaxed text-muted">
-        Η γραμματεία δέχεται ερωτήματα για εισαγωγικές εξετάσεις, μεταγραφές και μουσικά όργανα.
+        {t("Η γραμματεία δέχεται ερωτήματα για εισαγωγικές εξετάσεις, μεταγραφές και μουσικά όργανα.")}
       </p>
       <div className="relative mt-5 space-y-2 text-[0.78rem]">
         <a
@@ -68,7 +75,7 @@ export function ContactCard() {
         href="/epikoinonia"
         className="relative mt-6 flex items-center justify-center gap-2 rounded-full border border-brass-300/45 py-3 text-[0.64rem] uppercase tracking-[0.2em] text-brass-600 transition hover:bg-brass-400/15 hover:text-brass-600"
       >
-        Φόρμα επικοινωνίας →
+        {t("Φόρμα επικοινωνίας →")}
       </Link>
     </article>
   );
@@ -76,6 +83,7 @@ export function ContactCard() {
 
 /** Οριζόντια ταινία με τα αντικείμενα σπουδών. */
 export function Marquee() {
+  const { t } = useLanguage();
   const items = [
     "Πιάνο",
     "Βιολί",
@@ -100,7 +108,7 @@ export function Marquee() {
             key={item + i}
             className="flex items-center gap-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.32em] text-cream/45"
           >
-            {item}
+            {t(item)}
             <span className="text-brass-400/70">♪</span>
           </span>
         ))}
@@ -114,7 +122,7 @@ export function Marquee() {
             key={item + i}
             className="flex items-center gap-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.32em] text-cream/45"
           >
-            {item}
+            {t(item)}
             <span className="text-brass-400/70">♪</span>
           </span>
         ))}

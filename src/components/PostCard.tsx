@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatGreekDate, type Post } from "@/lib/wordpress";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const GLYPHS = ["♪", "♫", "♩", "♬"];
 
@@ -13,6 +14,14 @@ export default function PostCard({
   featured?: boolean;
   index?: number;
 }) {
+  const { language, t } = useLanguage();
+  const formattedDate =
+    language === "EN"
+      ? new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long", year: "numeric" }).format(
+          new Date(post.date),
+        )
+      : formatGreekDate(post.date);
+
   return (
     <article
       className={
@@ -57,9 +66,9 @@ export default function PostCard({
       {/* Κείμενο */}
       <div className={"min-w-0 flex flex-1 flex-col p-6 " + (featured ? "sm:p-8" : "")}>
         <div className="flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.2em] text-muted">
-          <time dateTime={post.date}>{formatGreekDate(post.date)}</time>
+          <time dateTime={post.date}>{formattedDate}</time>
           <span className="h-1 w-1 rounded-full bg-brass-400/60" />
-          <span>{post.readingMinutes}΄ ανάγνωση</span>
+          <span>{post.readingMinutes} min {t("ανάγνωση")}</span>
         </div>
 
         <h3
@@ -80,7 +89,7 @@ export default function PostCard({
         </p>
 
         <span className="mt-6 inline-flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.22em] text-brass-300">
-          Διαβάστε περισσότερα
+          {t("Διαβάστε περισσότερα")}
           <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
         </span>
       </div>
