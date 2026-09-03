@@ -27,7 +27,7 @@ export interface WPRendered {
 export interface WPMedia {
   id: number;
   source_url: string;
-  alt_text: string;
+  alt_text?: string;
   media_details?: {
     width: number;
     height: number;
@@ -51,7 +51,17 @@ export interface WPEmbedded {
   author?: { id: number; name: string; avatar_urls?: Record<string, string> }[];
 }
 
-export interface WPRawPost {
+/** Minimum shape required to render a WordPress post in the article view. */
+export interface WPData {
+  id: number;
+  title: { rendered: string };
+  content: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text?: string }>;
+  };
+}
+
+export interface WPRawPost extends WPData {
   id: number;
   date: string;
   date_gmt: string;
@@ -193,7 +203,7 @@ async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | nu
 /** Τα N πιο πρόσφατα άρθρα. Πέφτει σε δείγμα αν λείπει το WordPress. */
 export async function getRecentPosts(count = 4): Promise<Post[]> {
   const raw = await wpFetch<WPRawPost[]>(
-    `/posts?per_page=${count}&_embed=wp:featuredmedia,wp:term,author&orderby=date&order=desc`,
+    `/posts?per_page=${count}&_embed=true&orderby=date&order=desc`,
   );
   if (!raw?.length) return SAMPLE_POSTS.slice(0, count);
   return raw.map(normalize);
@@ -209,7 +219,7 @@ export async function getAllPosts(): Promise<Post[]> {
 
   while (true) {
     const raw = await wpFetch<WPRawPost[]>(
-      `/posts?per_page=${perPage}&page=${page}&_embed=wp:featuredmedia,wp:term,author&orderby=date&order=desc`,
+      `/posts?per_page=${perPage}&page=${page}&_embed=true&orderby=date&order=desc`,
     );
     if (!raw?.length) break;
     all.push(...raw);
@@ -222,14 +232,14 @@ export async function getAllPosts(): Promise<Post[]> {
 
 /** Ένα άρθρο με βάση το slug. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed`);
+  const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed=true`);
   if (!raw?.length) return SAMPLE_POSTS.find((p) => p.slug === slug) ?? null;
   return normalize(raw[0]);
 }
 
 /** Σελίδα (WordPress page) με βάση το slug — για ΤΟ ΣΧΟΛΕΙΟ, ΕΠΙΚΟΙΝΩΝΙΑ κ.λπ. */
 export async function getPageBySlug(slug: string): Promise<{ title: string; html: string } | null> {
-  const raw = await wpFetch<WPRawPost[]>(`/pages?slug=${encodeURIComponent(slug)}&_embed`);
+  const raw = await wpFetch<WPRawPost[]>(`/pages?slug=${encodeURIComponent(slug)}&_embed=true`);
   if (!raw?.length) return null;
   return { title: decodeHtml(stripHtml(raw[0].title.rendered)), html: raw[0].content.rendered };
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatGreekDate, getPostBySlug, getRecentPosts, type WPRawPost, WP_API_URL } from "@/lib/wordpress";
+import { formatGreekDate, getPostBySlug, getRecentPosts, type WPData, WP_API_URL } from "@/lib/wordpress";
 
 export const revalidate = 300;
 
@@ -20,10 +20,15 @@ export default async function ArticlePage({ params }: Params) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const html = WP_API_URL
-    ? await fetchContent(slug)
-    : "<p>" + post.excerpt + "</p><p>Το πλήρες κείμενο θα εμφανιστεί μόλις συνδεθεί το WordPress.</p>";
-  const featuredImage = post.image?.src ? post.image : null;
+  const item =
+    (WP_API_URL ? await fetchContent(slug) : null) ??
+    ({
+      id: post.id,
+      title: { rendered: post.title },
+      content: { rendered: `<p>${post.excerpt}</p><p>Το πλήρες κείμενο θα εμφανιστεί μόλις συνδεθεί το WordPress.</p>` },
+    } satisfies WPData);
+  const imageUrl = item._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  const imageAlt = item._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || post.title;
 
   const more = (await getRecentPosts(4)).filter((p) => p.slug !== slug).slice(0, 3);
 
@@ -48,15 +53,15 @@ export default async function ArticlePage({ params }: Params) {
         {post.title}
       </h1>
 
-      {featuredImage && (
+      {imageUrl && (
         <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-xl2 ring-1 ring-cream/10">
-          <Image src={featuredImage.src} alt={featuredImage.alt} fill sizes="800px" unoptimized className="object-cover" />
+          <Image src={imageUrl} alt={imageAlt} fill sizes="800px" unoptimized className="object-cover" />
         </div>
       )}
 
       <div
         className="prose-article mt-10 space-y-5 text-[0.95rem] leading-[1.85] text-cream/80"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: item.content.rendered }}
       />
 
       {more.length > 0 && (
@@ -86,15 +91,15 @@ export default async function ArticlePage({ params }: Params) {
 }
 
 /** Το πλήρες HTML του άρθρου, όπως το παράγει το WordPress. */
-async function fetchContent(slug: string): Promise<string> {
+async function fetchContent(slug: string): Promise<WPData | null> {
   try {
-    const res = await fetch(WP_API_URL + "/posts?slug=" + encodeURIComponent(slug) + "&_embed", {
+    const res = await fetch(WP_API_URL + "/posts?slug=" + encodeURIComponent(slug) + "&_embed=true", {
       next: { revalidate: 300 },
     });
-    if (!res.ok) return "";
-    const data = (await res.json()) as Pick<WPRawPost, "content">[];
-    return data[0]?.content?.rendered ?? "";
+    if (!res.ok) return null;
+    const data = (await res.json()) as WPData[];
+    return data[0] ?? null;
   } catch {
-    return "";
+    return null;
   }
 }
