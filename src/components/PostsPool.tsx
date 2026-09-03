@@ -25,7 +25,7 @@ export default async function PostsPool() {
 
         <Link
           href="/nea"
-          className="group inline-flex items-center gap-2 self-start text-[0.68rem] uppercase tracking-[0.22em] text-cream/70 transition hover:text-brass-200 sm:self-auto"
+          className="group inline-flex items-center gap-2 self-start text-[0.68rem] uppercase tracking-[0.22em] text-cream/70 transition hover:text-brass-600 sm:self-auto"
         >
           Όλα τα νέα
           <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
@@ -34,10 +34,10 @@ export default async function PostsPool() {
 
       {!isWordPressConfigured() && (
         <Reveal className="mt-6" delay={60}>
-          <p className="rounded-xl border border-brass-400/25 bg-brass-400/[0.06] px-4 py-3 text-[0.72rem] leading-relaxed text-brass-200/90">
+          <p className="rounded-xl border border-brass-400/25 bg-brass-400/[0.06] px-4 py-3 text-[0.72rem] leading-relaxed text-brass-600">
             Προβάλλεται δείγμα περιεχομένου. Συνδέστε το WordPress ορίζοντας{" "}
-            <code className="text-brass-100">WORDPRESS_API_URL</code> στο{" "}
-            <code className="text-brass-100">.env.local</code> — τα άρθρα θα έρθουν αυτόματα.
+            <code className="text-brass-600">WORDPRESS_API_URL</code> στο{" "}
+            <code className="text-brass-600">.env.local</code> — τα άρθρα θα έρθουν αυτόματα.
           </p>
         </Reveal>
       )}

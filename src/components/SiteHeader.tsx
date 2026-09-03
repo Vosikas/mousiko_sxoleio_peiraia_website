@@ -58,7 +58,7 @@ export default function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href="/epikoinonia"
-            className="hidden rounded-full border border-brass-400/45 px-5 py-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-brass-200 transition-all duration-300 hover:border-brass-300 hover:bg-brass-400/12 hover:text-brass-100 md:inline-block"
+            className="hidden rounded-full border border-brass-400/45 px-5 py-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-brass-600 transition-all duration-300 hover:border-brass-300 hover:bg-brass-400/12 hover:text-brass-600 md:inline-block"
           >
             Εγγραφές
           </Link>
@@ -100,7 +100,7 @@ export default function SiteHeader() {
               href={item.href}
               onClick={() => setOpen(false)}
               style={{ transitionDelay: i * 40 + "ms" }}
-              className="border-b border-cream/6 py-4 text-sm uppercase tracking-[0.22em] text-cream/80 transition-colors last:border-0 hover:text-brass-200"
+              className="border-b border-cream/6 py-4 text-sm uppercase tracking-[0.22em] text-cream/80 transition-colors last:border-0 hover:text-brass-600"
             >
               {item.label}
             </Link>

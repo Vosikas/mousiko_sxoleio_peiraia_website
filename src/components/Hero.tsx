@@ -21,7 +21,7 @@ export default function Hero() {
       {/* Φόντο */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-[-12%] h-[52rem] w-[52rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(53,183,174,0.14),transparent_60%)] blur-3xl" />
-        <div className="absolute bottom-[-20%] left-[-10%] h-[34rem] w-[34rem] -rotate-12 rounded-full bg-[radial-gradient(circle,rgba(239,132,110,0.10),transparent_62%)] blur-3xl" />
+        <div className="absolute bottom-[-20%] left-[-10%] h-[34rem] w-[34rem] -rotate-12 rounded-full bg-[radial-gradient(circle,rgba(244,185,66,0.12),transparent_62%)] blur-3xl" />
 
         {/* Πεντάγραμμο */}
         <svg
@@ -99,7 +99,7 @@ export default function Hero() {
 
             <a
               href="#video"
-              className="group flex items-center gap-3 rounded-full border border-cream/15 px-7 py-4 text-[0.7rem] uppercase tracking-[0.2em] text-cream/85 transition-all duration-300 hover:border-brass-400/60 hover:text-brass-100"
+              className="group flex items-center gap-3 rounded-full border border-cream/15 px-7 py-4 text-[0.7rem] uppercase tracking-[0.2em] text-cream/85 transition-all duration-300 hover:border-brass-400/60 hover:text-brass-600"
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full border border-brass-300/60">
                 <svg viewBox="0 0 24 24" className="ml-px h-2.5 w-2.5 fill-brass-200">
@@ -119,7 +119,7 @@ export default function Hero() {
               <div key={s.label}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd>
-                  <span className="block font-display text-4xl text-brass-200">{s.value}</span>
+                  <span className="block font-display text-4xl text-brass-600">{s.value}</span>
                   <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.22em] text-muted">
                     {s.label}
                   </span>

@@ -34,7 +34,7 @@ const EVENTS: SchoolEvent[] = [
 
 const KIND_COLOR: Record<string, string> = {
   concert: "bg-brass-300",
-  exam: "bg-rose-400",
+  exam: "bg-sun-500",
   trip: "bg-emerald-400",
 };
 
@@ -98,7 +98,7 @@ export default function CalendarWidget() {
           type="button"
           aria-label="Προηγούμενος μήνας"
           onClick={() => shift(-1)}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-200"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-600"
         >
           ‹
         </button>
@@ -109,7 +109,7 @@ export default function CalendarWidget() {
           type="button"
           aria-label="Επόμενος μήνας"
           onClick={() => shift(1)}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-200"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-600"
         >
           ›
         </button>
@@ -170,7 +170,7 @@ export default function CalendarWidget() {
             return (
               <li key={e.date + e.title} className="flex gap-3">
                 <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-brass-400/25 bg-ink-900/70">
-                  <span className="text-[0.8rem] font-semibold leading-none text-brass-200">
+                  <span className="text-[0.8rem] font-semibold leading-none text-brass-600">
                     {d.getDate()}
                   </span>
                   <span className="mt-0.5 text-[0.5rem] uppercase tracking-wider text-muted">

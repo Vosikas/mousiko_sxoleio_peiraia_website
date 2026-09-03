@@ -20,7 +20,7 @@ export function EnsemblesCard() {
           <li key={e.href}>
             <Link
               href={e.href}
-              className="group flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[0.78rem] text-cream/75 transition hover:bg-brass-400/8 hover:text-brass-100"
+              className="group flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[0.78rem] text-cream/75 transition hover:bg-brass-400/8 hover:text-brass-600"
             >
               <span className="flex items-center gap-2.5">
                 <span className="text-brass-400/70 transition-transform duration-300 group-hover:scale-125">
@@ -53,20 +53,20 @@ export function ContactCard() {
       <div className="relative mt-5 space-y-2 text-[0.78rem]">
         <a
           href={"tel:" + site.contact.phone.replace(/\s/g, "")}
-          className="flex items-center gap-2.5 text-cream/85 transition hover:text-brass-200"
+          className="flex items-center gap-2.5 text-cream/85 transition hover:text-brass-600"
         >
           <span className="text-brass-400">☎</span> {site.contact.phone}
         </a>
         <a
           href={"mailto:" + site.contact.email}
-          className="flex items-center gap-2.5 break-all text-cream/85 transition hover:text-brass-200"
+          className="flex items-center gap-2.5 break-all text-cream/85 transition hover:text-brass-600"
         >
           <span className="text-brass-400">✉</span> {site.contact.email}
         </a>
       </div>
       <Link
         href="/epikoinonia"
-        className="relative mt-6 flex items-center justify-center gap-2 rounded-full border border-brass-300/45 py-3 text-[0.64rem] uppercase tracking-[0.2em] text-brass-200 transition hover:bg-brass-400/15 hover:text-brass-100"
+        className="relative mt-6 flex items-center justify-center gap-2 rounded-full border border-brass-300/45 py-3 text-[0.64rem] uppercase tracking-[0.2em] text-brass-600 transition hover:bg-brass-400/15 hover:text-brass-600"
       >
         Φόρμα επικοινωνίας →
       </Link>

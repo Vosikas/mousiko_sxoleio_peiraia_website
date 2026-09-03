@@ -30,7 +30,7 @@ export default async function ArticlePage({ params }: Params) {
     <article className="mx-auto max-w-3xl px-5 pb-24 pt-40 lg:px-0">
       <Link
         href="/nea"
-        className="text-[0.65rem] uppercase tracking-[0.25em] text-muted transition hover:text-brass-200"
+        className="text-[0.65rem] uppercase tracking-[0.25em] text-muted transition hover:text-brass-600"
       >
         ← Όλα τα νέα
       </Link>
@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: Params) {
                   href={p.href}
                   className="group flex items-baseline justify-between gap-6 border-b border-cream/6 pb-4 transition"
                 >
-                  <span className="font-display text-lg text-cream/85 transition group-hover:text-brass-200">
+                  <span className="font-display text-lg text-cream/85 transition group-hover:text-brass-600">
                     {p.title}
                   </span>
                   <span className="shrink-0 text-[0.62rem] uppercase tracking-[0.2em] text-muted">

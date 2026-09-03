@@ -24,7 +24,7 @@ export default function SiteFooter() {
               <a
                 key={s.label}
                 href={s.href}
-                className="rounded-full border border-cream/12 px-4 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-cream/70 transition hover:border-brass-400/60 hover:text-brass-200"
+                className="rounded-full border border-cream/12 px-4 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-cream/70 transition hover:border-brass-400/60 hover:text-brass-600"
               >
                 {s.label}
               </a>
@@ -39,7 +39,7 @@ export default function SiteFooter() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-cream/70 transition hover:text-brass-200"
+                  className="text-sm text-cream/70 transition hover:text-brass-600"
                 >
                   {item.label}
                 </Link>
@@ -53,12 +53,12 @@ export default function SiteFooter() {
           <ul className="mt-5 space-y-3 text-sm text-cream/70">
             <li>{site.contact.address}</li>
             <li>
-              <a href={"tel:" + site.contact.phone.replace(/\s/g, "")} className="hover:text-brass-200">
+              <a href={"tel:" + site.contact.phone.replace(/\s/g, "")} className="hover:text-brass-600">
                 {site.contact.phone}
               </a>
             </li>
             <li>
-              <a href={"mailto:" + site.contact.email} className="break-all hover:text-brass-200">
+              <a href={"mailto:" + site.contact.email} className="break-all hover:text-brass-600">
                 {site.contact.email}
               </a>
             </li>

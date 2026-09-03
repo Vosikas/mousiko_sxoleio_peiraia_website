@@ -48,7 +48,7 @@ export default function PostCard({
         <div className="absolute inset-0 bg-gradient-to-t from-ink-950/70 to-transparent opacity-70" />
 
         {post.category && (
-          <span className="absolute left-4 top-4 rounded-full border border-brass-300/40 bg-ink-950/70 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-brass-200 backdrop-blur-sm">
+          <span className="absolute left-4 top-4 rounded-full border border-brass-300/40 bg-ink-950/70 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-brass-600 backdrop-blur-sm">
             {post.category}
           </span>
         )}
@@ -64,7 +64,7 @@ export default function PostCard({
 
         <h3
           className={
-            "mt-3 font-display leading-snug text-cream transition-colors duration-300 group-hover:text-brass-100 " +
+            "mt-3 font-display leading-snug text-cream transition-colors duration-300 group-hover:text-brass-600 " +
             (featured ? "text-2xl sm:text-3xl" : "text-lg")
           }
         >

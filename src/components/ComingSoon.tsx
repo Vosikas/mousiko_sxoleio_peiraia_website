@@ -23,7 +23,7 @@ export default function ComingSoon({
       </p>
       <Link
         href="/"
-        className="relative mt-8 text-[0.68rem] uppercase tracking-[0.22em] text-brass-300 transition hover:text-brass-100"
+        className="relative mt-8 text-[0.68rem] uppercase tracking-[0.22em] text-brass-300 transition hover:text-brass-600"
       >
         ← Επιστροφή στην αρχική
       </Link>
