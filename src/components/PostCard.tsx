@@ -55,7 +55,7 @@ export default function PostCard({
       </div>
 
       {/* Κείμενο */}
-      <div className={"flex flex-1 flex-col p-6 " + (featured ? "sm:p-8" : "")}>
+      <div className={"min-w-0 flex flex-1 flex-col p-6 " + (featured ? "sm:p-8" : "")}>
         <div className="flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.2em] text-muted">
           <time dateTime={post.date}>{formatGreekDate(post.date)}</time>
           <span className="h-1 w-1 rounded-full bg-brass-400/60" />
@@ -64,8 +64,8 @@ export default function PostCard({
 
         <h3
           className={
-            "mt-3 font-display leading-snug text-cream transition-colors duration-300 group-hover:text-brass-600 " +
-            (featured ? "text-2xl sm:text-3xl" : "text-lg")
+            "mt-3 min-w-0 break-words font-display leading-tight text-cream transition-colors duration-300 group-hover:text-brass-600 " +
+            (featured ? "text-xl sm:text-2xl" : "text-lg")
           }
         >
           {post.title}
