@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Logo from "./Logo";
 import { site } from "@/lib/site";
 
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [language, setLanguage] = useState<"GR" | "EN">("GR");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -22,32 +22,20 @@ export default function SiteHeader() {
 
   return (
     <header
-      className={
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500 " +
-        (scrolled
-          ? "border-b border-cream/8 bg-ink-950/85 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent")
-      }
+      className="fixed inset-x-0 top-0 z-50 px-4 py-4 transition-all duration-500 lg:px-8"
     >
-      <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-6 px-5 py-4 lg:px-10">
-        <Link href="/" className="group flex items-center gap-3" onClick={() => setOpen(false)}>
-          <Logo className="h-10 w-10 transition-transform duration-500 group-hover:rotate-[8deg]" />
-          <span className="leading-tight">
-            <span className="block font-display text-lg tracking-wide text-cream sm:text-xl">
-              Μουσικό Σχολείο
-            </span>
-            <span className="block text-[0.6rem] uppercase tracking-[0.42em] text-brass-400">
-              Πειραιά
-            </span>
-          </span>
-        </Link>
-
+      <div
+        className={
+          "mx-auto flex max-w-fit items-center gap-2 rounded-full border px-2 py-2 shadow-[0_12px_35px_rgba(16,42,67,0.10)] backdrop-blur-xl transition-all duration-500 " +
+          (scrolled ? "border-cream/20 bg-white/95" : "border-cream/12 bg-white/80")
+        }
+      >
         <nav className="hidden items-center gap-1 lg:flex">
           {site.nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="group relative px-3.5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-cream/70 transition-colors hover:text-cream"
+              className="group relative rounded-full px-3.5 py-2 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-cream/70 transition-colors hover:bg-ink-850 hover:text-cream"
             >
               {item.label}
               <span className="absolute inset-x-3.5 bottom-1 h-px origin-left scale-x-0 bg-brass-400 transition-transform duration-300 group-hover:scale-x-100" />
@@ -55,10 +43,27 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center rounded-full border border-cream/10 bg-ink-850/80 p-1" aria-label="Επιλογή γλώσσας">
+            {(["GR", "EN"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                aria-pressed={language === option}
+                onClick={() => setLanguage(option)}
+                className={
+                  "rounded-full px-2.5 py-1 text-[0.58rem] font-semibold tracking-[0.12em] transition " +
+                  (language === option ? "bg-cream text-white" : "text-muted hover:text-cream")
+                }
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+
           <Link
             href="/epikoinonia"
-            className="hidden rounded-full border border-brass-400/45 px-5 py-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-brass-600 transition-all duration-300 hover:border-brass-300 hover:bg-brass-400/12 hover:text-brass-600 md:inline-block"
+            className="hidden rounded-full bg-brass-500 px-5 py-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-brass-600 md:inline-block"
           >
             Εγγραφές
           </Link>
@@ -89,7 +94,7 @@ export default function SiteHeader() {
       {/* Μενού κινητού */}
       <div
         className={
-          "overflow-hidden border-t border-cream/8 bg-ink-950/97 backdrop-blur-xl transition-[max-height,opacity] duration-500 lg:hidden " +
+          "mx-4 overflow-hidden rounded-3xl border border-cream/15 bg-white/95 shadow-[0_12px_35px_rgba(16,42,67,0.10)] backdrop-blur-xl transition-[max-height,opacity] duration-500 lg:hidden " +
           (open ? "max-h-[70vh] opacity-100" : "max-h-0 opacity-0")
         }
       >

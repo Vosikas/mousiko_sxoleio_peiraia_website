@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
+import Logo from "@/components/Logo";
 
 const STATS = [
   { value: "420", label: "μαθητές & μαθήτριες" },
@@ -70,13 +71,16 @@ export default function Hero() {
             Γυμνάσιο &amp; Λύκειο · Δημόσια μουσική εκπαίδευση
           </p>
 
-          <h1
-            className="mt-7 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light leading-[0.94] tracking-[-0.02em]"
+          <div className="relative mt-7">
+            <Logo className="pointer-events-none absolute -left-8 -top-20 z-0 h-[24rem] w-[20rem] opacity-[0.055] sm:-left-14 sm:-top-28 sm:h-[34rem] sm:w-[28rem]" />
+            <h1
+            className="relative z-10 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light leading-[0.94] tracking-[-0.02em]"
             style={{ animation: "rise 1.1s 0.25s both" }}
-          >
-            <span className="block text-cream">Μουσικό Σχολείο</span>
-            <span className="block text-gradient-brass italic">Πειραιά</span>
-          </h1>
+            >
+              <span className="block text-cream">Μουσικό Σχολείο</span>
+              <span className="block text-gradient-brass italic">Πειραιά</span>
+            </h1>
+          </div>
 
           <p
             className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
