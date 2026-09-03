@@ -78,6 +78,7 @@ export default function SiteHeader() {
           {t("Εγγραφές")}
         </Link>
       </div>
+      </div>
 
       {/* Μενού κινητού */}
       <div
