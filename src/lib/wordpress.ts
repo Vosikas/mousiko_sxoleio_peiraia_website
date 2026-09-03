@@ -147,10 +147,14 @@ export function formatGreekDate(iso: string): string {
 
 function normalize(raw: WPRawPost): Post {
   const media = raw._embedded?.["wp:featuredmedia"]?.[0];
+  const inlineImageSrc = !media
+    ? raw.content?.rendered?.match(/<img\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/i)?.[1]
+    : undefined;
   const imageSrc =
     media?.source_url ??
     media?.media_details?.sizes?.medium_large?.source_url ??
-    media?.media_details?.sizes?.large?.source_url;
+    media?.media_details?.sizes?.large?.source_url ??
+    inlineImageSrc;
   const terms = raw._embedded?.["wp:term"]?.flat() ?? [];
   const category = terms.find((t) => t?.taxonomy === "category" && t.slug !== "uncategorized");
   const plainExcerpt = stripHtml(raw.excerpt?.rendered ?? "");

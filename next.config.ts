@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "secure.gravatar.com" },
+      { protocol: "https", hostname: "gym-mous-peiraia.att.sch.gr" },
       ...(host
         ? ([
             { protocol: "https", hostname: host },
