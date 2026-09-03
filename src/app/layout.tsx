@@ -36,6 +36,11 @@ export const metadata: Metadata = {
     description: site.description,
   },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
+  icons: {
+    icon: "/logomousiko.png",
+    shortcut: "/logomousiko.png",
+    apple: "/logomousiko.png",
+  },
   robots: { index: true, follow: true },
 };
 
