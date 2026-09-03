@@ -39,7 +39,7 @@ export default function LoadingScreen({
   const hidden = useIntroSeen();
   const [leaving, setLeaving] = useState(false);
   const [panel, setPanel] = useState(0);
-  const [sound, setSound] = useState<"on" | "off" | "blocked">("off");
+  const [sound, setSound] = useState<"on" | "off" | "blocked">("on");
 
   const rootRef = useRef<HTMLDivElement>(null);
   const cameraRef = useRef<HTMLDivElement>(null);
