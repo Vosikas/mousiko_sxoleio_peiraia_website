@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 
-import LoadingScreen from "@/components/LoadingScreen";
+import LoadingScreen from "@/components/intro/LoadingScreen";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { site } from "@/lib/site";
@@ -58,11 +58,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(!sessionStorage.getItem('msp:intro')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},6000)}}catch(e){}",
+              "try{if(!sessionStorage.getItem('intro_seen')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},6000)}}catch(e){}",
           }}
         />
         <LanguageProvider>
-          <LoadingScreen />
+          <LoadingScreen
+            schoolName="Μουσικό Σχολείο Πειραιά"
+            tagline="Εδώ αρχίζει η μπάντα σου"
+          />
           <SiteHeader />
           <main id="main">{children}</main>
           <SiteFooter />
