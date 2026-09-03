@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Πολύ ελαφρύς συνθέτης πιάνου με Web Audio API.
+ * Πολύ ελαφρύς συνθέτης ορχήστρας με Web Audio API.
  * Δεν φορτώνει δείγματα ήχου — μηδενικό κόστος στο bundle.
  */
 
@@ -57,10 +57,35 @@ export function playNote(frequency: number, duration = 1.6) {
   voice.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 }
 
-/** Μικρό αρπέζ — παίζεται όταν ολοκληρώνεται η φόρτωση. */
-export function playFlourish() {
-  const chord = [261.63, 329.63, 392.0, 523.25, 659.25];
-  chord.forEach((f, i) => {
-    setTimeout(() => playNote(f, 2.2), i * 90);
+function playVoice(frequency: number, duration: number, type: OscillatorType, volume: number) {
+  const audio = getContext();
+  if (!audio || !master) return;
+
+  const now = audio.currentTime;
+  const voice = audio.createGain();
+  const oscillator = audio.createOscillator();
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  oscillator.connect(voice).connect(master);
+  voice.gain.setValueAtTime(0.0001, now);
+  voice.gain.exponentialRampToValueAtTime(volume, now + 0.025);
+  voice.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  oscillator.start(now);
+  oscillator.stop(now + duration + 0.05);
+}
+
+/** Μικρή αυτόματη εισαγωγή με διαφορετικό ηχόχρωμα για κάθε ομάδα. */
+export function playBandIntro() {
+  const arrangement = [
+    { notes: [196, 246.94], type: "sine" as OscillatorType, duration: 1.9, volume: 0.12 },
+    { notes: [261.63, 329.63, 392], type: "triangle" as OscillatorType, duration: 1.5, volume: 0.16 },
+    { notes: [392, 493.88, 587.33], type: "sawtooth" as OscillatorType, duration: 1.2, volume: 0.07 },
+    { notes: [261.63, 329.63, 392, 523.25], type: "square" as OscillatorType, duration: 0.9, volume: 0.045 },
+  ];
+
+  arrangement.forEach((part, partIndex) => {
+    part.notes.forEach((frequency, noteIndex) => {
+      setTimeout(() => playVoice(frequency, part.duration, part.type, part.volume), partIndex * 480 + noteIndex * 55);
+    });
   });
 }
