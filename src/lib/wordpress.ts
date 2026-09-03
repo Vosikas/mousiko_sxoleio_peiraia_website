@@ -42,6 +42,15 @@ export interface WPTerm {
   taxonomy: string;
 }
 
+/** Custom fields exposed by WordPress, ACF, or another REST-enabled plugin. */
+export type WPCustomFields = Record<string, unknown>;
+
+export interface WPEmbedded {
+  "wp:featuredmedia"?: WPMedia[];
+  "wp:term"?: WPTerm[][];
+  author?: { id: number; name: string; avatar_urls?: Record<string, string> }[];
+}
+
 export interface WPRawPost {
   id: number;
   date: string;
@@ -53,11 +62,10 @@ export interface WPRawPost {
   excerpt: WPRendered;
   content: WPRendered;
   sticky?: boolean;
-  _embedded?: {
-    "wp:featuredmedia"?: WPMedia[];
-    "wp:term"?: WPTerm[][];
-    author?: { id: number; name: string; avatar_urls?: Record<string, string> }[];
-  };
+  /** Present when the post type or plugin exposes custom fields in REST. */
+  meta?: WPCustomFields;
+  acf?: WPCustomFields;
+  _embedded?: WPEmbedded;
 }
 
 /** Κανονικοποιημένη ανάρτηση, έτοιμη για τα components. */
