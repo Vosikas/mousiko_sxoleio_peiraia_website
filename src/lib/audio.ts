@@ -1,5 +1,5 @@
 /**
- * Band intro — a 5.6s stage riff synthesised with the Web Audio API.
+ * Band intro — a 10s stage riff synthesised with the Web Audio API.
  * No audio files: everything is generated, so the intro adds 0 kB to the bundle.
  *
  * Musicians enter one at a time, in sync with the camera move in LoadingScreen:
@@ -12,7 +12,7 @@ const BPM = 128;
 export const BEAT = 60 / BPM; //  0.46875s
 export const PANEL_BEATS = 2; //  each musician gets two beats
 export const PANEL_COUNT = 6; //  5 musicians + the wide shot
-export const INTRO_DURATION = BEAT * PANEL_BEATS * PANEL_COUNT + 2; // 7.625s
+export const INTRO_DURATION = 10;
 
 const SEMITONES: Record<string, number> = {
   C: 0, "C#": 1, D: 2, "D#": 3, E: 4, F: 5, "F#": 6, G: 7, "G#": 8, A: 9, "A#": 10, B: 11,
@@ -328,13 +328,13 @@ function buildScore(): Event[] {
     [8, "G4", 0.9], [8.5, "C5", 0.9], [9, "E5", 1.1], [9.5, "C5", 0.7]] as [number, string, number][])
     .forEach(([b, note, dur]) => add(b, (bus, at) => pianoNote(bus, at, note, dur * BEAT)));
   ["D4", "F4", "A4", "D5"].forEach((note, i) =>
-    add(10, (bus, at) => pianoNote(bus, at + i * 0.014, note, 2.4 * BEAT, 1.1)),
+    add(10, (bus, at) => pianoNote(bus, at + i * 0.014, note, 7.2 * BEAT, 1.1)),
   );
 
   // voice — takes the melody home
   add(8, (bus, at) => voiceNote(bus, at, "A4", 0.95 * BEAT));
   add(9, (bus, at) => voiceNote(bus, at, "C5", 0.95 * BEAT));
-  add(10, (bus, at) => voiceNote(bus, at, "F5", 2.3 * BEAT));
+  add(10, (bus, at) => voiceNote(bus, at, "F5", 3.5 * BEAT));
 
   return events.sort((a, b) => a.beat - b.beat);
 }
@@ -384,7 +384,7 @@ export function playBandIntro(): BandIntro {
       if (at < ctx.currentTime) return; // already gone by; skip rather than pile up
       play(bus, at);
     });
-    const fadeFrom = origin + 11.2 * BEAT;
+    const fadeFrom = origin + 17.6 * BEAT;
     bus.master.gain.setValueAtTime(0.85, Math.max(ctx.currentTime, fadeFrom));
     bus.master.gain.exponentialRampToValueAtTime(0.0001, fadeFrom + 1.1);
   };

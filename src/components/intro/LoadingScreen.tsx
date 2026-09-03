@@ -13,12 +13,13 @@ import {
 import { PANELS, PlayerBack, StageDefs, WideShot } from "./BandStage";
 
 /**
- * A 5.6s POV walk across the stage: the camera passes drums, bass, guitar,
+ * A 10s POV walk across the stage: the camera passes drums, bass, guitar,
  * piano and voice, each entering the riff as it comes into frame, then pulls
  * back on the full band. Skippable at any time.
  */
 
 const SEGMENT = BEAT * PANEL_BEATS; // seconds per musician
+const TRANSITION_DURATION = 1.6;
 const RING = 2 * Math.PI * 13;
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -50,6 +51,8 @@ export default function LoadingScreen({
   const audioRef = useRef<BandIntro | null>(null);
   const startedRef = useRef(0);
   const leavingRef = useRef(false);
+  const endingRef = useRef(false);
+  const soundRef = useRef(sound);
 
   const crowd = useMemo(
     () =>
@@ -74,10 +77,13 @@ export default function LoadingScreen({
 
   const enableSound = useCallback(() => {
     const intro = audioRef.current;
-    if (!intro || sound === "on") return;
+    if (!intro || soundRef.current === "on") return;
     const elapsed = (performance.now() - startedRef.current) / 1000;
-    void intro.unlock(elapsed).then((ok) => setSound(ok ? "on" : "off"));
-  }, [sound]);
+    void intro.unlock(elapsed).then((ok) => {
+      soundRef.current = ok ? "on" : "off";
+      setSound(ok ? "on" : "off");
+    });
+  }, []);
 
   useEffect(() => {
     if (hidden) return;
@@ -86,12 +92,14 @@ export default function LoadingScreen({
 
     const intro = playBandIntro();
     audioRef.current = intro;
+    soundRef.current = intro.blocked ? "blocked" : "on";
     setSound(intro.blocked ? "blocked" : "on");
 
     startedRef.current = performance.now();
     let frame = requestAnimationFrame(function tick(now) {
       const t = (now - startedRef.current) / 1000;
       const progress = clamp01(t / INTRO_DURATION);
+      const transitionProgress = clamp01((t - (INTRO_DURATION - TRANSITION_DURATION)) / TRANSITION_DURATION);
 
       // camera: settles on a musician, then swings to the next on the beat
       const u = Math.min(PANEL_COUNT - 1, t / SEGMENT);
@@ -118,6 +126,12 @@ export default function LoadingScreen({
       if (backRef.current) backRef.current.style.transform = `translate3d(${-position * 34}vw, 0, 0)`;
       if (frontRef.current) frontRef.current.style.transform = `translate3d(${-position * 138}vw, 0, 0)`;
       rootRef.current?.style.setProperty("--pulse", pulse.toFixed(3));
+      rootRef.current?.style.setProperty("--transition-progress", transitionProgress.toFixed(3));
+
+      if (transitionProgress > 0 && !endingRef.current) {
+        endingRef.current = true;
+        revealPage();
+      }
 
       if (meterRef.current) {
         const fills = meterRef.current.children;
@@ -134,6 +148,7 @@ export default function LoadingScreen({
     });
 
     const onKey = (event: KeyboardEvent) => {
+      if (sound === "blocked") enableSound();
       if (event.key === "Escape") dismiss();
     };
     window.addEventListener("keydown", onKey);
@@ -144,7 +159,7 @@ export default function LoadingScreen({
       intro.stop();
       document.body.style.overflow = "";
     };
-  }, [hidden, dismiss]);
+  }, [hidden, dismiss, enableSound]);
 
   if (hidden) return null;
 
@@ -160,10 +175,7 @@ export default function LoadingScreen({
       onPointerDown={(event) => {
         if (sound === "blocked") enableSound();
       }}
-      className={
-        "intro-stage fixed inset-0 z-[100] overflow-hidden bg-[#04080f] transition-[opacity,transform,filter] duration-[620ms] ease-[cubic-bezier(0.7,0,0.2,1)] " +
-        (leaving ? "pointer-events-none scale-[1.06] opacity-0 blur-[2px]" : "")
-      }
+      className={"intro-stage fixed inset-0 z-[100] overflow-hidden bg-[#04080f] transition-[opacity,transform,filter] duration-[620ms] ease-[cubic-bezier(0.7,0,0.2,1)] " + (leaving ? "is-leaving pointer-events-none scale-[1.06] opacity-0 blur-[2px]" : "")}
     >
       <style dangerouslySetInnerHTML={{ __html: STAGE_CSS }} />
       <StageDefs />
@@ -347,6 +359,7 @@ export default function LoadingScreen({
 
 const STAGE_CSS = `
 .intro-stage { --pulse: 0; }
+.intro-stage:not(.is-leaving)[style] { opacity: calc(1 - var(--transition-progress, 0) * 0.92); transform: scale(calc(1 + var(--transition-progress, 0) * 0.035)); }
 .intro-stage .beam {
   position: absolute; top: 0; width: 16vw; height: 78vh; filter: blur(28px);
   clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);

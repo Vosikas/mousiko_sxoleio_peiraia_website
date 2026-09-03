@@ -58,13 +58,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(!sessionStorage.getItem('intro_seen')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},6000)}}catch(e){}",
+              "try{if(!sessionStorage.getItem('intro_seen')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},12000)}}catch(e){}",
           }}
         />
         <LanguageProvider>
           <LoadingScreen
             schoolName="Μουσικό Σχολείο Πειραιά"
-            tagline="Εδώ αρχίζει η μπάντα σου"
+            tagline="Εδώ ξεκινάει το ταξίδι στη μουσική"
           />
           <SiteHeader />
           <main id="main">{children}</main>
