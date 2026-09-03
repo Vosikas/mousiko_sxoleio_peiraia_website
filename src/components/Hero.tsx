@@ -72,7 +72,7 @@ export default function Hero() {
           </p>
 
           <div className="relative mt-7">
-            <Logo className="pointer-events-none absolute -left-8 -top-20 z-0 h-[24rem] w-[20rem] opacity-[0.055] sm:-left-14 sm:-top-28 sm:h-[34rem] sm:w-[28rem]" />
+            <Logo className="pointer-events-none absolute -left-10 -top-24 z-0 h-[30rem] w-[25rem] opacity-[0.11] sm:-left-16 sm:-top-32 sm:h-[42rem] sm:w-[35rem]" />
             <h1
             className="relative z-10 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light leading-[0.94] tracking-[-0.02em]"
             style={{ animation: "rise 1.1s 0.25s both" }}
