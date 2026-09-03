@@ -190,6 +190,27 @@ export async function getRecentPosts(count = 4): Promise<Post[]> {
   return raw.map(normalize);
 }
 
+/** Όλες οι αναρτήσεις, σελίδα-σελίδα ώστε να μην περιορίζονται στις 100. */
+export async function getAllPosts(): Promise<Post[]> {
+  if (!WP_API_URL) return SAMPLE_POSTS;
+
+  const all: WPRawPost[] = [];
+  const perPage = 100;
+  let page = 1;
+
+  while (true) {
+    const raw = await wpFetch<WPRawPost[]>(
+      `/posts?per_page=${perPage}&page=${page}&_embed=wp:featuredmedia,wp:term,author&orderby=date&order=desc`,
+    );
+    if (!raw?.length) break;
+    all.push(...raw);
+    if (raw.length < perPage) break;
+    page += 1;
+  }
+
+  return all.length ? all.map(normalize) : SAMPLE_POSTS;
+}
+
 /** Ένα άρθρο με βάση το slug. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed`);
