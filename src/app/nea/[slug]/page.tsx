@@ -50,7 +50,7 @@ export default async function ArticlePage({ params }: Params) {
 
       {featuredImage && (
         <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-xl2 ring-1 ring-cream/10">
-          <Image src={featuredImage.src} alt={featuredImage.alt} fill sizes="800px" className="object-cover" />
+          <Image src={featuredImage.src} alt={featuredImage.alt} fill sizes="800px" unoptimized className="object-cover" />
         </div>
       )}
 

@@ -45,6 +45,7 @@ export default function PostCard({
             alt={post.image.alt}
             fill
             sizes={featured ? "(max-width: 640px) 100vw, 40vw" : "(max-width: 1024px) 100vw, 22vw"}
+            unoptimized
             className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
           />
         ) : (

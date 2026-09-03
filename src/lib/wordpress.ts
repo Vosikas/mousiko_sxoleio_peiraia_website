@@ -137,6 +137,10 @@ export function formatGreekDate(iso: string): string {
 
 function normalize(raw: WPRawPost): Post {
   const media = raw._embedded?.["wp:featuredmedia"]?.[0];
+  const imageSrc =
+    media?.source_url ??
+    media?.media_details?.sizes?.medium_large?.source_url ??
+    media?.media_details?.sizes?.large?.source_url;
   const terms = raw._embedded?.["wp:term"]?.flat() ?? [];
   const category = terms.find((t) => t?.taxonomy === "category" && t.slug !== "uncategorized");
   const plainExcerpt = stripHtml(raw.excerpt?.rendered ?? "");
@@ -151,12 +155,9 @@ function normalize(raw: WPRawPost): Post {
     href: `/nea/${raw.slug}`,
     category: category ? decodeHtml(category.name) : null,
     author: raw._embedded?.author?.[0]?.name ?? null,
-    image: media?.source_url
+    image: imageSrc
       ? {
-          src:
-            media.media_details?.sizes?.medium_large?.source_url ??
-            media.media_details?.sizes?.large?.source_url ??
-            media.source_url,
+          src: imageSrc,
           alt: decodeHtml(media.alt_text || stripHtml(raw.title?.rendered ?? "")),
         }
       : null,
