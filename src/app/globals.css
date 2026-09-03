@@ -2,28 +2,28 @@
 
 /* ------------------------------------------------------------------
    Μουσικό Σχολείο Πειραιά — Design tokens
-   Editorial conservatory palette: deep ink, brass, cream.
+  Bright conservatory palette: white, sea glass, coral accents.
 ------------------------------------------------------------------- */
 @theme {
-  --color-ink-950: #06070a;
-  --color-ink-900: #0a0c12;
-  --color-ink-850: #0f1118;
-  --color-ink-800: #14171f;
-  --color-ink-700: #1c2029;
-  --color-ink-600: #272c38;
+  --color-ink-950: #f7fbfb;
+  --color-ink-900: #ffffff;
+  --color-ink-850: #ffffff;
+  --color-ink-800: #eef6f5;
+  --color-ink-700: #dcebea;
+  --color-ink-600: #b7cecc;
 
-  --color-brass-100: #f6ecd6;
-  --color-brass-200: #ecd9ae;
-  --color-brass-300: #e0c286;
-  --color-brass-400: #d0a95f;
-  --color-brass-500: #c08e3c;
-  --color-brass-600: #9a6f2c;
+  --color-brass-100: #e8fbfa;
+  --color-brass-200: #c7f1ee;
+  --color-brass-300: #8edbd5;
+  --color-brass-400: #35b7ae;
+  --color-brass-500: #0e938c;
+  --color-brass-600: #08716d;
 
-  --color-cream: #f4f1ea;
-  --color-muted: #9aa2b4;
+  --color-cream: #14383b;
+  --color-muted: #5b7779;
 
-  --font-display: var(--font-garamond), "Georgia", serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --radius-xl2: 1.75rem;
 
@@ -110,7 +110,7 @@
 /* ------------------------------------------------------------------ */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html {
@@ -226,7 +226,7 @@ html[data-intro]::before {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: #06070a;
+  background: #f7fbfb;
 }
 html[data-intro] body {
   overflow: hidden;

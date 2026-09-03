@@ -20,8 +20,8 @@ export default function Hero() {
     <section className="relative flex min-h-[92svh] items-center overflow-hidden pt-28">
       {/* Φόντο */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-12%] h-[52rem] w-[52rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(208,169,95,0.15),transparent_60%)] blur-3xl" />
-        <div className="absolute bottom-[-20%] left-[-10%] h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(192,142,60,0.10),transparent_62%)] blur-3xl" />
+        <div className="absolute left-1/2 top-[-12%] h-[52rem] w-[52rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(53,183,174,0.14),transparent_60%)] blur-3xl" />
+        <div className="absolute bottom-[-20%] left-[-10%] h-[34rem] w-[34rem] -rotate-12 rounded-full bg-[radial-gradient(circle,rgba(239,132,110,0.10),transparent_62%)] blur-3xl" />
 
         {/* Πεντάγραμμο */}
         <svg

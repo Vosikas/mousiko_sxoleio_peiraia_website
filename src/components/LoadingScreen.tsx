@@ -152,7 +152,7 @@ export default function LoadingScreen() {
       }
     >
       {/* Λάμψη φόντου */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[46rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(208,169,95,0.16),transparent_62%)] blur-2xl" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[46rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(53,183,174,0.14),transparent_62%)] blur-2xl" />
 
       {/* Πεντάγραμμο που «γράφεται» */}
       <svg

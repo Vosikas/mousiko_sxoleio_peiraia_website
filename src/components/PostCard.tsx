@@ -37,7 +37,7 @@ export default function PostCard({
             className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(208,169,95,0.16),transparent_60%)]">
+          <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(53,183,174,0.14),transparent_60%)]">
             <span className="font-display text-6xl text-brass-400/30 transition-transform duration-700 group-hover:scale-110">
               {GLYPHS[index % GLYPHS.length]}
             </span>

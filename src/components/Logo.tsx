@@ -4,9 +4,9 @@ export default function Logo({ className = "h-11 w-11" }: { className?: string }
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">
       <defs>
         <linearGradient id="msp-brass" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#f6ecd6" />
-          <stop offset="45%" stopColor="#d0a95f" />
-          <stop offset="100%" stopColor="#9a6f2c" />
+          <stop offset="0%" stopColor="#e8fbfa" />
+          <stop offset="45%" stopColor="#35b7ae" />
+          <stop offset="100%" stopColor="#08716d" />
         </linearGradient>
       </defs>
       <circle cx="24" cy="24" r="22.2" fill="none" stroke="url(#msp-brass)" strokeWidth="1.3" />

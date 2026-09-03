@@ -48,13 +48,13 @@ export default function ClockWidget() {
         <svg viewBox="0 0 200 200" className="h-full w-full">
           <defs>
             <radialGradient id="face" cx="50%" cy="35%" r="75%">
-              <stop offset="0%" stopColor="#1c2029" />
-              <stop offset="100%" stopColor="#0a0c12" />
+              <stop offset="0%" stopColor="#eef6f5" />
+              <stop offset="100%" stopColor="#ffffff" />
             </radialGradient>
           </defs>
 
-          <circle cx="100" cy="100" r="94" fill="url(#face)" stroke="rgba(208,169,95,0.28)" strokeWidth="1" />
-          <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(244,241,234,0.06)" strokeWidth="1" />
+          <circle cx="100" cy="100" r="94" fill="url(#face)" stroke="rgba(14,147,140,0.28)" strokeWidth="1" />
+          <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(20,56,59,0.10)" strokeWidth="1" />
 
           {/* Δείκτες ωρών */}
           {Array.from({ length: 60 }, (_, i) => {
@@ -69,7 +69,7 @@ export default function ClockWidget() {
                 y1={100 - Math.cos(angle) * inner}
                 x2={100 + Math.sin(angle) * outer}
                 y2={100 - Math.cos(angle) * outer}
-                stroke={major ? "#d0a95f" : "rgba(244,241,234,0.22)"}
+                stroke={major ? "#0e938c" : "rgba(20,56,59,0.22)"}
                 strokeWidth={major ? 2 : 1}
                 strokeLinecap="round"
               />
@@ -81,7 +81,7 @@ export default function ClockWidget() {
             x="100"
             y="70"
             textAnchor="middle"
-            fill="rgba(208,169,95,0.55)"
+            fill="rgba(14,147,140,0.55)"
             fontSize="16"
             fontFamily="serif"
           >
@@ -90,10 +90,10 @@ export default function ClockWidget() {
 
           {/* Δείκτες */}
           <g style={{ transform: "rotate(" + hourAngle + "deg)", transformOrigin: "100px 100px" }}>
-            <line x1="100" y1="112" x2="100" y2="52" stroke="#f4f1ea" strokeWidth="5" strokeLinecap="round" />
+            <line x1="100" y1="112" x2="100" y2="52" stroke="#14383b" strokeWidth="5" strokeLinecap="round" />
           </g>
           <g style={{ transform: "rotate(" + minuteAngle + "deg)", transformOrigin: "100px 100px" }}>
-            <line x1="100" y1="116" x2="100" y2="34" stroke="#ecd9ae" strokeWidth="3" strokeLinecap="round" />
+            <line x1="100" y1="116" x2="100" y2="34" stroke="#8edbd5" strokeWidth="3" strokeLinecap="round" />
           </g>
           <g
             style={{
@@ -102,11 +102,11 @@ export default function ClockWidget() {
               transition: s === 0 ? "none" : "transform 0.15s cubic-bezier(0.4,2.2,0.5,1)",
             }}
           >
-            <line x1="100" y1="122" x2="100" y2="28" stroke="#c08e3c" strokeWidth="1.4" strokeLinecap="round" />
+            <line x1="100" y1="122" x2="100" y2="28" stroke="#08716d" strokeWidth="1.4" strokeLinecap="round" />
           </g>
 
-          <circle cx="100" cy="100" r="5" fill="#d0a95f" />
-          <circle cx="100" cy="100" r="2" fill="#0a0c12" />
+          <circle cx="100" cy="100" r="5" fill="#0e938c" />
+          <circle cx="100" cy="100" r="2" fill="#14383b" />
         </svg>
       </div>
 

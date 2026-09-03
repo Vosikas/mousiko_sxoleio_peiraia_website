@@ -136,7 +136,7 @@ export default function CalendarWidget() {
                 className={
                   "flex h-8 w-8 items-center justify-center rounded-full text-[0.78rem] tabular-nums transition " +
                   (isToday
-                    ? "bg-gradient-to-br from-brass-300 to-brass-500 font-semibold text-ink-950 shadow-[0_0_18px_rgba(208,169,95,0.45)]"
+                    ? "bg-gradient-to-br from-brass-300 to-brass-500 font-semibold text-ink-950 shadow-[0_0_18px_rgba(14,147,140,0.28)]"
                     : dayEvents
                       ? "cursor-default text-cream ring-1 ring-brass-400/35 hover:ring-brass-300"
                       : weekend

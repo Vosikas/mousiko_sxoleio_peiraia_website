@@ -119,7 +119,7 @@ export default function VideoFeature() {
 /** Διακοσμητικό «σκηνικό» όσο λείπει το βίντεο. */
 function PlaceholderStage() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_center,rgba(208,169,95,0.14),transparent_65%)]">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_center,rgba(53,183,174,0.12),transparent_65%)]">
       <div className="absolute inset-0 opacity-40">
         {[0, 1, 2, 3, 4].map((i) => (
           <span
