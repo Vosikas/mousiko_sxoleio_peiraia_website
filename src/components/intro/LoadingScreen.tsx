@@ -158,7 +158,7 @@ export default function LoadingScreen({
       aria-live="polite"
       aria-label="Εισαγωγή: μια μπάντα στη σκηνή"
       onPointerDown={(event) => {
-        if (sound === "blocked" && !(event.target as HTMLElement).closest("button")) enableSound();
+        if (sound === "blocked") enableSound();
       }}
       className={
         "intro-stage fixed inset-0 z-[100] overflow-hidden bg-[#04080f] transition-[opacity,transform,filter] duration-[620ms] ease-[cubic-bezier(0.7,0,0.2,1)] " +

@@ -12,7 +12,7 @@ const BPM = 128;
 export const BEAT = 60 / BPM; //  0.46875s
 export const PANEL_BEATS = 2; //  each musician gets two beats
 export const PANEL_COUNT = 6; //  5 musicians + the wide shot
-export const INTRO_DURATION = BEAT * PANEL_BEATS * PANEL_COUNT; // 5.625s
+export const INTRO_DURATION = BEAT * PANEL_BEATS * PANEL_COUNT + 2; // 7.625s
 
 const SEMITONES: Record<string, number> = {
   C: 0, "C#": 1, D: 2, "D#": 3, E: 4, F: 5, "F#": 6, G: 7, "G#": 8, A: 9, "A#": 10, B: 11,
