@@ -11,9 +11,9 @@ import { useLanguage } from "@/hooks/useLanguage";
  * δείχνει καλαίσθητο placeholder με οδηγίες — το layout δεν «σπάει» ποτέ.
  */
 export default function VideoFeature() {
-  const [playing, setPlaying] = useState(false);
-  const { t } = useLanguage();
   const { youtubeId, mp4, title, subtitle } = site.video;
+  const [playing, setPlaying] = useState(Boolean(youtubeId || mp4));
+  const { t } = useLanguage();
   const poster = process.env.NEXT_PUBLIC_SCHOOL_VIDEO_POSTER ?? "";
 
   const thumb =
@@ -44,14 +44,22 @@ export default function VideoFeature() {
               src={
                 "https://www.youtube-nocookie.com/embed/" +
                 youtubeId +
-                "?autoplay=1&rel=0&modestbranding=1&hl=el"
+                "?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1&hl=el"
               }
               title={title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           ) : playing && mp4 ? (
-            <video className="absolute inset-0 h-full w-full object-cover" src={mp4} controls autoPlay playsInline />
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={mp4}
+              controls
+              autoPlay
+              muted
+              playsInline
+              loop
+            />
           ) : (
             <>
               {thumb ? (
