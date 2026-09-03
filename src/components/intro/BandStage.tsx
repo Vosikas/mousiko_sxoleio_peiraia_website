@@ -87,7 +87,7 @@ export function Drums() {
 export function Bass() {
   return (
     <svg {...svgProps}>
-      <g transform="translate(228 206) rotate(-18)">
+      <g transform="translate(238 214) rotate(-10) scale(1.1 1.08)">
         <g fill="url(#bodyShade)">
           <ellipse cx="40" cy="20" rx="66" ry="58" />
           <ellipse cx="-40" cy="-10" rx="50" ry="46" />
@@ -96,22 +96,22 @@ export function Bass() {
         </g>
         <path d="M-126 -40 L-56 -50 A50 46 0 0 1 -2 -54" fill="none" stroke="url(#rimAmber)" strokeWidth="4" strokeLinecap="round" />
         <path d="M102 42 A66 58 0 0 1 16 76" fill="none" stroke="url(#rimAmber)" strokeWidth="5.5" strokeLinecap="round" />
-        <path d="M-112 -30 L-236 -42 L-236 -28 L-112 -16 Z" fill="#12283f" />
-        <path d="M-112 -30 L-236 -42" stroke="url(#rimTeal)" strokeWidth="2.2" fill="none" />
-        <path d="M-236 -48 L-286 -54 Q-298 -56 -298 -44 L-298 -30 Q-298 -19 -286 -21 L-236 -24 Z" fill="#0c1a2b" stroke="#22415f" strokeWidth="1.6" />
+        <path d="M-112 -30 L-278 -42 L-278 -28 L-112 -16 Z" fill="#12283f" />
+        <path d="M-112 -30 L-278 -42" stroke="url(#rimTeal)" strokeWidth="2.2" fill="none" />
+        <path d="M-278 -48 L-326 -54 Q-338 -56 -338 -44 L-338 -30 Q-338 -19 -326 -21 L-278 -24 Z" fill="#0c1a2b" stroke="#22415f" strokeWidth="1.6" />
         <g fill="#ffd98a" opacity="0.9">
-          <circle cx="-252" cy="-62" r="4.4" />
-          <circle cx="-276" cy="-66" r="4.4" />
-          <circle cx="-252" cy="-12" r="4.4" />
-          <circle cx="-276" cy="-8" r="4.4" />
+          <circle cx="-294" cy="-62" r="4.4" />
+          <circle cx="-318" cy="-66" r="4.4" />
+          <circle cx="-294" cy="-12" r="4.4" />
+          <circle cx="-318" cy="-8" r="4.4" />
         </g>
         <rect x="0" y="-10" width="16" height="54" rx="4" fill="#081422" stroke="#2b5273" strokeWidth="1.4" transform="rotate(6 8 17)" />
         <rect x="60" y="6" width="19" height="46" rx="3" fill="#0a1726" stroke="#3d6d8f" strokeWidth="1.4" transform="rotate(6 70 29)" />
         <g className="strings" stroke="#ffe6ac" strokeWidth="2.1" opacity="0.78">
-          <line x1="66" y1="12" x2="-282" y2="-56" />
-          <line x1="69" y1="25" x2="-282" y2="-46" />
-          <line x1="72" y1="38" x2="-282" y2="-36" />
-          <line x1="75" y1="48" x2="-282" y2="-26" />
+          <line x1="66" y1="12" x2="-322" y2="-56" />
+          <line x1="69" y1="25" x2="-322" y2="-46" />
+          <line x1="72" y1="38" x2="-322" y2="-36" />
+          <line x1="75" y1="48" x2="-322" y2="-26" />
         </g>
       </g>
     </svg>
@@ -121,7 +121,7 @@ export function Bass() {
 export function Guitar() {
   return (
     <svg {...svgProps}>
-      <g transform="translate(216 204) rotate(-20)">
+      <g transform="translate(216 204) rotate(-24) scale(0.86 0.92)">
         <g fill="url(#bodyShade)">
           <ellipse cx="46" cy="18" rx="72" ry="64" />
           <ellipse cx="-38" cy="-10" rx="56" ry="50" />
@@ -131,6 +131,8 @@ export function Guitar() {
         <path d="M-118 -46 L-52 -58 A56 50 0 0 1 6 -58" fill="none" stroke="url(#rimTeal)" strokeWidth="4" strokeLinecap="round" />
         <path d="M112 42 A72 64 0 0 1 22 80" fill="none" stroke="url(#rimTeal)" strokeWidth="5" strokeLinecap="round" />
         <path d="M14 -60 A72 64 0 0 1 116 12" fill="none" stroke="#8ce8df" strokeWidth="2.2" opacity="0.5" strokeLinecap="round" />
+        <circle cx="42" cy="18" r="24" fill="#050c16" stroke="url(#rimAmber)" strokeWidth="2.2" />
+        <ellipse cx="18" cy="42" rx="28" ry="11" fill="#173350" opacity="0.9" transform="rotate(-18 18 42)" />
         <path d="M-104 -34 L-198 -44 L-198 -30 L-104 -20 Z" fill="#12283f" />
         <path d="M-104 -34 L-198 -44" stroke="url(#rimAmber)" strokeWidth="2.2" fill="none" />
         <g stroke="#20405f" strokeWidth="1.2" opacity="0.8">
