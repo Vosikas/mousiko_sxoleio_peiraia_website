@@ -70,12 +70,18 @@ export default function Hero() {
             Γυμνάσιο &amp; Λύκειο · Δημόσια μουσική εκπαίδευση
           </p>
 
+          {/* 🎨 ΧΡΩΜΑΤΑ ΤΙΤΛΟΥ: μην τα αλλάζετε εδώ.
+              Κάθε γραμμή παίρνει το χρώμα της από μία μεταβλητή στο
+              src/app/globals.css → ενότητα «ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ»:
+              --hero-line-1 (ΜΟΥΣΙΚΟ) · --hero-line-2 (ΣΧΟΛΕΙΟ) · --hero-line-3 (ΠΕΙΡΑΙΑ) */}
           <h1
-            className="mt-7 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light leading-[0.94] tracking-[-0.02em]"
+            aria-label={site.name}
+            className="hero-title mt-7 font-display font-light"
             style={{ animation: "rise 1.1s 0.25s both" }}
           >
-            <span className="block text-cream">Μουσικό Σχολείο</span>
-            <span className="block text-gradient-brass italic">Πειραιά</span>
+            <TitleLine text="ΜΟΥΣΙΚΟ" line={1} />
+            <TitleLine text="ΣΧΟΛΕΙΟ" line={2} />
+            <TitleLine text="ΠΕΙΡΑΙΑ" line={3} />
           </h1>
 
           <p
@@ -136,5 +142,25 @@ export default function Hero() {
         <span className="h-12 w-px bg-gradient-to-b from-brass-400/70 to-transparent" />
       </div>
     </section>
+  );
+}
+
+/**
+ * Μία γραμμή του τίτλου.
+ *
+ * Τα γράμματα μπαίνουν σε flex με `space-between`: έτσι κάθε λέξη «απλώνει»
+ * όσο χρειάζεται ώστε και οι τρεις γραμμές να έχουν ακριβώς το ίδιο πλάτος
+ * και να ευθυγραμμίζονται αριστερά και δεξιά — το κενό ανάμεσα στα γράμματα
+ * υπολογίζεται μόνο του, δεν χρειάζεται χειροκίνητο padding.
+ *
+ * Το χρώμα ορίζεται στο globals.css (--hero-line-1/2/3), όχι εδώ.
+ */
+function TitleLine({ text, line }: { text: string; line: 1 | 2 | 3 }) {
+  return (
+    <span aria-hidden className={"hero-title__line hero-title__line--" + line}>
+      {Array.from(text).map((letter, i) => (
+        <span key={i}>{letter}</span>
+      ))}
+    </span>
   );
 }

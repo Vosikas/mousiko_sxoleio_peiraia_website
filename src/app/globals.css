@@ -1,9 +1,24 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------
-   Μουσικό Σχολείο Πειραιά — Design tokens
-   Editorial conservatory palette: deep ink, brass, cream.
-------------------------------------------------------------------- */
+/* ==================================================================
+   🎨  ΚΕΝΤΡΟ ΧΡΩΜΑΤΩΝ — ΟΛΟ ΤΟ SITE ΒΑΦΕΤΑΙ ΑΠΟ ΕΔΩ
+   ------------------------------------------------------------------
+   ΔΥΟ ΕΠΙΠΕΔΑ, ΜΕ ΤΗ ΣΕΙΡΑ:
+
+   1) @theme  → οι ΑΠΟΧΡΩΣΕΙΣ (η παλέτα).
+      Κάθε --color-XXX φτιάχνει αυτόματα utilities του Tailwind:
+      --color-forest-400  ⇒  text-forest-400 / bg-forest-400 / border-forest-400
+      Αλλάζεις μία τιμή εδώ και αλλάζει ΠΑΝΤΟΥ στο project.
+
+   2) :root   → τα ΣΗΜΑΣΙΟΛΟΓΙΚΑ χρώματα («ποιο χρώμα βάφει τι»).
+      Π.χ. --hero-line-3 = το χρώμα της λέξης ΠΕΙΡΑΙΑ στην αρχική.
+      Εδώ αλλάζεις ΤΙ βάφεται, χωρίς να αγγίξεις καθόλου το JSX.
+
+   ΠΑΡΑΔΕΙΓΜΑ — θέλω το ΠΕΙΡΑΙΑ πιο σκούρο πράσινο:
+      --hero-line-3: var(--color-forest-600);
+   ΠΑΡΑΔΕΙΓΜΑ — θέλω άλλο πράσινο συνολικά:
+      άλλαξε τα --color-forest-* πιο κάτω.
+   ================================================================== */
 @theme {
   --color-ink-950: #06070a;
   --color-ink-900: #0a0c12;
@@ -18,6 +33,13 @@
   --color-brass-400: #d0a95f;
   --color-brass-500: #c08e3c;
   --color-brass-600: #9a6f2c;
+
+  /* Πράσινο (ΠΕΙΡΑΙΑ / τονισμοί) */
+  --color-forest-200: #a8dcbe;
+  --color-forest-300: #6fbf8e;
+  --color-forest-400: #3f9d68;
+  --color-forest-500: #2f7d52;
+  --color-forest-600: #1f5c3b;
 
   --color-cream: #f4f1ea;
   --color-muted: #9aa2b4;
@@ -109,8 +131,25 @@
 
 /* ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------
+   ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ — «ποιο χρώμα βάφει τι»
+   Άλλαξε ΜΟΝΟ τις τιμές δεξιά από την άνω-κάτω τελεία.
+------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
+
+  /* Βάση σελίδας */
+  --page-bg: var(--color-ink-950);
+  --page-text: var(--color-cream);
+  --page-accent: var(--color-brass-400);
+
+  /* Τίτλος αρχικής — μία μεταβλητή ανά γραμμή (βλ. Hero.tsx) */
+  --hero-line-1: rgb(0 0 0 / 0.5); /* ΜΟΥΣΙΚΟ — μαύρο 50% */
+  --hero-line-2: rgb(0 0 0 / 0.5); /* ΣΧΟΛΕΙΟ — μαύρο 50% */
+  --hero-line-3: var(--color-forest-400); /* ΠΕΙΡΑΙΑ — πράσινο */
+
+  /* Πλάτος του τίτλου: ορίζει πόσο «ανοίγουν» τα γράμματα. */
+  --hero-title-width: min(88vw, 44rem);
 }
 
 html {
@@ -118,15 +157,15 @@ html {
 }
 
 body {
-  background-color: var(--color-ink-950);
-  color: var(--color-cream);
+  background-color: var(--page-bg);
+  color: var(--page-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-brass-400);
+  background: var(--page-accent);
   color: var(--color-ink-950);
 }
 
@@ -230,4 +269,33 @@ html[data-intro]::before {
 }
 html[data-intro] body {
   overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Τίτλος αρχικής: τρεις λέξεις, ίδιο πλάτος, στοιχισμένες αριστερά
+   και δεξιά. Τα γράμματα απλώνονται μόνα τους (flex space-between),
+   γι' αυτό δεν χρειάζεται χειροκίνητο padding σε καμία γραμμή.
+   Χρώματα: --hero-line-1/2/3 στην ενότητα ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ.
+------------------------------------------------------------------- */
+.hero-title {
+  width: var(--hero-title-width);
+  max-width: 100%;
+  font-size: clamp(2.6rem, 11vw, 7.5rem);
+  line-height: 0.95;
+}
+
+.hero-title__line {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.hero-title__line--1 {
+  color: var(--hero-line-1);
+}
+.hero-title__line--2 {
+  color: var(--hero-line-2);
+}
+.hero-title__line--3 {
+  color: var(--hero-line-3);
 }
