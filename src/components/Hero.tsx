@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { site } from "@/lib/site";
+import Logo from "@/components/Logo";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const STATS = [
   { value: "420", label: "μαθητές & μαθήτριες" },
@@ -16,12 +20,14 @@ const FLOATING = [
 ];
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section className="relative flex min-h-[92svh] items-center overflow-hidden pt-28">
       {/* Φόντο */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-12%] h-[52rem] w-[52rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(208,169,95,0.15),transparent_60%)] blur-3xl" />
-        <div className="absolute bottom-[-20%] left-[-10%] h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(192,142,60,0.10),transparent_62%)] blur-3xl" />
+        <div className="absolute left-1/2 top-[-12%] h-[52rem] w-[52rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(53,183,174,0.14),transparent_60%)] blur-3xl" />
+        <div className="absolute bottom-[-20%] left-[-10%] h-[34rem] w-[34rem] -rotate-12 rounded-full bg-[radial-gradient(circle,rgba(244,185,66,0.12),transparent_62%)] blur-3xl" />
 
         {/* Πεντάγραμμο */}
         <svg
@@ -67,9 +73,10 @@ export default function Hero() {
             style={{ animation: "rise 0.9s 0.1s both" }}
           >
             <span className="h-px w-10 bg-brass-400/60" />
-            Γυμνάσιο &amp; Λύκειο · Δημόσια μουσική εκπαίδευση
+            {t("Γυμνάσιο & Λύκειο · Δημόσια μουσική εκπαίδευση")}
           </p>
 
+<<<<<<< HEAD
           {/* 🎨 ΧΡΩΜΑΤΑ ΤΙΤΛΟΥ: μην τα αλλάζετε εδώ.
               Κάθε γραμμή παίρνει το χρώμα της από μία μεταβλητή στο
               src/app/globals.css → ενότητα «ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ»:
@@ -83,12 +90,24 @@ export default function Hero() {
             <TitleLine text="ΣΧΟΛΕΙΟ" line={2} />
             <TitleLine text="ΠΕΙΡΑΙΑ" line={3} />
           </h1>
+=======
+          <div className="relative mt-7">
+            <Logo className="pointer-events-none absolute -left-10 -top-24 z-0 h-[30rem] w-[25rem] opacity-[0.11] sm:-left-16 sm:-top-32 sm:h-[42rem] sm:w-[35rem]" />
+            <h1
+            className="relative z-10 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light uppercase leading-[0.94] tracking-[-0.02em]"
+            style={{ animation: "rise 1.1s 0.25s both" }}
+            >
+              <span className="block text-cream">{t("Μουσικό Σχολείο")}</span>
+              <span className="block text-gradient-brass italic">{t("Πειραιά")}</span>
+            </h1>
+          </div>
+>>>>>>> 9f0aed2c21e3b3c62a292bb075c9c93648f965c6
 
           <p
             className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
             style={{ animation: "rise 1.1s 0.45s both" }}
           >
-            {site.description}
+            {t(site.description)}
           </p>
 
           <div
@@ -99,20 +118,20 @@ export default function Hero() {
               href="/to-scholeio"
               className="group relative overflow-hidden rounded-full bg-gradient-to-r from-brass-300 to-brass-500 px-8 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink-950 transition-transform duration-300 hover:scale-[1.03]"
             >
-              <span className="relative z-10">Γνωρίστε το σχολείο</span>
+              <span className="relative z-10">{t("Γνωρίστε το σχολείο")}</span>
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
             </Link>
 
             <a
               href="#video"
-              className="group flex items-center gap-3 rounded-full border border-cream/15 px-7 py-4 text-[0.7rem] uppercase tracking-[0.2em] text-cream/85 transition-all duration-300 hover:border-brass-400/60 hover:text-brass-100"
+              className="group flex items-center gap-3 rounded-full border border-cream/15 px-7 py-4 text-[0.7rem] uppercase tracking-[0.2em] text-cream/85 transition-all duration-300 hover:border-brass-400/60 hover:text-brass-600"
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full border border-brass-300/60">
                 <svg viewBox="0 0 24 24" className="ml-px h-2.5 w-2.5 fill-brass-200">
                   <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.29-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
                 </svg>
               </span>
-              Δείτε το βίντεο
+              {t("Δείτε το βίντεο")}
             </a>
           </div>
 
@@ -125,9 +144,9 @@ export default function Hero() {
               <div key={s.label}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd>
-                  <span className="block font-display text-4xl text-brass-200">{s.value}</span>
+                  <span className="block font-display text-4xl text-brass-600">{s.value}</span>
                   <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.22em] text-muted">
-                    {s.label}
+                    {t(s.label)}
                   </span>
                 </dd>
               </div>

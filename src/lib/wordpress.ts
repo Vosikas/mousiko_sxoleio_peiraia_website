@@ -27,7 +27,7 @@ export interface WPRendered {
 export interface WPMedia {
   id: number;
   source_url: string;
-  alt_text: string;
+  alt_text?: string;
   media_details?: {
     width: number;
     height: number;
@@ -42,7 +42,26 @@ export interface WPTerm {
   taxonomy: string;
 }
 
-export interface WPRawPost {
+/** Custom fields exposed by WordPress, ACF, or another REST-enabled plugin. */
+export type WPCustomFields = Record<string, unknown>;
+
+export interface WPEmbedded {
+  "wp:featuredmedia"?: WPMedia[];
+  "wp:term"?: WPTerm[][];
+  author?: { id: number; name: string; avatar_urls?: Record<string, string> }[];
+}
+
+/** Minimum shape required to render a WordPress post in the article view. */
+export interface WPData {
+  id: number;
+  title: { rendered: string };
+  content: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text?: string }>;
+  };
+}
+
+export interface WPRawPost extends WPData {
   id: number;
   date: string;
   date_gmt: string;
@@ -53,11 +72,10 @@ export interface WPRawPost {
   excerpt: WPRendered;
   content: WPRendered;
   sticky?: boolean;
-  _embedded?: {
-    "wp:featuredmedia"?: WPMedia[];
-    "wp:term"?: WPTerm[][];
-    author?: { id: number; name: string; avatar_urls?: Record<string, string> }[];
-  };
+  /** Present when the post type or plugin exposes custom fields in REST. */
+  meta?: WPCustomFields;
+  acf?: WPCustomFields;
+  _embedded?: WPEmbedded;
 }
 
 /** Κανονικοποιημένη ανάρτηση, έτοιμη για τα components. */
@@ -129,6 +147,14 @@ export function formatGreekDate(iso: string): string {
 
 function normalize(raw: WPRawPost): Post {
   const media = raw._embedded?.["wp:featuredmedia"]?.[0];
+  const inlineImageSrc = !media
+    ? raw.content?.rendered?.match(/<img\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/i)?.[1]
+    : undefined;
+  const imageSrc =
+    media?.source_url ??
+    media?.media_details?.sizes?.medium_large?.source_url ??
+    media?.media_details?.sizes?.large?.source_url ??
+    inlineImageSrc;
   const terms = raw._embedded?.["wp:term"]?.flat() ?? [];
   const category = terms.find((t) => t?.taxonomy === "category" && t.slug !== "uncategorized");
   const plainExcerpt = stripHtml(raw.excerpt?.rendered ?? "");
@@ -143,13 +169,10 @@ function normalize(raw: WPRawPost): Post {
     href: `/nea/${raw.slug}`,
     category: category ? decodeHtml(category.name) : null,
     author: raw._embedded?.author?.[0]?.name ?? null,
-    image: media?.source_url
+    image: imageSrc
       ? {
-          src:
-            media.media_details?.sizes?.medium_large?.source_url ??
-            media.media_details?.sizes?.large?.source_url ??
-            media.source_url,
-          alt: decodeHtml(media.alt_text || stripHtml(raw.title?.rendered ?? "")),
+          src: imageSrc,
+          alt: decodeHtml(media?.alt_text || stripHtml(raw.title?.rendered ?? "")),
         }
       : null,
     readingMinutes: Math.max(1, Math.round(words / 200)),
@@ -184,22 +207,43 @@ async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | nu
 /** Τα N πιο πρόσφατα άρθρα. Πέφτει σε δείγμα αν λείπει το WordPress. */
 export async function getRecentPosts(count = 4): Promise<Post[]> {
   const raw = await wpFetch<WPRawPost[]>(
-    `/posts?per_page=${count}&_embed=wp:featuredmedia,wp:term,author&orderby=date&order=desc`,
+    `/posts?per_page=${count}&_embed=true&orderby=date&order=desc`,
   );
   if (!raw?.length) return SAMPLE_POSTS.slice(0, count);
   return raw.map(normalize);
 }
 
+/** Όλες οι αναρτήσεις, σελίδα-σελίδα ώστε να μην περιορίζονται στις 100. */
+export async function getAllPosts(): Promise<Post[]> {
+  if (!WP_API_URL) return SAMPLE_POSTS;
+
+  const all: WPRawPost[] = [];
+  const perPage = 100;
+  let page = 1;
+
+  while (true) {
+    const raw = await wpFetch<WPRawPost[]>(
+      `/posts?per_page=${perPage}&page=${page}&_embed=true&orderby=date&order=desc`,
+    );
+    if (!raw?.length) break;
+    all.push(...raw);
+    if (raw.length < perPage) break;
+    page += 1;
+  }
+
+  return all.length ? all.map(normalize) : SAMPLE_POSTS;
+}
+
 /** Ένα άρθρο με βάση το slug. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed`);
+  const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed=true`);
   if (!raw?.length) return SAMPLE_POSTS.find((p) => p.slug === slug) ?? null;
   return normalize(raw[0]);
 }
 
 /** Σελίδα (WordPress page) με βάση το slug — για ΤΟ ΣΧΟΛΕΙΟ, ΕΠΙΚΟΙΝΩΝΙΑ κ.λπ. */
 export async function getPageBySlug(slug: string): Promise<{ title: string; html: string } | null> {
-  const raw = await wpFetch<WPRawPost[]>(`/pages?slug=${encodeURIComponent(slug)}&_embed`);
+  const raw = await wpFetch<WPRawPost[]>(`/pages?slug=${encodeURIComponent(slug)}&_embed=true`);
   if (!raw?.length) return null;
   return { title: decodeHtml(stripHtml(raw[0].title.rendered)), html: raw[0].content.rendered };
 }

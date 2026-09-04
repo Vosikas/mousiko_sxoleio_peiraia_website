@@ -1,5 +1,5 @@
-import Link from "next/link";
 import PostCard from "./PostCard";
+import PostsHeading from "./PostsHeading";
 import Reveal from "./Reveal";
 import { getRecentPosts, isWordPressConfigured } from "@/lib/wordpress";
 
@@ -13,34 +13,9 @@ export default async function PostsPool() {
 
   return (
     <section aria-labelledby="posts-title">
-      <Reveal className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[0.62rem] uppercase tracking-[0.34em] text-brass-400">
-            Νέα &amp; ανακοινώσεις
-          </p>
-          <h2 id="posts-title" className="mt-3 font-display text-3xl text-cream sm:text-4xl">
-            Τελευταία από το σχολείο
-          </h2>
-        </div>
-
-        <Link
-          href="/nea"
-          className="group inline-flex items-center gap-2 self-start text-[0.68rem] uppercase tracking-[0.22em] text-cream/70 transition hover:text-brass-200 sm:self-auto"
-        >
-          Όλα τα νέα
-          <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-        </Link>
+      <Reveal>
+        <PostsHeading wordpressConfigured={isWordPressConfigured()} />
       </Reveal>
-
-      {!isWordPressConfigured() && (
-        <Reveal className="mt-6" delay={60}>
-          <p className="rounded-xl border border-brass-400/25 bg-brass-400/[0.06] px-4 py-3 text-[0.72rem] leading-relaxed text-brass-200/90">
-            Προβάλλεται δείγμα περιεχομένου. Συνδέστε το WordPress ορίζοντας{" "}
-            <code className="text-brass-100">WORDPRESS_API_URL</code> στο{" "}
-            <code className="text-brass-100">.env.local</code> — τα άρθρα θα έρθουν αυτόματα.
-          </p>
-        </Reveal>
-      )}
 
       <div className="mt-9 space-y-6">
         {featured && (

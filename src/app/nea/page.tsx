@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import PostCard from "@/components/PostCard";
 import Reveal from "@/components/Reveal";
-import { getRecentPosts } from "@/lib/wordpress";
+import NewsBrowser from "@/components/NewsBrowser";
+import { getAllPosts } from "@/lib/wordpress";
 
 export const revalidate = 300;
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function NewsPage() {
-  const posts = await getRecentPosts(12);
+  const posts = await getAllPosts();
 
   return (
     <div className="mx-auto max-w-[1200px] px-5 pb-24 pt-40 lg:px-10">
@@ -24,13 +24,7 @@ export default async function NewsPage() {
         </p>
       </Reveal>
 
-      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post, i) => (
-          <Reveal key={post.id} delay={i * 70} className="h-full">
-            <PostCard post={post} index={i} />
-          </Reveal>
-        ))}
-      </div>
+      <NewsBrowser posts={posts} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useNow } from "@/hooks/useNow";
+import { useLanguage } from "@/hooks/useLanguage";
 import { WidgetLabel } from "./ClockWidget";
 
 const MONTHS = [
@@ -34,7 +35,7 @@ const EVENTS: SchoolEvent[] = [
 
 const KIND_COLOR: Record<string, string> = {
   concert: "bg-brass-300",
-  exam: "bg-rose-400",
+  exam: "bg-sun-500",
   trip: "bg-emerald-400",
 };
 
@@ -42,6 +43,7 @@ const iso = (y: number, m: number, d: number) =>
   y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
 
 export default function CalendarWidget() {
+  const { language, t } = useLanguage();
   // Ανανέωση ανά λεπτό: αρκεί για να «γυρίσει» το σημερινό κελί τα μεσάνυχτα.
   const today = useNow(60_000);
 
@@ -98,18 +100,20 @@ export default function CalendarWidget() {
           type="button"
           aria-label="Προηγούμενος μήνας"
           onClick={() => shift(-1)}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-200"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-600"
         >
           ‹
         </button>
         <p className="font-display text-lg tracking-wide text-cream">
-          {MONTHS[view.month]} <span className="text-brass-400">{view.year}</span>
+          {new Intl.DateTimeFormat(language === "EN" ? "en-US" : "el-GR", { month: "long" }).format(
+            new Date(view.year, view.month, 1),
+          )} <span className="text-brass-400">{view.year}</span>
         </p>
         <button
           type="button"
           aria-label="Επόμενος μήνας"
           onClick={() => shift(1)}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-200"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-600"
         >
           ›
         </button>
@@ -136,7 +140,7 @@ export default function CalendarWidget() {
                 className={
                   "flex h-8 w-8 items-center justify-center rounded-full text-[0.78rem] tabular-nums transition " +
                   (isToday
-                    ? "bg-gradient-to-br from-brass-300 to-brass-500 font-semibold text-ink-950 shadow-[0_0_18px_rgba(208,169,95,0.45)]"
+                    ? "bg-gradient-to-br from-brass-300 to-brass-500 font-semibold text-ink-950 shadow-[0_0_18px_rgba(14,147,140,0.28)]"
                     : dayEvents
                       ? "cursor-default text-cream ring-1 ring-brass-400/35 hover:ring-brass-300"
                       : weekend
@@ -160,21 +164,23 @@ export default function CalendarWidget() {
       </div>
 
       <div className="mt-6 border-t border-cream/8 pt-5">
-        <h3 className="text-[0.6rem] uppercase tracking-[0.28em] text-brass-300">Προσεχώς</h3>
+        <h3 className="text-[0.6rem] uppercase tracking-[0.28em] text-brass-300">{t("Προσεχώς")}</h3>
         <ul className="mt-4 space-y-3.5">
           {upcoming.length === 0 && (
-            <li className="text-xs text-muted">Δεν υπάρχουν προγραμματισμένες εκδηλώσεις.</li>
+            <li className="text-xs text-muted">{t("Δεν υπάρχουν προγραμματισμένες εκδηλώσεις.")}</li>
           )}
           {upcoming.map((e) => {
             const d = new Date(e.date);
             return (
               <li key={e.date + e.title} className="flex gap-3">
                 <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-brass-400/25 bg-ink-900/70">
-                  <span className="text-[0.8rem] font-semibold leading-none text-brass-200">
+                  <span className="text-[0.8rem] font-semibold leading-none text-brass-600">
                     {d.getDate()}
                   </span>
                   <span className="mt-0.5 text-[0.5rem] uppercase tracking-wider text-muted">
-                    {MONTHS[d.getMonth()].slice(0, 3)}
+                    {new Intl.DateTimeFormat(language === "EN" ? "en-US" : "el-GR", { month: "short" }).format(
+                      d,
+                    )}
                   </span>
                 </span>
                 <span className="text-[0.78rem] leading-snug text-cream/80">{e.title}</span>

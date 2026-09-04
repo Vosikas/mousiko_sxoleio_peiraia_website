@@ -1,23 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { EB_Garamond, Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-import LoadingScreen from "@/components/LoadingScreen";
+import LoadingScreen from "@/components/intro/LoadingScreen";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { site } from "@/lib/site";
+import { LanguageProvider } from "@/hooks/useLanguage";
 
-const garamond = EB_Garamond({
+const manrope = Manrope({
   subsets: ["greek", "latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-garamond",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["greek", "latin"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -43,29 +37,39 @@ export const metadata: Metadata = {
     description: site.description,
   },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
+  icons: {
+    icon: "/logomousiko.png",
+    shortcut: "/logomousiko.png",
+    apple: "/logomousiko.png",
+  },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#06070a",
-  colorScheme: "dark",
+  themeColor: "#f7fbfb",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="el" className={garamond.variable + " " + inter.variable}>
+    <html lang="el" className={manrope.variable}>
       <body className="grain min-h-screen antialiased">
         {/* Τρέχει πριν την πρώτη ζωγραφιά: αποφασίζει αν θα παίξει η intro. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(!sessionStorage.getItem('msp:intro')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},6000)}}catch(e){}",
+              "try{if(!sessionStorage.getItem('intro_seen')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},12000)}}catch(e){}",
           }}
         />
-        <LoadingScreen />
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        <LanguageProvider>
+          <LoadingScreen
+            schoolName="Μουσικό Σχολείο Πειραιά"
+            tagline="Εδώ ξεκινάει το ταξίδι στη μουσική"
+          />
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatGreekDate, type Post } from "@/lib/wordpress";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const GLYPHS = ["♪", "♫", "♩", "♬"];
 
@@ -13,6 +16,14 @@ export default function PostCard({
   featured?: boolean;
   index?: number;
 }) {
+  const { language, t } = useLanguage();
+  const formattedDate =
+    language === "EN"
+      ? new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long", year: "numeric" }).format(
+          new Date(post.date),
+        )
+      : formatGreekDate(post.date);
+
   return (
     <article
       className={
@@ -34,10 +45,11 @@ export default function PostCard({
             alt={post.image.alt}
             fill
             sizes={featured ? "(max-width: 640px) 100vw, 40vw" : "(max-width: 1024px) 100vw, 22vw"}
+            unoptimized
             className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(208,169,95,0.16),transparent_60%)]">
+          <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(53,183,174,0.14),transparent_60%)]">
             <span className="font-display text-6xl text-brass-400/30 transition-transform duration-700 group-hover:scale-110">
               {GLYPHS[index % GLYPHS.length]}
             </span>
@@ -48,24 +60,24 @@ export default function PostCard({
         <div className="absolute inset-0 bg-gradient-to-t from-ink-950/70 to-transparent opacity-70" />
 
         {post.category && (
-          <span className="absolute left-4 top-4 rounded-full border border-brass-300/40 bg-ink-950/70 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-brass-200 backdrop-blur-sm">
+          <span className="absolute left-4 top-4 rounded-full border border-brass-300/40 bg-ink-950/70 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-brass-600 backdrop-blur-sm">
             {post.category}
           </span>
         )}
       </div>
 
       {/* Κείμενο */}
-      <div className={"flex flex-1 flex-col p-6 " + (featured ? "sm:p-8" : "")}>
+      <div className={"min-w-0 flex flex-1 flex-col p-6 " + (featured ? "sm:p-8" : "")}>
         <div className="flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.2em] text-muted">
-          <time dateTime={post.date}>{formatGreekDate(post.date)}</time>
+          <time dateTime={post.date}>{formattedDate}</time>
           <span className="h-1 w-1 rounded-full bg-brass-400/60" />
-          <span>{post.readingMinutes}΄ ανάγνωση</span>
+          <span>{post.readingMinutes} min {t("ανάγνωση")}</span>
         </div>
 
         <h3
           className={
-            "mt-3 font-display leading-snug text-cream transition-colors duration-300 group-hover:text-brass-100 " +
-            (featured ? "text-2xl sm:text-3xl" : "text-lg")
+            "mt-3 min-w-0 break-words font-display leading-tight text-cream transition-colors duration-300 group-hover:text-brass-600 " +
+            (featured ? "text-xl sm:text-2xl" : "text-lg")
           }
         >
           {post.title}
@@ -80,7 +92,7 @@ export default function PostCard({
         </p>
 
         <span className="mt-6 inline-flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.22em] text-brass-300">
-          Διαβάστε περισσότερα
+          {t("Διαβάστε περισσότερα")}
           <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
         </span>
       </div>

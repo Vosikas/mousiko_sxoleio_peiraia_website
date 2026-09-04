@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { site } from "@/lib/site";
+import { useLanguage } from "@/hooks/useLanguage";
 
 /**
  * Πρότυπο (template) για το βίντεο του σχολείου.
@@ -10,8 +11,9 @@ import { site } from "@/lib/site";
  * δείχνει καλαίσθητο placeholder με οδηγίες — το layout δεν «σπάει» ποτέ.
  */
 export default function VideoFeature() {
-  const [playing, setPlaying] = useState(false);
   const { youtubeId, mp4, title, subtitle } = site.video;
+  const [playing, setPlaying] = useState(Boolean(youtubeId || mp4));
+  const { t } = useLanguage();
   const poster = process.env.NEXT_PUBLIC_SCHOOL_VIDEO_POSTER ?? "";
 
   const thumb =
@@ -22,13 +24,13 @@ export default function VideoFeature() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[0.62rem] uppercase tracking-[0.34em] text-brass-400">
-            Βίντεο παρουσίασης
+            {t("Βίντεο παρουσίασης")}
           </p>
           <h2 id="video-title" className="mt-3 font-display text-3xl text-cream sm:text-4xl">
-            {title}
+            {t(title)}
           </h2>
         </div>
-        <p className="max-w-xs text-sm leading-relaxed text-muted">{subtitle}</p>
+        <p className="max-w-xs text-sm leading-relaxed text-muted">{t(subtitle)}</p>
       </div>
 
       {/* Κορνίζα */}
@@ -42,14 +44,22 @@ export default function VideoFeature() {
               src={
                 "https://www.youtube-nocookie.com/embed/" +
                 youtubeId +
-                "?autoplay=1&rel=0&modestbranding=1&hl=el"
+                "?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1&hl=el"
               }
               title={title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           ) : playing && mp4 ? (
-            <video className="absolute inset-0 h-full w-full object-cover" src={mp4} controls autoPlay playsInline />
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={mp4}
+              controls
+              autoPlay
+              muted
+              playsInline
+              loop
+            />
           ) : (
             <>
               {thumb ? (
@@ -85,9 +95,9 @@ export default function VideoFeature() {
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-7">
                 <div>
                   <p className="text-[0.6rem] uppercase tracking-[0.3em] text-brass-300">
-                    {site.shortName} · Φιλμ
+                    {site.shortName} · {t("Φιλμ")}
                   </p>
-                  <p className="mt-1.5 font-display text-lg text-cream sm:text-xl">{title}</p>
+                  <p className="mt-1.5 font-display text-lg text-cream sm:text-xl">{t(title)}</p>
                 </div>
                 <Equalizer />
               </div>
@@ -119,7 +129,7 @@ export default function VideoFeature() {
 /** Διακοσμητικό «σκηνικό» όσο λείπει το βίντεο. */
 function PlaceholderStage() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_center,rgba(208,169,95,0.14),transparent_65%)]">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_center,rgba(53,183,174,0.12),transparent_65%)]">
       <div className="absolute inset-0 opacity-40">
         {[0, 1, 2, 3, 4].map((i) => (
           <span

@@ -7,7 +7,7 @@ import { useSyncExternalStore } from "react";
  * Η πληροφορία ζει στο sessionStorage — εξωτερική πηγή, όχι state του React.
  */
 
-const KEY = "msp:intro";
+const KEY = "intro_seen";
 
 let seen: boolean | null = null;
 const listeners = new Set<() => void>();

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+<<<<<<< HEAD
 /* ==================================================================
    🎨  ΚΕΝΤΡΟ ΧΡΩΜΑΤΩΝ — ΟΛΟ ΤΟ SITE ΒΑΦΕΤΑΙ ΑΠΟ ΕΔΩ
    ------------------------------------------------------------------
@@ -19,21 +20,28 @@
    ΠΑΡΑΔΕΙΓΜΑ — θέλω άλλο πράσινο συνολικά:
       άλλαξε τα --color-forest-* πιο κάτω.
    ================================================================== */
+=======
+/* ------------------------------------------------------------------
+   Μουσικό Σχολείο Πειραιά — Design tokens
+  Bright conservatory palette: white, deep blue, sea glass, and amber accents.
+------------------------------------------------------------------- */
+>>>>>>> 9f0aed2c21e3b3c62a292bb075c9c93648f965c6
 @theme {
-  --color-ink-950: #06070a;
-  --color-ink-900: #0a0c12;
-  --color-ink-850: #0f1118;
-  --color-ink-800: #14171f;
-  --color-ink-700: #1c2029;
-  --color-ink-600: #272c38;
+  --color-ink-950: #ffffff;
+  --color-ink-900: #f7fbff;
+  --color-ink-850: #f1f7fa;
+  --color-ink-800: #e5f0f3;
+  --color-ink-700: #d0e1e7;
+  --color-ink-600: #9bb7c1;
 
-  --color-brass-100: #f6ecd6;
-  --color-brass-200: #ecd9ae;
-  --color-brass-300: #e0c286;
-  --color-brass-400: #d0a95f;
-  --color-brass-500: #c08e3c;
-  --color-brass-600: #9a6f2c;
+  --color-brass-100: #e8fbfa;
+  --color-brass-200: #c7f1ee;
+  --color-brass-300: #8edbd5;
+  --color-brass-400: #35b7ae;
+  --color-brass-500: #0e938c;
+  --color-brass-600: #08716d;
 
+<<<<<<< HEAD
   /* Πράσινο (ΠΕΙΡΑΙΑ / τονισμοί) */
   --color-forest-200: #a8dcbe;
   --color-forest-300: #6fbf8e;
@@ -43,9 +51,16 @@
 
   --color-cream: #f4f1ea;
   --color-muted: #9aa2b4;
+=======
+  --color-cream: #102a43;
+  --color-muted: #4b6474;
+  --color-sun-100: #fff3cf;
+  --color-sun-300: #f4b942;
+  --color-sun-500: #d98c00;
+>>>>>>> 9f0aed2c21e3b3c62a292bb075c9c93648f965c6
 
-  --font-display: var(--font-garamond), "Georgia", serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --radius-xl2: 1.75rem;
 
@@ -129,6 +144,26 @@
   }
 }
 
+@keyframes camera-pan {
+  0%,
+  100% {
+    transform: translateX(-3%) scale(1);
+  }
+  50% {
+    transform: translateX(3%) scale(1.03);
+  }
+}
+
+@keyframes instrument-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
 /* ------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------
@@ -136,6 +171,7 @@
    Άλλαξε ΜΟΝΟ τις τιμές δεξιά από την άνω-κάτω τελεία.
 ------------------------------------------------------------------- */
 :root {
+<<<<<<< HEAD
   color-scheme: dark;
 
   /* Βάση σελίδας */
@@ -150,6 +186,9 @@
 
   /* Πλάτος του τίτλου: ορίζει πόσο «ανοίγουν» τα γράμματα. */
   --hero-title-width: min(88vw, 44rem);
+=======
+  color-scheme: light;
+>>>>>>> 9f0aed2c21e3b3c62a292bb075c9c93648f965c6
 }
 
 html {
@@ -265,7 +304,7 @@ html[data-intro]::before {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: #06070a;
+  background: #f7fbfb;
 }
 html[data-intro] body {
   overflow: hidden;
