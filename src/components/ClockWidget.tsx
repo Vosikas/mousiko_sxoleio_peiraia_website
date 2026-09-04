@@ -131,16 +131,16 @@ export default function ClockWidget() {
       <div className="mt-5 flex items-center justify-center gap-2 rounded-full border border-cream/10 bg-ink-900/60 py-2 text-[0.62rem] uppercase tracking-[0.2em]">
         <span className="relative flex h-2 w-2">
           {isOpen && (
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-olive-500/70" />
           )}
           <span
             className={
               "relative inline-flex h-2 w-2 rounded-full " +
-              (isOpen ? "bg-emerald-400" : "bg-muted/60")
+              (isOpen ? "bg-olive-500" : "bg-muted/60")
             }
           />
         </span>
-        <span className={isOpen ? "text-emerald-300" : "text-muted"}>
+        <span className={isOpen ? "text-olive-600" : "text-muted"}>
           {t(isOpen ? "Ανοιχτά τώρα" : "Εκτός ωραρίου")}
         </span>
       </div>
