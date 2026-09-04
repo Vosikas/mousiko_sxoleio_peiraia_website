@@ -13,7 +13,16 @@ export const revalidate = 300;
 
 export default function HomePage() {
   return (
-    <>
+    <div className="watermark-host">
+      {/* 🎨 ΥΔΑΤΟΓΡΑΦΗΜΑ — το λογότυπο του σχολείου πίσω από όλη τη σελίδα.
+          Μένει «κολλημένο» στο κέντρο της οθόνης καθώς κυλάει η σελίδα.
+          ΔΙΑΦΑΝΕΙΑ / ΜΕΓΕΘΟΣ / ΘΕΣΗ: src/app/globals.css → --watermark-*
+          (--watermark-opacity είναι το 40% που ζητήθηκε). */}
+      <div aria-hidden className="watermark-layer">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/LOGO%20AXNO%202.svg" alt="" className="watermark-mark" />
+      </div>
+
       <Hero />
 
       <Marquee />
@@ -59,6 +68,6 @@ export default function HomePage() {
           Το περιεχόμενο ανανεώνεται από το WordPress κάθε {REVALIDATE_SECONDS / 60} λεπτά
         </p>
       </div>
-    </>
+    </div>
   );
 }

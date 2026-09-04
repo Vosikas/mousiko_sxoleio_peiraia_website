@@ -12,11 +12,11 @@
       Αλλάζεις μία τιμή εδώ και αλλάζει ΠΑΝΤΟΥ στο project.
 
    2) :root   → τα ΣΗΜΑΣΙΟΛΟΓΙΚΑ χρώματα («ποιο χρώμα βάφει τι»).
-      Π.χ. --hero-line-3 = το χρώμα της λέξης ΠΕΙΡΑΙΑ στην αρχική.
+      Π.χ. --watermark-opacity = πόσο έντονο είναι το υδατογράφημα.
       Εδώ αλλάζεις ΤΙ βάφεται, χωρίς να αγγίξεις καθόλου το JSX.
 
-   ΠΑΡΑΔΕΙΓΜΑ — θέλω το ΠΕΙΡΑΙΑ πιο σκούρο πράσινο:
-      --hero-line-3: var(--color-olive-700);
+   ΠΑΡΑΔΕΙΓΜΑ — θέλω πιο διακριτικό υδατογράφημα:
+      --watermark-opacity: 0.2;
    ΠΑΡΑΔΕΙΓΜΑ — θέλω άλλο πράσινο συνολικά:
       άλλαξε τα --color-olive-* πιο κάτω.
 
@@ -41,7 +41,7 @@
 
    B) ΣΗΜΑΣΙΟΛΟΓΙΚΑ → όταν θέλω «το χρώμα του Χ», όχι έναν τόνο:
 
-        className="text-[var(--hero-line-3)]"
+        className="text-[var(--page-accent)]"
         className="bg-[var(--btn-bg)]"
         style={{ color: "var(--page-accent)" }}
 
@@ -214,19 +214,17 @@
   --page-text: var(--color-cream);
   --page-accent: var(--color-brass-400);
 
-  /* Τίτλος αρχικής — μία μεταβλητή ανά γραμμή (βλ. Hero.tsx) */
-  --hero-line-1: rgb(0 0 0 / 0.5); /* ΜΟΥΣΙΚΟ — μαύρο 50% */
-  --hero-line-2: rgb(0 0 0 / 0.5); /* ΣΧΟΛΕΙΟ — μαύρο 50% */
-  --hero-line-3: var(--color-olive-500); /* ΠΕΙΡΑΙΑ — πράσινο #9da423 */
-
-  /* ΜΕΓΕΘΟΣ ΤΙΤΛΟΥ — τρεις μοχλοί:
-     size   = πόσο μεγάλα τα γράμματα (μικρότερο νούμερο ⇒ μικρότερος τίτλος)
-     spread = πόσο ανοίγουν μεταξύ τους (το πλάτος βγαίνει size × spread,
-              γι' αυτό η στοίχιση κρατάει την ίδια αίσθηση σε κάθε οθόνη)
-     line-3 = πόσο μικρότερη είναι η 3η γραμμή (0.46 = 46% των άλλων δύο) */
-  --hero-title-size: clamp(1.9rem, 6.4vw, 4.4rem);
-  --hero-title-spread: 5.6;
-  --hero-line-3-scale: 0.46;
+  /* ==============================================================
+     ΥΔΑΤΟΓΡΑΦΗΜΑ (WATERMARK) — το λογότυπο στο κέντρο της σελίδας.
+     ΕΔΩ αλλάζεις τα πάντα γι' αυτό:
+     ============================================================== */
+  --watermark-opacity: 0.4; /* 0 = αόρατο, 1 = πλήρες. Ζητήθηκε 40%. */
+  --watermark-width: min(70%, 46rem); /* μέγεθος σε σχέση με τη σελίδα */
+  --watermark-top: 50vh; /* πού «κολλάει» κατακόρυφα στην οθόνη */
+  /* Το αρχείο είναι ΛΕΥΚΟ λογότυπο (#fff/#f6f6f6/#d9d9d9), φτιαγμένο για
+     σκούρο φόντο. Επειδή η σελίδα είναι λευκή, το αντιστρέφουμε για να
+     φαίνεται. Αν βάλεις σκούρα εκδοχή του λογοτύπου: none */
+ 
 
   /* ΚΟΥΜΠΙΑ — άλλαξε ΜΟΝΟ αυτά και αλλάζουν όλα τα κουμπιά του site.
      Τα components χρησιμοποιούν τις κλάσεις .btn-solid / .btn-ghost. */
@@ -245,7 +243,9 @@ body {
   color: var(--page-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* clip (όχι hidden): το hidden φτιάχνει scroll container και
+     ακυρώνει το position: sticky του υδατογραφήματος. */
+  overflow-x: clip;
 }
 
 ::selection {
@@ -356,39 +356,35 @@ html[data-intro] body {
 }
 
 /* ------------------------------------------------------------------
-   Τίτλος αρχικής: τρεις λέξεις, ίδιο πλάτος, στοιχισμένες αριστερά
-   και δεξιά. Τα γράμματα απλώνονται μόνα τους (flex space-between),
-   γι' αυτό δεν χρειάζεται χειροκίνητο padding σε καμία γραμμή.
-   Χρώματα: --hero-line-1/2/3 στην ενότητα ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ.
+   ΥΔΑΤΟΓΡΑΦΗΜΑ — το λογότυπο πίσω από όλη τη σελίδα.
+   Ο host απομονώνει τα επίπεδα (isolation) ώστε το z-index: -1 να
+   πηγαίνει πίσω από το περιεχόμενο αλλά μπροστά από το φόντο.
+   Χρώμα/μέγεθος/διαφάνεια: --watermark-* παραπάνω.
 ------------------------------------------------------------------- */
-.hero-title {
-  /* Το πλάτος δένεται με το μέγεθος: τα κενά ανάμεσα στα γράμματα
-     μένουν οπτικά ίδια σε κάθε ανάλυση. */
-  width: calc(var(--hero-title-size) * var(--hero-title-spread));
-  max-width: 100%;
-  font-size: var(--hero-title-size);
-  line-height: 0.95;
+.watermark-host {
+  position: relative;
+  isolation: isolate;
 }
 
-.hero-title__line {
+.watermark-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.hero-title__line--1 {
-  color: var(--hero-line-1);
-}
-.hero-title__line--2 {
-  color: var(--hero-line-2);
-}
-.hero-title__line--3 {
-  color: var(--hero-line-3);
-  /* Μικραίνουν μαζί μέγεθος και πλάτος ⇒ ίδια οπτική απόσταση γραμμάτων,
-     ενώ οι τρεις λέξεις μένουν στοιχισμένες στην αριστερή ακμή. */
-  font-size: calc(var(--hero-title-size) * var(--hero-line-3-scale));
-  width: calc(100% * var(--hero-line-3-scale));
-  margin-top: 0.15em;
+.watermark-mark {
+  position: sticky;
+  top: var(--watermark-top);
+  translate: 0 -50%;
+  width: var(--watermark-width);
+  max-width: 100%;
+  height: auto;
+  opacity: var(--watermark-opacity);
+  filter: var(--watermark-filter);
 }
 
 /* ------------------------------------------------------------------

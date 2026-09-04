@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { site } from "@/lib/site";
-import Logo from "@/components/Logo";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const STATS = [
@@ -76,22 +75,9 @@ export default function Hero() {
             {t("Γυμνάσιο & Λύκειο · Δημόσια μουσική εκπαίδευση")}
           </p>
 
-          {/* 🎨 ΧΡΩΜΑΤΑ ΤΙΤΛΟΥ: μην τα αλλάζετε εδώ.
-              Κάθε γραμμή παίρνει το χρώμα της από μία μεταβλητή στο
-              src/app/globals.css → ενότητα «ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ»:
-              --hero-line-1 (ΜΟΥΣΙΚΟ) · --hero-line-2 (ΣΧΟΛΕΙΟ) · --hero-line-3 (ΠΕΙΡΑΙΑ) */}
-          <div className="relative mt-7">
-            <Logo className="pointer-events-none absolute -left-10 -top-24 z-0 h-[30rem] w-[25rem] opacity-[0.11] sm:-left-16 sm:-top-32 sm:h-[42rem] sm:w-[35rem]" />
-            <h1
-              aria-label={site.name}
-              className="hero-title relative z-10 font-display font-light"
-              style={{ animation: "rise 1.1s 0.25s both" }}
-            >
-              <TitleLine text="ΜΟΥΣΙΚΟ" line={1} />
-              <TitleLine text="ΣΧΟΛΕΙΟ" line={2} />
-              <TitleLine text="ΠΕΙΡΑΙΑ" line={3} />
-            </h1>
-          </div>
+          {/* Ο τίτλος είναι πλέον το λογότυπο (υδατογράφημα στο page.tsx).
+              Το <h1> μένει για SEO και αναγνώστες οθόνης. */}
+          <h1 className="sr-only">{site.name}</h1>
 
           <p
             className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
@@ -154,22 +140,3 @@ export default function Hero() {
   );
 }
 
-/**
- * Μία γραμμή του τίτλου.
- *
- * Τα γράμματα μπαίνουν σε flex με `space-between`: έτσι κάθε λέξη «απλώνει»
- * όσο χρειάζεται ώστε και οι τρεις γραμμές να έχουν ακριβώς το ίδιο πλάτος
- * και να ευθυγραμμίζονται αριστερά και δεξιά — το κενό ανάμεσα στα γράμματα
- * υπολογίζεται μόνο του, δεν χρειάζεται χειροκίνητο padding.
- *
- * Το χρώμα ορίζεται στο globals.css (--hero-line-1/2/3), όχι εδώ.
- */
-function TitleLine({ text, line }: { text: string; line: 1 | 2 | 3 }) {
-  return (
-    <span aria-hidden className={"hero-title__line hero-title__line--" + line}>
-      {Array.from(text).map((letter, i) => (
-        <span key={i}>{letter}</span>
-      ))}
-    </span>
-  );
-}
