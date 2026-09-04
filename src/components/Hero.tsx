@@ -76,32 +76,22 @@ export default function Hero() {
             {t("Γυμνάσιο & Λύκειο · Δημόσια μουσική εκπαίδευση")}
           </p>
 
-<<<<<<< HEAD
           {/* 🎨 ΧΡΩΜΑΤΑ ΤΙΤΛΟΥ: μην τα αλλάζετε εδώ.
               Κάθε γραμμή παίρνει το χρώμα της από μία μεταβλητή στο
               src/app/globals.css → ενότητα «ΣΗΜΑΣΙΟΛΟΓΙΚΑ ΧΡΩΜΑΤΑ»:
               --hero-line-1 (ΜΟΥΣΙΚΟ) · --hero-line-2 (ΣΧΟΛΕΙΟ) · --hero-line-3 (ΠΕΙΡΑΙΑ) */}
-          <h1
-            aria-label={site.name}
-            className="hero-title mt-7 font-display font-light"
-            style={{ animation: "rise 1.1s 0.25s both" }}
-          >
-            <TitleLine text="ΜΟΥΣΙΚΟ" line={1} />
-            <TitleLine text="ΣΧΟΛΕΙΟ" line={2} />
-            <TitleLine text="ΠΕΙΡΑΙΑ" line={3} />
-          </h1>
-=======
           <div className="relative mt-7">
             <Logo className="pointer-events-none absolute -left-10 -top-24 z-0 h-[30rem] w-[25rem] opacity-[0.11] sm:-left-16 sm:-top-32 sm:h-[42rem] sm:w-[35rem]" />
             <h1
-            className="relative z-10 font-display text-[clamp(2.9rem,9vw,7.5rem)] font-light uppercase leading-[0.94] tracking-[-0.02em]"
-            style={{ animation: "rise 1.1s 0.25s both" }}
+              aria-label={site.name}
+              className="hero-title relative z-10 font-display font-light"
+              style={{ animation: "rise 1.1s 0.25s both" }}
             >
-              <span className="block text-cream">{t("Μουσικό Σχολείο")}</span>
-              <span className="block text-gradient-brass italic">{t("Πειραιά")}</span>
+              <TitleLine text="ΜΟΥΣΙΚΟ" line={1} />
+              <TitleLine text="ΣΧΟΛΕΙΟ" line={2} />
+              <TitleLine text="ΠΕΙΡΑΙΑ" line={3} />
             </h1>
           </div>
->>>>>>> 9f0aed2c21e3b3c62a292bb075c9c93648f965c6
 
           <p
             className="mt-8 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
