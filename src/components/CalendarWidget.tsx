@@ -100,7 +100,7 @@ export default function CalendarWidget() {
           type="button"
           aria-label="Προηγούμενος μήνας"
           onClick={() => shift(-1)}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-600"
+          className="btn-ghost flex h-8 w-8 items-center justify-center rounded-full border"
         >
           ‹
         </button>
@@ -113,7 +113,7 @@ export default function CalendarWidget() {
           type="button"
           aria-label="Επόμενος μήνας"
           onClick={() => shift(1)}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/10 text-muted transition hover:border-brass-400/50 hover:text-brass-600"
+          className="btn-ghost flex h-8 w-8 items-center justify-center rounded-full border"
         >
           ›
         </button>

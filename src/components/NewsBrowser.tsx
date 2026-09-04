@@ -88,8 +88,8 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
               className={
                 "rounded-full border px-3.5 py-2 text-[0.65rem] font-medium transition " +
                 (category === item
-                  ? "border-brass-600 bg-brass-600 text-white"
-                  : "border-cream/15 bg-white text-cream/75 hover:border-brass-500 hover:text-brass-600")
+                  ? "btn-solid"
+                  : "border-cream/15 bg-white text-cream/75 hover:border-plum-400 hover:text-plum-500")
               }
             >
               {item === "all" ? t("Όλα") : item}
@@ -123,7 +123,7 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
         <nav aria-label={t("Σελιδοποίηση")} className="mt-10 flex items-center justify-center gap-2">
           <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-brass-500 disabled:cursor-not-allowed disabled:opacity-35">←</button>
           {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
-            <button key={number} type="button" onClick={() => goToPage(number)} aria-current={page === number ? "page" : undefined} className={"h-9 w-9 rounded-full text-sm transition " + (page === number ? "bg-brass-600 text-white" : "border border-cream/15 bg-white text-cream hover:border-brass-500")}>{number}</button>
+            <button key={number} type="button" onClick={() => goToPage(number)} aria-current={page === number ? "page" : undefined} className={"h-9 w-9 rounded-full text-sm transition " + (page === number ? "btn-solid" : "border border-cream/15 bg-white text-cream hover:border-plum-400 hover:text-plum-500")}>{number}</button>
           ))}
           <button type="button" disabled={page === pageCount} onClick={() => setPage((current) => current + 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-brass-500 disabled:cursor-not-allowed disabled:opacity-35">→</button>
         </nav>

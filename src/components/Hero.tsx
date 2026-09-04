@@ -106,7 +106,7 @@ export default function Hero() {
           >
             <Link
               href="/to-scholeio"
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-brass-300 to-brass-500 px-8 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink-950 transition-transform duration-300 hover:scale-[1.03]"
+              className="btn-solid group relative overflow-hidden rounded-full px-8 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.2em] duration-300 hover:scale-[1.03]"
             >
               <span className="relative z-10">{t("Γνωρίστε το σχολείο")}</span>
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
@@ -114,10 +114,10 @@ export default function Hero() {
 
             <a
               href="#video"
-              className="group flex items-center gap-3 rounded-full border border-cream/15 px-7 py-4 text-[0.7rem] uppercase tracking-[0.2em] text-cream/85 transition-all duration-300 hover:border-brass-400/60 hover:text-brass-600"
+              className="btn-ghost group flex items-center gap-3 rounded-full border px-7 py-4 text-[0.7rem] uppercase tracking-[0.2em] duration-300"
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full border border-brass-300/60">
-                <svg viewBox="0 0 24 24" className="ml-px h-2.5 w-2.5 fill-brass-200">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full border border-current/50">
+                <svg viewBox="0 0 24 24" className="ml-px h-2.5 w-2.5 fill-current">
                   <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.29-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
                 </svg>
               </span>

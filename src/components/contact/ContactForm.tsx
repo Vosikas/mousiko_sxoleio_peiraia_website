@@ -89,7 +89,7 @@ export default function ContactForm() {
             setValues(EMPTY_CONTACT);
             setStatus("idle");
           }}
-          className="mt-6 rounded-full border border-[#0e938c]/40 px-5 py-2.5 font-medium text-[#0b6f6a] transition hover:bg-[#0e938c]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0e938c]"
+          className="btn-ghost mt-6 rounded-full border px-5 py-2.5 font-medium"
         >
           Στείλτε κι άλλο μήνυμα
         </button>
@@ -236,7 +236,7 @@ export default function ContactForm() {
           type="button"
           onClick={submit}
           disabled={status === "sending"}
-          className="inline-flex items-center gap-2.5 rounded-full bg-[#0e938c] px-7 py-3.5 font-medium text-white transition hover:bg-[#0b7f79] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0e938c] disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-solid inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 font-medium"
         >
           {status === "sending" ? (
             <>

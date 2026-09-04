@@ -73,7 +73,7 @@ export function ContactCard() {
       </div>
       <Link
         href="/epikoinonia"
-        className="relative mt-6 flex items-center justify-center gap-2 rounded-full border border-brass-300/45 py-3 text-[0.64rem] uppercase tracking-[0.2em] text-brass-600 transition hover:bg-brass-400/15 hover:text-brass-600"
+        className="btn-ghost relative mt-6 flex items-center justify-center gap-2 rounded-full border py-3 text-[0.64rem] uppercase tracking-[0.2em]"
       >
         {t("Φόρμα επικοινωνίας →")}
       </Link>

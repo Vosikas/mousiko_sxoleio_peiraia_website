@@ -10,7 +10,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="mt-10 rounded-full border border-brass-400/45 px-7 py-3.5 text-[0.66rem] uppercase tracking-[0.22em] text-brass-600 transition hover:bg-brass-400/12 hover:text-brass-600"
+        className="btn-ghost mt-10 rounded-full border px-7 py-3.5 text-[0.66rem] uppercase tracking-[0.22em]"
       >
         Επιστροφή στην αρχική
       </Link>

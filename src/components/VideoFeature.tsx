@@ -82,9 +82,9 @@ export default function VideoFeature() {
                   aria-label={"Αναπαραγωγή: " + title}
                   className="absolute inset-0 flex items-center justify-center"
                 >
-                  <span className="relative flex h-20 w-20 items-center justify-center rounded-full border border-brass-300/70 bg-ink-950/55 backdrop-blur-sm transition duration-300 group-hover:scale-110 group-hover:bg-brass-400/20 sm:h-24 sm:w-24">
-                    <span className="absolute inset-0 rounded-full border border-brass-300/60 animate-pulse-ring" />
-                    <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-brass-100">
+                  <span className="btn-solid relative flex h-20 w-20 items-center justify-center rounded-full backdrop-blur-sm duration-300 group-hover:scale-110 sm:h-24 sm:w-24">
+                    <span className="absolute inset-0 rounded-full border border-plum-300 animate-pulse-ring" />
+                    <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-current">
                       <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.29-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
                     </svg>
                   </span>
