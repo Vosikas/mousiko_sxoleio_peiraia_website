@@ -93,16 +93,16 @@ export default function SiteHeader() {
         <nav className="hidden items-center gap-1 min-[900px]:flex" aria-label="Κύρια πλοήγηση">
           {navItems.map((item, index) => {
             const expanded = openMenu === item.label;
-            const activeClass = isActive(item.href) ? "bg-brass-100 text-brass-600 " : "text-cream/75 ";
+            const activeClass = isActive(item.href) ? "bg-plum-100 text-plum-500 " : "text-cream/75 ";
             return item.children ? (
               <div key={item.label} className="relative" onMouseEnter={() => setOpenMenu(item.label)} onFocus={() => setOpenMenu(item.label)}>
                 <div className="flex items-center">
-                  <Link href={item.href} className={activeClass + "rounded-l-full px-3 py-2 text-[0.68rem] font-medium transition hover:bg-ink-850 hover:text-cream"}>{item.label}</Link>
-                  <button type="button" data-menu-trigger aria-label={`Άνοιγμα ${item.label}`} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.label)} onKeyDown={(event) => handleMenuKeyDown(event, index)} onFocus={() => setOpenMenu(item.label)} className={activeClass + "rounded-r-full px-2 py-2 transition hover:bg-ink-850 hover:text-cream"}><Chevron expanded={expanded} /></button>
+                  <Link href={item.href} className={activeClass + "rounded-l-full px-3 py-2 text-[0.68rem] font-medium transition hover:bg-plum-100 hover:text-plum-500"}>{item.label}</Link>
+                  <button type="button" data-menu-trigger aria-label={`Άνοιγμα ${item.label}`} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.label)} onKeyDown={(event) => handleMenuKeyDown(event, index)} onFocus={() => setOpenMenu(item.label)} className={activeClass + "rounded-r-full px-2 py-2 transition hover:bg-plum-100 hover:text-plum-500"}><Chevron expanded={expanded} /></button>
                 </div>
                 <Dropdown items={item.children} open={expanded} />
               </div>
-            ) : <Link key={item.label} href={item.href} className={activeClass + "rounded-full px-3.5 py-2 text-[0.68rem] font-medium transition hover:bg-ink-850 hover:text-cream"}>{item.label}</Link>;
+            ) : <Link key={item.label} href={item.href} className={activeClass + "rounded-full px-3.5 py-2 text-[0.68rem] font-medium transition hover:bg-plum-100 hover:text-plum-500"}>{item.label}</Link>;
           })}
         </nav>
 
@@ -122,12 +122,12 @@ export default function SiteHeader() {
             return item.children ? (
               <div key={item.label} className="border-b border-cream/8 last:border-0">
                 <div className="flex items-center">
-                  <Link href={item.href} onClick={(event) => { if (!expanded) { event.preventDefault(); setOpenMenu(item.label); } else closeMobile(); }} className={(isActive(item.href) ? "text-brass-600 " : "text-cream ") + "flex-1 py-3 text-sm font-medium"}>{item.label}</Link>
+                  <Link href={item.href} onClick={(event) => { if (!expanded) { event.preventDefault(); setOpenMenu(item.label); } else closeMobile(); }} className={(isActive(item.href) ? "text-plum-500 " : "text-cream ") + "flex-1 py-3 text-sm font-medium"}>{item.label}</Link>
                   <button type="button" aria-label={`Άνοιγμα ${item.label}`} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.label)} className="p-3 text-muted"><Chevron expanded={expanded} /></button>
                 </div>
-                {expanded ? <div role="menu" className="mb-2 border-l-2 border-brass-400/40 pl-3">{item.children.map((child) => <Link key={child.label} href={child.href} role="menuitem" onClick={closeMobile} className="block py-2 text-sm leading-snug text-muted hover:text-brass-600">{child.label}</Link>)}</div> : null}
+                {expanded ? <div role="menu" className="mb-2 border-l-2 border-plum-500/40 pl-3">{item.children.map((child) => <Link key={child.label} href={child.href} role="menuitem" onClick={closeMobile} className="block py-2 text-sm leading-snug text-muted hover:text-plum-500">{child.label}</Link>)}</div> : null}
               </div>
-            ) : <Link key={item.label} href={item.href} onClick={closeMobile} className={(isActive(item.href) ? "text-brass-600 " : "text-cream ") + "border-b border-cream/8 py-3 text-sm font-medium last:border-0"}>{item.label}</Link>;
+            ) : <Link key={item.label} href={item.href} onClick={closeMobile} className={(isActive(item.href) ? "text-plum-500 " : "text-cream ") + "border-b border-cream/8 py-3 text-sm font-medium last:border-0"}>{item.label}</Link>;
           })}
         </nav>
       </div>
@@ -152,9 +152,9 @@ function Dropdown({ items, open }: { items: MenuItem[]; open: boolean }) {
     links[next]?.focus();
   };
 
-  return <div ref={menuRef} role="menu" aria-hidden={!open} onKeyDown={handleKeyDown} className={(open ? "visible translate-y-0 opacity-100 " : "pointer-events-none invisible -translate-y-1 opacity-0 ") + "absolute right-0 top-[calc(100%+0.6rem)] z-20 w-80 rounded-2xl border border-cream/15 bg-white p-2 shadow-[0_18px_45px_rgba(16,42,67,0.16)] transition-all duration-200"}>{items.map((child) => <Link key={child.label} href={child.href} role="menuitem" tabIndex={open ? 0 : -1} className="block rounded-xl px-3 py-2.5 text-sm leading-snug text-cream transition hover:bg-brass-100 hover:text-brass-600">{child.label}</Link>)}</div>;
+  return <div ref={menuRef} role="menu" aria-hidden={!open} onKeyDown={handleKeyDown} className={(open ? "visible translate-y-0 opacity-100 " : "pointer-events-none invisible -translate-y-1 opacity-0 ") + "absolute right-0 top-[calc(100%+0.6rem)] z-20 w-80 rounded-2xl border border-cream/15 bg-white p-2 shadow-[0_18px_45px_rgba(16,42,67,0.16)] transition-all duration-200"}>{items.map((child) => <Link key={child.label} href={child.href} role="menuitem" tabIndex={open ? 0 : -1} className="block rounded-xl px-3 py-2.5 text-sm leading-snug text-cream transition hover:bg-plum-100 hover:text-plum-500">{child.label}</Link>)}</div>;
 }
 
 function LanguageSwitcher({ language, setLanguage }: { language: Language; setLanguage: (language: Language) => void }) {
-  return <div className="flex items-center rounded-full border border-cream/10 bg-ink-850 p-1" aria-label="Επιλογή γλώσσας">{(["GR", "EN"] as const).map((option) => <button key={option} type="button" aria-pressed={language === option} onClick={() => setLanguage(option)} className={(language === option ? "bg-cream text-white " : "text-muted ") + "rounded-full px-2.5 py-1 text-[0.58rem] font-semibold tracking-[0.12em] transition hover:text-brass-600"}>{option === "GR" ? "ΕΛ" : "EN"}</button>)}</div>;
+  return <div className="flex items-center rounded-full border border-cream/10 bg-ink-850 p-1" aria-label="Επιλογή γλώσσας">{(["GR", "EN"] as const).map((option) => <button key={option} type="button" aria-pressed={language === option} onClick={() => setLanguage(option)} className={(language === option ? "bg-cream text-white " : "text-muted ") + "rounded-full px-2.5 py-1 text-[0.58rem] font-semibold tracking-[0.12em] transition hover:text-plum-500"}>{option === "GR" ? "ΕΛ" : "EN"}</button>)}</div>;
 }

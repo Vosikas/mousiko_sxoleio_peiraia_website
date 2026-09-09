@@ -17,8 +17,8 @@
 
    ΠΑΡΑΔΕΙΓΜΑ — θέλω πιο διακριτικό υδατογράφημα:
       --watermark-opacity: 0.2;
-   ΠΑΡΑΔΕΙΓΜΑ — θέλω άλλο πράσινο συνολικά:
-      άλλαξε τα --color-olive-* πιο κάτω.
+   ΠΑΡΑΔΕΙΓΜΑ — θέλω άλλο μωβ συνολικά:
+      άλλαξε ΜΟΝΟ το --primary-purple πιο κάτω.
 
    ------------------------------------------------------------------
    ΠΩΣ ΤΑ ΧΡΗΣΙΜΟΠΟΙΩ ΣΤΑ COMPONENTS (cheat sheet)
@@ -26,16 +26,14 @@
    A) ΠΑΛΕΤΑ → έτοιμες κλάσεις Tailwind. Κάθε --color-<όνομα>-<τόνος>
       δίνει αυτόματα text- / bg- / border- / ring- / fill- / stroke-:
 
-        text-olive-500      bg-olive-500      border-olive-500
+        text-plum-500       bg-plum-500       border-plum-500
         text-plum-500       bg-plum-500       ring-plum-400
-        bg-olive-500/70     ← /70 = διαφάνεια 70%
+        bg-plum-500/70      ← /70 = διαφάνεια 70%
 
       ΔΙΑΘΕΣΙΜΕΣ ΟΙΚΟΓΕΝΕΙΕΣ:
         ink-600…950   επιφάνειες  (950 = λευκό φόντο σελίδας)
         cream         κύριο κείμενο (βαθύ μπλε)
         muted         δευτερεύον κείμενο
-        brass-100…600 sea glass / teal τονισμοί
-        olive-100…700 ΠΡΑΣΙΝΟ ΣΧΟΛΕΙΟΥ (500 = #9da423)
         plum-100…700  ΚΥΡΙΟ ΜΩΒ (500 = --primary-purple)
         box           το γκρι κουτί #e3e3e3 (bg-box)
 
@@ -63,22 +61,6 @@
   --color-ink-800: #e5f0f3;
   --color-ink-700: #d0e1e7;
   --color-ink-600: #9bb7c1;
-
-  --color-brass-100: #e8fbfa;
-  --color-brass-200: #c7f1ee;
-  --color-brass-300: #8edbd5;
-  --color-brass-400: #35b7ae;
-  --color-brass-500: #0e938c;
-  --color-brass-600: #08716d;
-
-  /* Πράσινο του σχολείου — βάση #9da423 (λέξη ΠΕΙΡΑΙΑ, τονισμοί) */
-  --color-olive-100: #f2f3de;
-  --color-olive-200: #dddfb2;
-  --color-olive-300: #c4c87b;
-  --color-olive-400: #b0b64f;
-  --color-olive-500: #9da423;
-  --color-olive-600: #858b1e;
-  --color-olive-700: #6e7319;
 
   /* ==============================================================
      ΚΥΡΙΟ ΧΡΩΜΑ (PRIMARY) — ΒΑΛΕ ΕΔΩ ΤΟ ΜΩΒ ΣΟΥ.
@@ -172,12 +154,12 @@
      ΕΔΩ αλλάζεις τα πάντα γι' αυτό:
      ============================================================== */
   --watermark-opacity: 0.4; /* 0 = αόρατο, 1 = πλήρες. Ζητήθηκε 40%. */
-  --watermark-width: min(200%, 140rem); /* μέγεθος σε σχέση με τη σελίδα */
-  --watermark-top: 50vh; /* πού «κολλάει» κατακόρυφα στην οθόνη */
+  --watermark-fit: cover; /* cover = γεμίζει την οθόνη · contain = όλο το λογότυπο */
+  --watermark-scale: 1; /* >1 μεγαλώνει το λογότυπο πέρα από την οθόνη */
   /* Το αρχείο είναι ΛΕΥΚΟ λογότυπο (#fff/#f6f6f6/#d9d9d9), φτιαγμένο για
      σκούρο φόντο. Επειδή η σελίδα είναι λευκή, το αντιστρέφουμε για να
      φαίνεται. Αν βάλεις σκούρα εκδοχή του λογοτύπου: none */
- 
+  --watermark-filter: invert(1);
 
   /* ΚΟΥΜΠΙΑ — άλλαξε ΜΟΝΟ αυτά και αλλάζουν όλα τα κουμπιά του site.
      Τα components χρησιμοποιούν τις κλάσεις .btn-solid / .btn-ghost. */
@@ -218,18 +200,18 @@ body {
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brass-600);
+  background: var(--color-plum-600);
 }
 
 /* Utility layers -------------------------------------------------- */
 
-@utility text-gradient-brass {
+@utility text-gradient-primary {
   background-image: linear-gradient(
     100deg,
-    var(--color-brass-100) 0%,
-    var(--color-brass-300) 35%,
-    var(--color-brass-500) 60%,
-    var(--color-brass-200) 100%
+    var(--color-plum-100) 0%,
+    var(--color-plum-300) 35%,
+    var(--color-plum-500) 60%,
+    var(--color-plum-200) 100%
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -239,7 +221,7 @@ body {
 @utility glass {
   background: color-mix(in oklab, var(--color-ink-850) 72%, transparent);
   backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid color-mix(in oklab, var(--color-brass-300) 14%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-plum-300) 14%, transparent);
 }
 
 @utility hairline {
@@ -308,24 +290,25 @@ body {
 }
 
 .watermark-layer {
-  position: absolute;
+  /* fixed = «κάθεται» στην οθόνη. Η σελίδα κυλάει από πάνω του, το
+     λογότυπο μένει στη θέση του — δεν φεύγει μαζί με το scroll. */
+  position: fixed;
   inset: 0;
   z-index: -1;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  overflow: hidden;
   pointer-events: none;
 }
 
 .watermark-mark {
-  position: sticky;
-  top: var(--watermark-top);
-  translate: 0 -50%;
-  width: var(--watermark-width);
-  max-width: 100%;
-  height: auto;
-  opacity: var(--watermark-opacity);
-  filter: var(--watermark-filter);
+  width: 100%;
+  height: 100%;
+  object-fit: var(--watermark-fit, cover);
+  object-position: center;
+  scale: var(--watermark-scale, 1);
+  opacity: var(--watermark-opacity, 0.4);
+  /* fallback invert(1): αν λείψει το token, το λευκό λογότυπο δεν
+     γίνεται αόρατο πάνω στη λευκή σελίδα. */
+  filter: var(--watermark-filter, invert(1));
 }
 
 /* ------------------------------------------------------------------

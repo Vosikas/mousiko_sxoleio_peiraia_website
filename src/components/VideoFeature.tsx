@@ -23,7 +23,7 @@ export default function VideoFeature() {
     <section aria-labelledby="video-title" className="relative">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[0.62rem] uppercase tracking-[0.34em] text-brass-400">
+          <p className="text-[0.62rem] uppercase tracking-[0.34em] text-plum-400">
             {t("Βίντεο παρουσίασης")}
           </p>
           <h2 id="video-title" className="mt-3 font-display text-3xl text-cream sm:text-4xl">
@@ -35,7 +35,7 @@ export default function VideoFeature() {
 
       {/* Κορνίζα */}
       <div className="group relative mt-8">
-        <div className="pointer-events-none absolute -inset-px rounded-xl2 bg-gradient-to-br from-brass-400/50 via-transparent to-brass-500/30 opacity-70 blur-[1px] transition group-hover:opacity-100" />
+        <div className="pointer-events-none absolute -inset-px rounded-xl2 bg-gradient-to-br from-plum-400/50 via-transparent to-plum-500/30 opacity-70 blur-[1px] transition group-hover:opacity-100" />
 
         <div className="relative aspect-video w-full overflow-hidden rounded-xl2 bg-ink-900 ring-1 ring-cream/10">
           {playing && youtubeId ? (
@@ -94,7 +94,7 @@ export default function VideoFeature() {
               {/* Λεζάντα κάτω αριστερά */}
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-7">
                 <div>
-                  <p className="text-[0.6rem] uppercase tracking-[0.3em] text-brass-300">
+                  <p className="text-[0.6rem] uppercase tracking-[0.3em] text-plum-300">
                     {site.shortName} · {t("Φιλμ")}
                   </p>
                   <p className="mt-1.5 font-display text-lg text-cream sm:text-xl">{t(title)}</p>
@@ -109,7 +109,7 @@ export default function VideoFeature() {
             (pos) => (
               <span
                 key={pos}
-                className={"pointer-events-none absolute h-5 w-5 border-brass-300/40 " + pos}
+                className={"pointer-events-none absolute h-5 w-5 border-plum-300/40 " + pos}
               />
             ),
           )}
@@ -118,8 +118,8 @@ export default function VideoFeature() {
 
       {!youtubeId && !mp4 && (
         <p className="mt-4 text-center text-[0.68rem] uppercase tracking-[0.2em] text-muted/60">
-          Ορίστε <code className="text-brass-300">NEXT_PUBLIC_SCHOOL_VIDEO_ID</code> στο{" "}
-          <code className="text-brass-300">.env.local</code> για να μπει το βίντεο του σχολείου
+          Ορίστε <code className="text-plum-300">NEXT_PUBLIC_SCHOOL_VIDEO_ID</code> στο{" "}
+          <code className="text-plum-300">.env.local</code> για να μπει το βίντεο του σχολείου
         </p>
       )}
     </section>
@@ -129,23 +129,23 @@ export default function VideoFeature() {
 /** Διακοσμητικό «σκηνικό» όσο λείπει το βίντεο. */
 function PlaceholderStage() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_center,rgba(53,183,174,0.12),transparent_65%)]">
+    <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--primary-purple)_14%,transparent),transparent_65%)]">
       <div className="absolute inset-0 opacity-40">
         {[0, 1, 2, 3, 4].map((i) => (
           <span
             key={i}
-            className="absolute inset-x-0 h-px bg-brass-400/30"
+            className="absolute inset-x-0 h-px bg-plum-400/30"
             style={{ top: "calc(50% + " + (i - 2) * 14 + "px)" }}
           />
         ))}
       </div>
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[7rem] text-brass-400/25 sm:text-[10rem]">
+      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[7rem] text-plum-400/25 sm:text-[10rem]">
         𝄞
       </span>
       {["♪", "♫", "♩"].map((g, i) => (
         <span
           key={g}
-          className="absolute text-3xl text-brass-300/30 animate-float"
+          className="absolute text-3xl text-plum-300/30 animate-float"
           style={{
             left: 18 + i * 28 + "%",
             top: 26 + ((i * 17) % 34) + "%",
@@ -166,7 +166,7 @@ function Equalizer() {
       {bars.map((h, i) => (
         <span
           key={i}
-          className="w-1 rounded-full bg-brass-300/70"
+          className="w-1 rounded-full bg-plum-300/70"
           style={{
             height: h * 100 + "%",
             animation: "float " + (1.1 + i * 0.17) + "s ease-in-out infinite alternate",

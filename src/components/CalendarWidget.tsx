@@ -34,9 +34,9 @@ const EVENTS: SchoolEvent[] = [
 ];
 
 const KIND_COLOR: Record<string, string> = {
-  concert: "bg-brass-300",
+  concert: "bg-plum-300",
   exam: "bg-plum-500",
-  trip: "bg-olive-500",
+  trip: "bg-plum-500",
 };
 
 const iso = (y: number, m: number, d: number) =>
@@ -107,7 +107,7 @@ export default function CalendarWidget() {
         <p className="font-display text-lg tracking-wide text-cream">
           {new Intl.DateTimeFormat(language === "EN" ? "en-US" : "el-GR", { month: "long" }).format(
             new Date(view.year, view.month, 1),
-          )} <span className="text-brass-400">{view.year}</span>
+          )} <span className="text-plum-400">{view.year}</span>
         </p>
         <button
           type="button"
@@ -140,9 +140,9 @@ export default function CalendarWidget() {
                 className={
                   "flex h-8 w-8 items-center justify-center rounded-full text-[0.78rem] tabular-nums transition " +
                   (isToday
-                    ? "bg-gradient-to-br from-brass-300 to-brass-500 font-semibold text-ink-950 shadow-[0_0_18px_rgba(14,147,140,0.28)]"
+                    ? "bg-gradient-to-br from-plum-300 to-plum-500 font-semibold text-ink-950 shadow-[0_0_18px_color-mix(in_oklab,var(--primary-purple)_38%,transparent)]"
                     : dayEvents
-                      ? "cursor-default text-cream ring-1 ring-brass-400/35 hover:ring-brass-300"
+                      ? "cursor-default text-cream ring-1 ring-plum-400/35 hover:ring-plum-300"
                       : weekend
                         ? "text-muted/50"
                         : "text-cream/80")
@@ -154,7 +154,7 @@ export default function CalendarWidget() {
                 {dayEvents?.slice(0, 3).map((e, j) => (
                   <span
                     key={j}
-                    className={"h-1 w-1 rounded-full " + (KIND_COLOR[e.kind ?? "concert"] ?? "bg-brass-300")}
+                    className={"h-1 w-1 rounded-full " + (KIND_COLOR[e.kind ?? "concert"] ?? "bg-plum-300")}
                   />
                 ))}
               </span>
@@ -164,7 +164,7 @@ export default function CalendarWidget() {
       </div>
 
       <div className="mt-6 border-t border-cream/8 pt-5">
-        <h3 className="text-[0.6rem] uppercase tracking-[0.28em] text-brass-300">{t("Προσεχώς")}</h3>
+        <h3 className="text-[0.6rem] uppercase tracking-[0.28em] text-plum-300">{t("Προσεχώς")}</h3>
         <ul className="mt-4 space-y-3.5">
           {upcoming.length === 0 && (
             <li className="text-xs text-muted">{t("Δεν υπάρχουν προγραμματισμένες εκδηλώσεις.")}</li>
@@ -173,8 +173,8 @@ export default function CalendarWidget() {
             const d = new Date(e.date);
             return (
               <li key={e.date + e.title} className="flex gap-3">
-                <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-brass-400/25 bg-ink-900/70">
-                  <span className="text-[0.8rem] font-semibold leading-none text-brass-600">
+                <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-plum-400/25 bg-ink-900/70">
+                  <span className="text-[0.8rem] font-semibold leading-none text-plum-600">
                     {d.getDate()}
                   </span>
                   <span className="mt-0.5 text-[0.5rem] uppercase tracking-wider text-muted">

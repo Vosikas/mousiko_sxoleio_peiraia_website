@@ -64,14 +64,14 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t("Αναζήτηση ανακοινώσεων")}
-              className="w-full rounded-xl border border-cream/15 bg-white px-11 py-3 text-sm text-cream outline-none transition placeholder:text-muted/70 focus:border-brass-500 focus:ring-2 focus:ring-brass-400/20"
+              className="w-full rounded-xl border border-cream/15 bg-white px-11 py-3 text-sm text-cream outline-none transition placeholder:text-muted/70 focus:border-plum-500 focus:ring-2 focus:ring-plum-400/20"
             />
           </label>
           <select
             value={sort}
             onChange={(event) => setSort(event.target.value as SortOrder)}
             aria-label={t("Ταξινόμηση")}
-            className="rounded-xl border border-cream/15 bg-white px-4 py-3 text-sm text-cream outline-none focus:border-brass-500"
+            className="rounded-xl border border-cream/15 bg-white px-4 py-3 text-sm text-cream outline-none focus:border-plum-500"
           >
             <option value="newest">{t("Νεότερα πρώτα")}</option>
             <option value="oldest">{t("Παλαιότερα πρώτα")}</option>
@@ -101,7 +101,7 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
       <div className="mt-7 flex items-center justify-between gap-4 text-[0.65rem] uppercase tracking-[0.18em] text-muted">
         <span>{filteredPosts.length} {t("ανακοινώσεις")}</span>
         {query || category !== "all" ? (
-          <button type="button" onClick={() => { setQuery(""); setCategory("all"); }} className="text-brass-600 transition hover:text-brass-500">
+          <button type="button" onClick={() => { setQuery(""); setCategory("all"); }} className="text-plum-600 transition hover:text-plum-500">
             {t("Καθαρισμός φίλτρων")}
           </button>
         ) : null}
@@ -121,11 +121,11 @@ export default function NewsBrowser({ posts }: { posts: Post[] }) {
 
       {pageCount > 1 && (
         <nav aria-label={t("Σελιδοποίηση")} className="mt-10 flex items-center justify-center gap-2">
-          <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-brass-500 disabled:cursor-not-allowed disabled:opacity-35">←</button>
+          <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-plum-500 disabled:cursor-not-allowed disabled:opacity-35">←</button>
           {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
             <button key={number} type="button" onClick={() => goToPage(number)} aria-current={page === number ? "page" : undefined} className={"h-9 w-9 rounded-full text-sm transition " + (page === number ? "btn-solid" : "border border-cream/15 bg-white text-cream hover:border-plum-400 hover:text-plum-500")}>{number}</button>
           ))}
-          <button type="button" disabled={page === pageCount} onClick={() => setPage((current) => current + 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-brass-500 disabled:cursor-not-allowed disabled:opacity-35">→</button>
+          <button type="button" disabled={page === pageCount} onClick={() => setPage((current) => current + 1)} className="rounded-full border border-cream/15 bg-white px-4 py-2 text-sm text-cream transition hover:border-plum-500 disabled:cursor-not-allowed disabled:opacity-35">→</button>
         </nav>
       )}
     </>

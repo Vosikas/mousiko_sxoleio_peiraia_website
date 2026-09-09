@@ -25,15 +25,15 @@ export function EnsemblesCard() {
           <li key={e.href}>
             <Link
               href={e.href}
-              className="group flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[0.78rem] text-cream/75 transition hover:bg-brass-400/8 hover:text-brass-600"
+              className="group flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-[0.78rem] text-cream/75 transition hover:bg-plum-400/8 hover:text-plum-600"
             >
               <span className="flex items-center gap-2.5">
-                <span className="text-brass-400/70 transition-transform duration-300 group-hover:scale-125">
+                <span className="text-plum-400/70 transition-transform duration-300 group-hover:scale-125">
                   ♪
                 </span>
                 {t(e.name)}
               </span>
-              <span className="text-muted/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-brass-300">
+              <span className="text-muted/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-plum-300">
                 →
               </span>
             </Link>
@@ -49,8 +49,8 @@ export function ContactCard() {
   const { t } = useLanguage();
 
   return (
-    <article className="relative overflow-hidden rounded-xl2 border border-brass-400/25 bg-gradient-to-br from-brass-400/12 via-ink-850/70 to-ink-900 p-6">
-      <span className="pointer-events-none absolute -right-8 -top-8 font-display text-[8rem] leading-none text-brass-400/10">
+    <article className="relative overflow-hidden rounded-xl2 border border-plum-400/25 bg-gradient-to-br from-plum-400/12 via-ink-850/70 to-ink-900 p-6">
+      <span className="pointer-events-none absolute -right-8 -top-8 font-display text-[8rem] leading-none text-plum-400/10">
         𝄞
       </span>
       <h2 className="relative font-display text-xl text-cream">{t("Εγγραφές & πληροφορίες")}</h2>
@@ -60,15 +60,15 @@ export function ContactCard() {
       <div className="relative mt-5 space-y-2 text-[0.78rem]">
         <a
           href={"tel:" + site.contact.phone.replace(/\s/g, "")}
-          className="flex items-center gap-2.5 text-cream/85 transition hover:text-brass-600"
+          className="flex items-center gap-2.5 text-cream/85 transition hover:text-plum-600"
         >
-          <span className="text-brass-400">☎</span> {site.contact.phone}
+          <span className="text-plum-400">☎</span> {site.contact.phone}
         </a>
         <a
           href={"mailto:" + site.contact.email}
-          className="flex items-center gap-2.5 break-all text-cream/85 transition hover:text-brass-600"
+          className="flex items-center gap-2.5 break-all text-cream/85 transition hover:text-plum-600"
         >
-          <span className="text-brass-400">✉</span> {site.contact.email}
+          <span className="text-plum-400">✉</span> {site.contact.email}
         </a>
       </div>
       <Link
@@ -109,7 +109,7 @@ export function Marquee() {
             className="flex items-center gap-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.32em] text-cream/45"
           >
             {t(item)}
-            <span className="text-brass-400/70">♪</span>
+            <span className="text-plum-400/70">♪</span>
           </span>
         ))}
       </div>
@@ -123,7 +123,7 @@ export function Marquee() {
             className="flex items-center gap-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.32em] text-cream/45"
           >
             {t(item)}
-            <span className="text-brass-400/70">♪</span>
+            <span className="text-plum-400/70">♪</span>
           </span>
         ))}
       </div>

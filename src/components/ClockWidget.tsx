@@ -50,12 +50,12 @@ export default function ClockWidget() {
         <svg viewBox="0 0 200 200" className="h-full w-full">
           <defs>
             <radialGradient id="face" cx="50%" cy="35%" r="75%">
-              <stop offset="0%" stopColor="#eef6f5" />
+              <stop offset="0%" stopColor="var(--color-plum-100)" />
               <stop offset="100%" stopColor="#ffffff" />
             </radialGradient>
           </defs>
 
-          <circle cx="100" cy="100" r="94" fill="url(#face)" stroke="rgba(14,147,140,0.28)" strokeWidth="1" />
+          <circle cx="100" cy="100" r="94" fill="url(#face)" stroke="color-mix(in oklab, var(--primary-purple) 28%, transparent)" strokeWidth="1" />
           <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(20,56,59,0.10)" strokeWidth="1" />
 
           {/* Δείκτες ωρών */}
@@ -71,7 +71,7 @@ export default function ClockWidget() {
                 y1={100 - Math.cos(angle) * inner}
                 x2={100 + Math.sin(angle) * outer}
                 y2={100 - Math.cos(angle) * outer}
-                stroke={major ? "#0e938c" : "rgba(20,56,59,0.22)"}
+                stroke={major ? "var(--primary-purple)" : "rgba(20,56,59,0.22)"}
                 strokeWidth={major ? 2 : 1}
                 strokeLinecap="round"
               />
@@ -83,7 +83,7 @@ export default function ClockWidget() {
             x="100"
             y="70"
             textAnchor="middle"
-            fill="rgba(14,147,140,0.55)"
+            fill="color-mix(in oklab, var(--primary-purple) 55%, transparent)"
             fontSize="16"
             fontFamily="serif"
           >
@@ -92,10 +92,10 @@ export default function ClockWidget() {
 
           {/* Δείκτες */}
           <g style={{ transform: "rotate(" + hourAngle + "deg)", transformOrigin: "100px 100px" }}>
-            <line x1="100" y1="112" x2="100" y2="52" stroke="#14383b" strokeWidth="5" strokeLinecap="round" />
+            <line x1="100" y1="112" x2="100" y2="52" stroke="var(--color-plum-700)" strokeWidth="5" strokeLinecap="round" />
           </g>
           <g style={{ transform: "rotate(" + minuteAngle + "deg)", transformOrigin: "100px 100px" }}>
-            <line x1="100" y1="116" x2="100" y2="34" stroke="#8edbd5" strokeWidth="3" strokeLinecap="round" />
+            <line x1="100" y1="116" x2="100" y2="34" stroke="var(--color-plum-300)" strokeWidth="3" strokeLinecap="round" />
           </g>
           <g
             style={{
@@ -104,18 +104,18 @@ export default function ClockWidget() {
               transition: s === 0 ? "none" : "transform 0.15s cubic-bezier(0.4,2.2,0.5,1)",
             }}
           >
-            <line x1="100" y1="122" x2="100" y2="28" stroke="#08716d" strokeWidth="1.4" strokeLinecap="round" />
+            <line x1="100" y1="122" x2="100" y2="28" stroke="var(--color-plum-600)" strokeWidth="1.4" strokeLinecap="round" />
           </g>
 
-          <circle cx="100" cy="100" r="5" fill="#0e938c" />
-          <circle cx="100" cy="100" r="2" fill="#14383b" />
+          <circle cx="100" cy="100" r="5" fill="var(--primary-purple)" />
+          <circle cx="100" cy="100" r="2" fill="var(--color-plum-700)" />
         </svg>
       </div>
 
       <div className="mt-5 text-center">
         <p className="font-display text-3xl tabular-nums tracking-wide text-cream">
           {pad(h)}
-          <span className="animate-pulse text-brass-400">:</span>
+          <span className="animate-pulse text-plum-400">:</span>
           {pad(m)}
           <span className="ml-1 align-top text-sm text-muted">{pad(s)}</span>
         </p>
@@ -131,16 +131,16 @@ export default function ClockWidget() {
       <div className="mt-5 flex items-center justify-center gap-2 rounded-full border border-cream/10 bg-ink-900/60 py-2 text-[0.62rem] uppercase tracking-[0.2em]">
         <span className="relative flex h-2 w-2">
           {isOpen && (
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-olive-500/70" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-plum-500/70" />
           )}
           <span
             className={
               "relative inline-flex h-2 w-2 rounded-full " +
-              (isOpen ? "bg-olive-500" : "bg-muted/60")
+              (isOpen ? "bg-plum-500" : "bg-muted/60")
             }
           />
         </span>
-        <span className={isOpen ? "text-olive-600" : "text-muted"}>
+        <span className={isOpen ? "text-plum-600" : "text-muted"}>
           {t(isOpen ? "Ανοιχτά τώρα" : "Εκτός ωραρίου")}
         </span>
       </div>
@@ -169,9 +169,9 @@ export function WidgetLabel({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="h-px flex-1 bg-gradient-to-r from-brass-400/50 to-transparent" />
-      <h2 className="text-[0.6rem] uppercase tracking-[0.32em] text-brass-300">{t(String(children))}</h2>
-      <span className="h-px flex-1 bg-gradient-to-l from-brass-400/50 to-transparent" />
+      <span className="h-px flex-1 bg-gradient-to-r from-plum-400/50 to-transparent" />
+      <h2 className="text-[0.6rem] uppercase tracking-[0.32em] text-plum-300">{t(String(children))}</h2>
+      <span className="h-px flex-1 bg-gradient-to-l from-plum-400/50 to-transparent" />
     </div>
   );
 }

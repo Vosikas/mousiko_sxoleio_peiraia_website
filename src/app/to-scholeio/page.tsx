@@ -11,7 +11,7 @@ export default async function Page() {
     return (
       <main className="mx-auto w-full max-w-5xl px-5 pb-24 pt-36 lg:px-10">
         <header className="max-w-3xl">
-          <p className="text-[0.62rem] uppercase tracking-[0.35em] text-brass-400">Ταυτότητα</p>
+          <p className="text-[0.62rem] uppercase tracking-[0.35em] text-plum-400">Ταυτότητα</p>
           <h1 className="mt-5 font-display text-5xl leading-tight text-cream sm:text-7xl">{page.title}</h1>
         </header>
         <div

@@ -53,9 +53,9 @@ export default function OfficeHours() {
           className={
             "rounded-full px-3 py-1.5 text-sm font-medium " +
             (now === null
-              ? "bg-[#eef4f7] text-[#5b7285]"
+              ? "bg-white text-[#5b7285]"
               : openNow
-                ? "bg-[#0e938c]/10 text-[#0b6f6a]"
+                ? "bg-[var(--primary-purple)]/10 text-[var(--primary-purple)]"
                 : "bg-[var(--primary-purple)]/15 text-[var(--primary-purple)]")
           }
         >
@@ -101,7 +101,7 @@ export default function OfficeHours() {
                   <span className="sm:hidden">{day.short}</span>
                 </span>
 
-                <div className="relative h-9 flex-1 overflow-hidden rounded-lg bg-[#eef4f7]">
+                <div className="relative h-9 flex-1 overflow-hidden rounded-lg bg-white">
                   {TICKS.map((tick) => (
                     <span
                       key={tick}
@@ -114,7 +114,7 @@ export default function OfficeHours() {
                     <span className="absolute inset-y-0 left-3 flex items-center text-xs text-[#8ea3b3]">Κλειστά</span>
                   ) : (
                     <span
-                      className="absolute inset-y-1 flex items-center rounded-md bg-[linear-gradient(90deg,#0e938c,#35b7ae)] px-2.5 text-xs font-medium text-white shadow-[0_2px_8px_rgba(14,147,140,0.28)]"
+                      className="absolute inset-y-1 flex items-center rounded-md bg-[var(--primary-purple)] px-2.5 text-xs font-medium text-white"
                       style={{
                         left: `${position(day.open!)}%`,
                         width: `${position(day.close!) - position(day.open!)}%`,

@@ -23,8 +23,9 @@ const STATS = [
 export default function Hero() {
   const { t } = useLanguage();
 
+  // Χωρίς δικό του φόντο: αφήνει να φανεί το υδατογράφημα από πίσω.
   return (
-    <section className="relative bg-[var(--page-bg)] pt-28">
+    <section className="relative pt-28">
       <div className="mx-auto grid w-full max-w-[1500px] items-center gap-12 px-5 pb-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.3fr)] lg:gap-16 lg:px-10">
         {/* ---------------- ΑΡΙΣΤΕΡΑ: λογότυπο ---------------- */}
         <div
@@ -45,23 +46,7 @@ export default function Hero() {
 
         {/* ---------------- ΔΕΞΙΑ: γκρι κουτί ---------------- */}
         <div className="relative" style={{ animation: "rise 1.1s 0.3s both" }}>
-          {/* Δεύτερο κουτί σε μετατόπιση — δίνει το βάθος του reference. */}
-          <div
-            aria-hidden
-            className="surface-box absolute -bottom-8 left-6 right-6 top-20 -z-10 opacity-55"
-          />
-
-          <div className="surface-box relative overflow-hidden p-7 sm:p-10 lg:p-14">
-            {/* Υδατογράφημα λογοτύπου μέσα στο κουτί: το αρχείο είναι λευκό,
-                οπότε πάνω στο γκρι διαβάζεται σαν ανοιχτά πλήκτρα πιάνου. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/LOGO%20AXNO%202.svg"
-              alt=""
-              aria-hidden
-              className="pointer-events-none absolute -right-4 top-1/2 w-[85%] -translate-y-1/2 opacity-70"
-            />
-
+          <div className="surface-box p-7 sm:p-10 lg:p-14">
             <div className="relative">
               {/* Eyebrow */}
               <p className="flex items-center gap-3 text-[0.6rem] font-medium uppercase tracking-[0.3em] surface-box-accent">

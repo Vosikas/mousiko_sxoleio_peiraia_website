@@ -60,7 +60,7 @@ function body(input: ContactInput, meta: { ip: string; at: string }) {
   <table style="border-collapse:collapse;font-size:14px">
     ${rows.map(([label, value]) => `<tr><td style="padding:4px 16px 4px 0;color:#5b7285">${escape(label)}</td><td style="padding:4px 0"><strong>${escape(value)}</strong></td></tr>`).join("")}
   </table>
-  <div style="margin-top:20px;padding:16px;background:#f2f8f8;border-left:3px solid #0e938c;white-space:pre-wrap;font-size:14px">${escape(input.message)}</div>
+  <div style="margin-top:20px;padding:16px;background:#f5f0f4;border-left:3px solid #951b81;white-space:pre-wrap;font-size:14px">${escape(input.message)}</div>
 </div>`;
 
   return { text, html };

@@ -36,14 +36,14 @@ export default async function ArticlePage({ params }: Params) {
     <article className="mx-auto max-w-3xl px-5 pb-24 pt-40 lg:px-0">
       <Link
         href="/nea"
-        className="text-[0.65rem] uppercase tracking-[0.25em] text-muted transition hover:text-brass-600"
+        className="text-[0.65rem] uppercase tracking-[0.25em] text-muted transition hover:text-plum-600"
       >
         ← Όλα τα νέα
       </Link>
 
-      <div className="mt-8 flex items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-brass-400">
+      <div className="mt-8 flex items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-plum-400">
         {post.category && <span>{post.category}</span>}
-        <span className="h-1 w-1 rounded-full bg-brass-400/60" />
+        <span className="h-1 w-1 rounded-full bg-plum-400/60" />
         <time dateTime={post.date} className="text-muted">
           {formatGreekDate(post.date)}
         </time>
@@ -66,7 +66,7 @@ export default async function ArticlePage({ params }: Params) {
 
       {more.length > 0 && (
         <section className="mt-20 border-t border-cream/8 pt-10">
-          <h2 className="text-[0.62rem] uppercase tracking-[0.3em] text-brass-400">Διαβάστε επίσης</h2>
+          <h2 className="text-[0.62rem] uppercase tracking-[0.3em] text-plum-400">Διαβάστε επίσης</h2>
           <ul className="mt-6 space-y-4">
             {more.map((p) => (
               <li key={p.id}>
@@ -74,7 +74,7 @@ export default async function ArticlePage({ params }: Params) {
                   href={p.href}
                   className="group flex items-baseline justify-between gap-6 border-b border-cream/6 pb-4 transition"
                 >
-                  <span className="font-display text-lg text-cream/85 transition group-hover:text-brass-600">
+                  <span className="font-display text-lg text-cream/85 transition group-hover:text-plum-600">
                     {p.title}
                   </span>
                   <span className="shrink-0 text-[0.62rem] uppercase tracking-[0.2em] text-muted">

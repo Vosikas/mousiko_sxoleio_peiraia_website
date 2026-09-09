@@ -13,7 +13,7 @@ import {
 type Status = "idle" | "sending" | "sent" | "failed";
 
 const field =
-  "w-full rounded-xl border bg-white px-4 py-3 text-[#102a43] outline-none transition placeholder:text-[#9db0be] focus:border-[#0e938c] focus:ring-4 focus:ring-[#0e938c]/15";
+  "w-full rounded-xl border bg-white px-4 py-3 text-[#102a43] outline-none transition placeholder:text-[#9db0be] focus:border-[var(--primary-purple)] focus:ring-4 focus:ring-[var(--primary-purple)]/15";
 const ok = "border-[#dbe6ec]";
 const bad = "border-[#d1534a] ring-4 ring-[#d1534a]/10";
 
@@ -78,8 +78,8 @@ export default function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="rounded-2xl border border-[#0e938c]/25 bg-[#0e938c]/[0.06] p-8">
-        <p className="font-display text-2xl font-semibold text-[#0b6f6a]">Το μήνυμα στάλθηκε</p>
+      <div className="rounded-2xl border border-[var(--primary-purple)]/25 bg-white p-8">
+        <p className="font-display text-2xl font-semibold text-[var(--primary-purple)]">Το μήνυμα στάλθηκε</p>
         <p className="mt-3 max-w-prose text-[#3d5568]">
           Η γραμματεία απαντά συνήθως μέσα σε δύο εργάσιμες ημέρες. Θα λάβετε απάντηση στο {values.email}.
         </p>
@@ -98,7 +98,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div ref={formRef} className="rounded-2xl border border-[#e3ecf1] bg-white p-6 shadow-[0_18px_50px_-30px_rgba(16,42,67,0.45)] sm:p-8">
+    <div ref={formRef}>
       <h2 className="font-display text-2xl font-semibold text-[#102a43]">Στείλτε μας μήνυμα</h2>
       <p className="mt-2 text-sm text-[#5b7285]">Τα πεδία με αστερίσκο είναι υποχρεωτικά.</p>
 
@@ -223,7 +223,7 @@ export default function ContactForm() {
               onChange={(event) => set("consent", event.target.checked)}
               aria-invalid={Boolean(errors.consent)}
               aria-describedby={describe("consent")}
-              className="mt-0.5 h-5 w-5 shrink-0 rounded border-[#c6d5df] text-[#0e938c] focus:ring-[#0e938c]"
+              className="mt-0.5 h-5 w-5 shrink-0 rounded border-[#c6d5df] text-[var(--primary-purple)] focus:ring-[var(--primary-purple)]"
             />
             <span>Συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου αποκλειστικά για την απάντηση σε αυτό το μήνυμα. *</span>
           </label>

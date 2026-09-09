@@ -10,7 +10,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="relative mt-28 border-t border-cream/8 bg-ink-900">
-      <div className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-brass-400/50 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-plum-400/50 to-transparent" />
 
       <div className="mx-auto grid max-w-[1500px] gap-12 px-5 py-16 md:grid-cols-2 lg:grid-cols-4 lg:px-10">
         <div className="lg:col-span-2">
@@ -18,7 +18,7 @@ export default function SiteFooter() {
             <Logo className="h-12 w-12" />
             <span>
                 <span className="block font-display text-2xl text-cream">{t(site.name)}</span>
-              <span className="block text-[0.62rem] uppercase tracking-[0.4em] text-brass-400">
+              <span className="block text-[0.62rem] uppercase tracking-[0.4em] text-plum-400">
                 {t(site.tagline)}
               </span>
             </span>
@@ -29,7 +29,7 @@ export default function SiteFooter() {
               <a
                 key={s.label}
                 href={s.href}
-                className="rounded-full border border-cream/12 px-4 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-cream/70 transition hover:border-brass-400/60 hover:text-brass-600"
+                className="rounded-full border border-cream/12 px-4 py-2 text-[0.65rem] uppercase tracking-[0.2em] text-cream/70 transition hover:border-plum-400/60 hover:text-plum-600"
               >
                 {s.label}
               </a>
@@ -38,13 +38,13 @@ export default function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="text-[0.68rem] uppercase tracking-[0.3em] text-brass-400">{t("Πλοήγηση")}</h3>
+          <h3 className="text-[0.68rem] uppercase tracking-[0.3em] text-plum-400">{t("Πλοήγηση")}</h3>
           <ul className="mt-5 space-y-3">
             {site.nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-cream/70 transition hover:text-brass-600"
+                  className="text-sm text-cream/70 transition hover:text-plum-600"
                 >
                   {t(item.label)}
                 </Link>
@@ -54,16 +54,16 @@ export default function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="text-[0.68rem] uppercase tracking-[0.3em] text-brass-400">{t("Επικοινωνία")}</h3>
+          <h3 className="text-[0.68rem] uppercase tracking-[0.3em] text-plum-400">{t("Επικοινωνία")}</h3>
           <ul className="mt-5 space-y-3 text-sm text-cream/70">
             <li>{t(site.contact.address)}</li>
             <li>
-              <a href={"tel:" + site.contact.phone.replace(/\s/g, "")} className="hover:text-brass-600">
+              <a href={"tel:" + site.contact.phone.replace(/\s/g, "")} className="hover:text-plum-600">
                 {site.contact.phone}
               </a>
             </li>
             <li>
-              <a href={"mailto:" + site.contact.email} className="break-all hover:text-brass-600">
+              <a href={"mailto:" + site.contact.email} className="break-all hover:text-plum-600">
                 {site.contact.email}
               </a>
             </li>
@@ -77,7 +77,7 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} {t(site.name)}
           </span>
           <span className="flex items-center gap-2">
-            <span className="text-brass-400">♪</span> {t("Με μουσική και προσοχή στη λεπτομέρεια")}
+            <span className="text-plum-400">♪</span> {t("Με μουσική και προσοχή στη λεπτομέρεια")}
           </span>
         </div>
       </div>
