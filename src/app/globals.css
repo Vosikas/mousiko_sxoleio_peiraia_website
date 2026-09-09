@@ -157,8 +157,12 @@
      Καλό εύρος: 0.06 (πολύ διακριτικό) – 0.15 (εμφανές).
      Πάνω από ~0.2 σκουραίνει και δυσκολεύει την ανάγνωση του κειμένου. */
   --watermark-opacity: 0.1;
-  --watermark-fit: cover; /* cover = γεμίζει την οθόνη · contain = όλο το λογότυπο */
-  --watermark-scale: 1; /* >1 μεγαλώνει το λογότυπο πέρα από την οθόνη */
+  --watermark-fit: contain; /* contain = ΟΛΟΚΛΗΡΟ το λογότυπο · cover = γεμίζει κομμένο */
+  --watermark-scale: 1; /* >1 μεγαλώνει το λογότυπο */
+  /* Κενό γύρω από το λογότυπο. Το πάνω είναι μεγαλύτερο ώστε να μην
+     κολλάει στο header και να «κατεβαίνει» οπτικά το λογότυπο. */
+  --watermark-pad-top: 9rem;
+  --watermark-pad: 2.5rem;
   /* Το αρχείο είναι ΛΕΥΚΟ λογότυπο (#fff/#f6f6f6/#d9d9d9), φτιαγμένο για
      σκούρο φόντο. Επειδή η σελίδα είναι λευκή, το αντιστρέφουμε για να
      φαίνεται. Αν βάλεις σκούρα εκδοχή του λογοτύπου: none */
@@ -300,12 +304,17 @@ body {
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  /* Το padding μικραίνει τον διαθέσιμο χώρο, οπότε με object-fit: contain
+     το λογότυπο φαίνεται ΟΛΟΚΛΗΡΟ και με αέρα γύρω του. */
+  box-sizing: border-box;
+  padding: var(--watermark-pad-top, 9rem) var(--watermark-pad, 2.5rem)
+    var(--watermark-pad, 2.5rem);
 }
 
 .watermark-mark {
   width: 100%;
   height: 100%;
-  object-fit: var(--watermark-fit, cover);
+  object-fit: var(--watermark-fit, contain);
   object-position: center;
   scale: var(--watermark-scale, 1);
   opacity: var(--watermark-opacity, 0.4);
