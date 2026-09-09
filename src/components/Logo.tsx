@@ -6,8 +6,8 @@ export default function Logo({ className = "h-11 w-11" }: { className?: string }
     <Image
       src="/logomousiko.png"
       alt=""
-      width={64}
-      height={64}
+      width={192}
+      height={192}
       aria-hidden="true"
       className={className + " object-contain"}
     />
