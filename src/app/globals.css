@@ -2,7 +2,7 @@
 
 /* ==================================================================
    🎨  ΚΕΝΤΡΟ ΧΡΩΜΑΤΩΝ — ΟΛΟ ΤΟ SITE ΒΑΦΕΤΑΙ ΑΠΟ ΕΔΩ
-   Φωτεινή παλέτα: λευκό, βαθύ μπλε, sea glass, amber τονισμοί.
+   Παλέτα: ΛΕΥΚΟ φόντο ενοτήτων · ΓΚΡΙ κουτιά (#e3e3e3) · ΜΩΒ περιεχόμενο.
    ------------------------------------------------------------------
    ΔΥΟ ΕΠΙΠΕΔΑ, ΜΕ ΤΗ ΣΕΙΡΑ:
 
@@ -36,8 +36,8 @@
         muted         δευτερεύον κείμενο
         brass-100…600 sea glass / teal τονισμοί
         olive-100…700 ΠΡΑΣΙΝΟ ΣΧΟΛΕΙΟΥ (500 = #9da423)
-        plum-100…700  ΜΩΒ ΚΟΥΜΠΙΩΝ    (500 = #951b81)
-        sun-100…500   amber τονισμοί
+        plum-100…700  ΚΥΡΙΟ ΜΩΒ (500 = --primary-purple)
+        box           το γκρι κουτί #e3e3e3 (bg-box)
 
    B) ΣΗΜΑΣΙΟΛΟΓΙΚΑ → όταν θέλω «το χρώμα του Χ», όχι έναν τόνο:
 
@@ -80,20 +80,26 @@
   --color-olive-600: #858b1e;
   --color-olive-700: #6e7319;
 
-  /* Μωβ των κουμπιών — βάση #951b81 */
-  --color-plum-100: #efddec;
-  --color-plum-200: #daafd3;
-  --color-plum-300: #bf76b3;
-  --color-plum-400: #aa499a;
-  --color-plum-500: #951b81;
-  --color-plum-600: #7f176e;
-  --color-plum-700: #68135a;
+  /* ==============================================================
+     ΚΥΡΙΟ ΧΡΩΜΑ (PRIMARY) — ΒΑΛΕ ΕΔΩ ΤΟ ΜΩΒ ΣΟΥ.
+     Είναι η ΜΟΝΗ γραμμή που χρειάζεται αλλαγή: όλες οι αποχρώσεις
+     plum-100…700 παράγονται αυτόματα από αυτήν με color-mix.
+     ============================================================== */
+  --primary-purple: #951b81;
+
+  --color-plum-100: color-mix(in oklab, var(--primary-purple) 12%, white);
+  --color-plum-200: color-mix(in oklab, var(--primary-purple) 28%, white);
+  --color-plum-300: color-mix(in oklab, var(--primary-purple) 48%, white);
+  --color-plum-400: color-mix(in oklab, var(--primary-purple) 72%, white);
+  --color-plum-500: var(--primary-purple);
+  --color-plum-600: color-mix(in oklab, var(--primary-purple) 85%, black);
+  --color-plum-700: color-mix(in oklab, var(--primary-purple) 70%, black);
+
+  /* Το ΓΚΡΙ ΚΟΥΤΙ του design pattern (10% μαύρο). Χρήση: bg-box */
+  --color-box: #e3e3e3;
 
   --color-cream: #102a43;
   --color-muted: #4b6474;
-  --color-sun-100: #fff3cf;
-  --color-sun-300: #f4b942;
-  --color-sun-500: #d98c00;
 
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -101,7 +107,6 @@
   --radius-xl2: 1.75rem;
 
   --animate-float: float 7s ease-in-out infinite;
-  --animate-shimmer: shimmer 2.6s linear infinite;
   --animate-rise: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
 }
@@ -113,15 +118,6 @@
   }
   50% {
     transform: translateY(-18px) rotate(4deg);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
   }
 }
 
@@ -148,58 +144,6 @@
   }
 }
 
-@keyframes note-rise {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(0.6) rotate(0deg);
-  }
-  15% {
-    opacity: 0.9;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--dx, 20px), -160px) scale(1.1) rotate(var(--rot, 25deg));
-  }
-}
-
-@keyframes stave-draw {
-  from {
-    stroke-dashoffset: 1200;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes sweep {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes camera-pan {
-  0%,
-  100% {
-    transform: translateX(-3%) scale(1);
-  }
-  50% {
-    transform: translateX(3%) scale(1.03);
-  }
-}
-
-@keyframes instrument-bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-1deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-}
-
 /* ------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------
@@ -209,10 +153,19 @@
 :root {
   color-scheme: light;
 
-  /* Βάση σελίδας */
+  /* Βάση σελίδας: ΛΕΥΚΟ φόντο, ΜΩΒ τονισμός. */
   --page-bg: var(--color-ink-950);
   --page-text: var(--color-cream);
-  --page-accent: var(--color-brass-400);
+  --page-accent: var(--primary-purple);
+
+  /* ==============================================================
+     ΤΟ ΜΟΤΙΒΟ ΤΟΥ SITE
+     ΛΕΥΚΗ ενότητα → ΓΚΡΙ κουτί → ΜΩΒ περιεχόμενο μέσα στο κουτί.
+     Χρησιμοποίησε την κλάση .surface-box για κάθε τέτοιο κουτί.
+     ============================================================== */
+  --surface-box: var(--color-box); /* #e3e3e3 */
+  --surface-box-text: var(--color-cream); /* κείμενο μέσα στο κουτί */
+  --surface-box-accent: var(--primary-purple); /* τονισμοί μέσα στο κουτί */
 
   /* ==============================================================
      ΥΔΑΤΟΓΡΑΦΗΜΑ (WATERMARK) — το λογότυπο στο κέντρο της σελίδας.
@@ -342,18 +295,6 @@ body {
   }
 }
 
-/* Κάλυμμα πριν το hydration: κρύβει τη σελίδα μέχρι να μπει η intro,
-   ώστε να μην «αναβοσβήνει» το hero. Το αφαιρεί το useIntro. */
-html[data-intro]::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  background: #f7fbfb;
-}
-html[data-intro] body {
-  overflow: hidden;
-}
 
 /* ------------------------------------------------------------------
    ΥΔΑΤΟΓΡΑΦΗΜΑ — το λογότυπο πίσω από όλη τη σελίδα.
@@ -427,4 +368,25 @@ html[data-intro] body {
 .btn-ghost:focus-visible {
   outline: 2px solid var(--btn-ring);
   outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------
+   ΓΚΡΙ ΚΟΥΤΙ (.surface-box)
+   Το βασικό δομικό μοτίβο: λευκή ενότητα → γκρι κουτί → μωβ μέσα.
+   Χρώμα/γωνίες αλλάζουν από τα --surface-box* παραπάνω.
+------------------------------------------------------------------- */
+.surface-box {
+  background-color: var(--surface-box);
+  color: var(--surface-box-text);
+  border-radius: var(--radius-xl2);
+}
+
+/* Τονισμένο στοιχείο μέσα σε γκρι κουτί (τίτλοι, αριθμοί, εικονίδια). */
+.surface-box-accent {
+  color: var(--surface-box-accent);
+}
+
+/* Λεπτή γραμμή διαχωρισμού μέσα στο γκρι κουτί. */
+.surface-box-rule {
+  border-color: color-mix(in oklab, var(--surface-box-text) 14%, transparent);
 }

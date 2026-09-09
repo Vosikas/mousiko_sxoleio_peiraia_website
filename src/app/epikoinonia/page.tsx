@@ -12,13 +12,8 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="bg-[#f7fbfb] text-[#102a43]">
+    <main className="bg-[var(--page-bg)] text-[var(--page-text)]">
       <div className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_100%_at_20%_0%,rgba(14,147,140,0.14),transparent_60%),radial-gradient(45%_90%_at_85%_10%,rgba(244,185,66,0.16),transparent_60%)]"
-        />
-
         <div className="relative mx-auto w-full max-w-6xl px-6 pb-20 pt-16 sm:px-8 sm:pt-24">
           <header className="max-w-2xl">
             <h1 className="font-display text-[clamp(2.4rem,7vw,4.2rem)] font-semibold leading-[1.02] tracking-tight">
@@ -31,7 +26,8 @@ export default function ContactPage() {
           </header>
 
           <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-16">
-            <section aria-labelledby="details">
+            {/* ΓΚΡΙ ΚΟΥΤΙ — ίδιο μοτίβο με τις κάρτες στα «Νέα». */}
+            <section aria-labelledby="details" className="surface-box p-7 sm:p-10">
               <h2 id="details" className="sr-only">
                 Στοιχεία επικοινωνίας
               </h2>
@@ -40,14 +36,14 @@ export default function ContactPage() {
                 href={MAPS_LINK}
                 target="_blank"
                 rel="noreferrer"
-                className="group block rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0e938c]"
+                className="group block rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--primary-purple)]"
               >
-                <p className="font-display text-[clamp(1.5rem,3.4vw,2.1rem)] font-semibold leading-tight decoration-[#0e938c]/40 underline-offset-8 group-hover:underline">
+                <p className="font-display text-[clamp(1.5rem,3.4vw,2.1rem)] font-semibold leading-tight decoration-[var(--primary-purple)]/40 underline-offset-8 group-hover:underline">
                   {SCHOOL.street}
                   <br />
                   {SCHOOL.postcode} {SCHOOL.area}
                 </p>
-                <p className="mt-2 text-sm text-[#0b6f6a]">Άνοιγμα στους Χάρτες Google</p>
+                <p className="mt-2 text-sm text-[var(--primary-purple)]">Άνοιγμα στους Χάρτες Google</p>
               </a>
 
               <dl className="mt-10 divide-y divide-[#dde8ee] border-y border-[#dde8ee]">
@@ -56,7 +52,7 @@ export default function ContactPage() {
                   <dd className="text-lg">
                     <a
                       href={`tel:${SCHOOL.phone.replace(/\s/g, "")}`}
-                      className="tabular-nums transition hover:text-[#0b6f6a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0e938c]"
+                      className="tabular-nums transition hover:text-[var(--primary-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-purple)]"
                     >
                       {SCHOOL.phone}
                     </a>
@@ -67,7 +63,7 @@ export default function ContactPage() {
                   <dd className="min-w-0 text-lg">
                     <a
                       href={`mailto:${SCHOOL.email}`}
-                      className="break-all transition hover:text-[#0b6f6a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0e938c]"
+                      className="break-all transition hover:text-[var(--primary-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-purple)]"
                     >
                       {SCHOOL.email}
                     </a>
@@ -84,7 +80,7 @@ export default function ContactPage() {
                 <ul className="mt-4 space-y-4">
                   {SCHOOL.transit.map((item) => (
                     <li key={item.mode} className="flex gap-4">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#f4b942]" aria-hidden />
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary-purple)]" aria-hidden />
                       <p className="leading-relaxed">
                         <span className="font-medium">{item.mode}.</span>{" "}
                         <span className="text-[#3d5568]">{item.detail}</span>
@@ -95,7 +91,7 @@ export default function ContactPage() {
               </div>
             </section>
 
-            <section aria-labelledby="form-heading">
+            <section aria-labelledby="form-heading" className="surface-box p-7 sm:p-10">
               <h2 id="form-heading" className="sr-only">
                 Φόρμα επικοινωνίας
               </h2>
@@ -106,7 +102,7 @@ export default function ContactPage() {
       </div>
 
       <div className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
-        <div className="rounded-2xl border border-[#e3ecf1] bg-white p-6 sm:p-10">
+        <div className="surface-box p-6 sm:p-10">
           <OfficeHours />
         </div>
       </div>
@@ -120,12 +116,12 @@ export default function ContactPage() {
             href={MAPS_LINK}
             target="_blank"
             rel="noreferrer"
-            className="text-sm font-medium text-[#0b6f6a] underline decoration-[#0e938c]/30 underline-offset-4 transition hover:decoration-[#0e938c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0e938c]"
+            className="text-sm font-medium text-[var(--primary-purple)] underline decoration-[var(--primary-purple)]/30 underline-offset-4 transition hover:decoration-[var(--primary-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-purple)]"
           >
             Οδηγίες πλοήγησης
           </a>
         </div>
-        <div className="mt-6 overflow-hidden rounded-2xl border border-[#e3ecf1] bg-white shadow-[0_18px_50px_-34px_rgba(16,42,67,0.5)]">
+        <div className="surface-box mt-6 overflow-hidden p-2">
           <iframe
             title={`Χάρτης: ${SCHOOL.name}, ${ADDRESS_LINE}`}
             src={MAPS_EMBED}

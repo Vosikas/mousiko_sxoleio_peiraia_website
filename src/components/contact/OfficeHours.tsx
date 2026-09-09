@@ -56,7 +56,7 @@ export default function OfficeHours() {
               ? "bg-[#eef4f7] text-[#5b7285]"
               : openNow
                 ? "bg-[#0e938c]/10 text-[#0b6f6a]"
-                : "bg-[#f4b942]/20 text-[#8a5f10]")
+                : "bg-[var(--primary-purple)]/15 text-[var(--primary-purple)]")
           }
         >
           {now === null
@@ -89,7 +89,7 @@ export default function OfficeHours() {
                 key={day.label}
                 className={
                   "flex items-center gap-3 rounded-xl px-2 py-1.5 transition-colors sm:gap-4 " +
-                  (isToday ? "bg-[#f4b942]/10 ring-1 ring-[#f4b942]/45" : "")
+                  (isToday ? "bg-[var(--primary-purple)]/10 ring-1 ring-[var(--primary-purple)]/45" : "")
                 }
               >
                 <span

@@ -35,7 +35,7 @@ const EVENTS: SchoolEvent[] = [
 
 const KIND_COLOR: Record<string, string> = {
   concert: "bg-brass-300",
-  exam: "bg-sun-500",
+  exam: "bg-plum-500",
   trip: "bg-olive-500",
 };
 

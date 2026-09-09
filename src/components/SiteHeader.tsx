@@ -95,7 +95,7 @@ export default function SiteHeader() {
             const expanded = openMenu === item.label;
             const activeClass = isActive(item.href) ? "bg-brass-100 text-brass-600 " : "text-cream/75 ";
             return item.children ? (
-              <div key={item.label} className="relative" onMouseEnter={() => setOpenMenu(item.label)} onMouseLeave={() => setOpenMenu(null)} onFocus={() => setOpenMenu(item.label)}>
+              <div key={item.label} className="relative" onMouseEnter={() => setOpenMenu(item.label)} onFocus={() => setOpenMenu(item.label)}>
                 <div className="flex items-center">
                   <Link href={item.href} className={activeClass + "rounded-l-full px-3 py-2 text-[0.68rem] font-medium transition hover:bg-ink-850 hover:text-cream"}>{item.label}</Link>
                   <button type="button" data-menu-trigger aria-label={`Άνοιγμα ${item.label}`} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.label)} onKeyDown={(event) => handleMenuKeyDown(event, index)} onFocus={() => setOpenMenu(item.label)} className={activeClass + "rounded-r-full px-2 py-2 transition hover:bg-ink-850 hover:text-cream"}><Chevron expanded={expanded} /></button>

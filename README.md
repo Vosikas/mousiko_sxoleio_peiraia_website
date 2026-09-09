@@ -90,19 +90,18 @@ NEXT_PUBLIC_SCHOOL_VIDEO_POSTER=/video/poster.jpg
 src/
 ├─ app/
 │  ├─ page.tsx              ΑΡΧΙΚΗ — hero, βίντεο, άρθρα, widgets
-│  ├─ layout.tsx            γραμματοσειρές, header/footer, intro
+│  ├─ layout.tsx            γραμματοσειρές, header & footer
 │  ├─ globals.css           design tokens & animations
 │  ├─ nea/                  λίστα άρθρων + [slug]
 │  ├─ api/revalidate/       webhook για άμεση ανανέωση
 │  └─ …                     to-scholeio, tmimata, ekdiloseis, epikoinonia
 ├─ components/
-│  ├─ LoadingScreen.tsx     διαδραστική intro με πιάνο
-│  ├─ Hero.tsx  VideoFeature.tsx  PostsPool.tsx  PostCard.tsx
+│  ├─ Hero.tsx  VideoFeature.tsx  PostsPool.tsx  PostCard.tsx  NewsBrowser.tsx
 │  ├─ ClockWidget.tsx       αναλογικό ρολόι (αριστερή στήλη)
 │  ├─ CalendarWidget.tsx    ημερολόγιο & εκδηλώσεις (δεξιά στήλη)
 │  └─ RailCards.tsx  SiteHeader.tsx  SiteFooter.tsx  Reveal.tsx  Logo.tsx
-├─ hooks/  useNow.ts, useIntro.ts
-└─ lib/    wordpress.ts, site.ts, audio.ts
+├─ hooks/  useNow.ts, useLanguage.tsx
+└─ lib/    wordpress.ts, site.ts, school.ts
 ```
 
 Τα σταθερά στοιχεία (όνομα, τηλέφωνα, μενού, ωράριο) ζουν στο `src/lib/site.ts`.
@@ -112,11 +111,15 @@ src/
 
 ## Σχεδίαση
 
-Φωτεινή παλέτα με λευκές επιφάνειες, sea-glass τόνους και καθαρά amber highlights.
+Μοτίβο: **ΛΕΥΚΟ** φόντο ενοτήτων → **ΓΚΡΙ** κουτί `#e3e3e3` (`.surface-box`) →
+**ΜΩΒ** περιεχόμενο μέσα στο κουτί.
+
+Όλα τα χρώματα ορίζονται στο `src/app/globals.css`. Το κύριο μωβ αλλάζει από
+**μία** γραμμή — `--primary-purple` — και παράγει μόνο του όλες τις αποχρώσεις.
 
 - **Γραμματοσειρά:** Manrope για τίτλους και κείμενο — με πλήρη ελληνικά.
-- **Intro:** αυτόματη σύντομη μουσική εισαγωγή με διαφορετικό ηχόχρωμα για κάθε ομάδα
-  οργάνων, με δυνατότητα παράλειψης. Παίζει μία φορά ανά επίσκεψη.
+- **Υδατογράφημα:** το λογότυπο μένει «κολλημένο» (sticky) στο κέντρο της σελίδας —
+  ρυθμίζεται από τα `--watermark-*`.
 - **Προσβασιμότητα:** σημασιολογικό HTML, `aria-label` παντού, σεβασμός στο
   `prefers-reduced-motion`, πλήρης πλοήγηση με πληκτρολόγιο.
 - **Ταχύτητα:** μηδέν εξωτερικές βιβλιοθήκες animation, ISR, facade για το YouTube.

@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 
-import LoadingScreen from "@/components/intro/LoadingScreen";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { site } from "@/lib/site";
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f7fbfb",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 
@@ -54,18 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="el" className={manrope.variable}>
       <body className="grain min-h-screen antialiased">
-        {/* Τρέχει πριν την πρώτη ζωγραφιά: αποφασίζει αν θα παίξει η intro. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(!sessionStorage.getItem('intro_seen')){document.documentElement.setAttribute('data-intro','');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},12000)}}catch(e){}",
-          }}
-        />
         <LanguageProvider>
-          <LoadingScreen
-            schoolName="Μουσικό Σχολείο Πειραιά"
-            tagline="Εδώ ξεκινάει το ταξίδι στη μουσική"
-          />
           <SiteHeader />
           <main id="main">{children}</main>
           <SiteFooter />

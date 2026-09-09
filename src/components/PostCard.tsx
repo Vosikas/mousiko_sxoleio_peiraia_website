@@ -27,7 +27,7 @@ export default function PostCard({
   return (
     <article
       className={
-        "group relative overflow-hidden rounded-xl2 border border-cream/8 bg-ink-850/60 transition-all duration-500 hover:border-brass-400/35 hover:bg-ink-800/70 " +
+        "surface-box group relative overflow-hidden border border-transparent transition-all duration-500 hover:border-plum-500/35 " +
         (featured ? "sm:grid sm:grid-cols-2" : "flex flex-col")
       }
     >
@@ -36,7 +36,7 @@ export default function PostCard({
       {/* Εικόνα */}
       <div
         className={
-          "relative overflow-hidden bg-ink-900 " + (featured ? "aspect-[4/3] sm:aspect-auto" : "aspect-[16/10]")
+          "relative overflow-hidden bg-white " + (featured ? "aspect-[4/3] sm:aspect-auto" : "aspect-[16/10]")
         }
       >
         {post.image ? (
@@ -49,18 +49,18 @@ export default function PostCard({
             className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(53,183,174,0.14),transparent_60%)]">
-            <span className="font-display text-6xl text-brass-400/30 transition-transform duration-700 group-hover:scale-110">
+          <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklab,var(--primary-purple)_16%,transparent),transparent_60%)]">
+            <span className="font-display text-6xl text-plum-500/30 transition-transform duration-700 group-hover:scale-110">
               {GLYPHS[index % GLYPHS.length]}
             </span>
-            <span className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-brass-400/25 to-transparent" />
+            <span className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-plum-500/25 to-transparent" />
           </div>
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-ink-950/70 to-transparent opacity-70" />
 
         {post.category && (
-          <span className="absolute left-4 top-4 rounded-full border border-brass-300/40 bg-ink-950/70 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-brass-600 backdrop-blur-sm">
+          <span className="absolute left-4 top-4 rounded-full border border-plum-500/35 bg-white/85 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-plum-500 backdrop-blur-sm">
             {post.category}
           </span>
         )}
@@ -70,13 +70,13 @@ export default function PostCard({
       <div className={"min-w-0 flex flex-1 flex-col p-6 " + (featured ? "sm:p-8" : "")}>
         <div className="flex items-center gap-3 text-[0.6rem] uppercase tracking-[0.2em] text-muted">
           <time dateTime={post.date}>{formattedDate}</time>
-          <span className="h-1 w-1 rounded-full bg-brass-400/60" />
+          <span className="h-1 w-1 rounded-full bg-plum-500/60" />
           <span>{post.readingMinutes} min {t("ανάγνωση")}</span>
         </div>
 
         <h3
           className={
-            "mt-3 min-w-0 break-words font-display leading-tight text-cream transition-colors duration-300 group-hover:text-brass-600 " +
+            "mt-3 min-w-0 break-words font-display leading-tight text-cream transition-colors duration-300 group-hover:text-plum-500 " +
             (featured ? "text-xl sm:text-2xl" : "text-lg")
           }
         >
@@ -91,7 +91,7 @@ export default function PostCard({
           {post.excerpt}
         </p>
 
-        <span className="mt-6 inline-flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.22em] text-brass-300">
+        <span className="mt-6 inline-flex items-center gap-2 text-[0.66rem] uppercase tracking-[0.22em] surface-box-accent">
           {t("Διαβάστε περισσότερα")}
           <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
         </span>
