@@ -5,6 +5,8 @@ type Props = { params: Promise<{ slug: string }> };
 
 // Μόνο οι υποσελίδες του src/content/draseis.ts υπάρχουν· οτιδήποτε άλλο → 404.
 export const dynamicParams = false;
+// Τα άρθρα του WordPress ανανεώνονται κάθε 5 λεπτά, όπως στα Νέα.
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return subpageParams("draseis");

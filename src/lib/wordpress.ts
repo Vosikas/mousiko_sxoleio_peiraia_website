@@ -1,18 +1,32 @@
 /**
  * WordPress REST API client (headless).
  *
- * Ρύθμιση: βάλτε στο .env.local
- *   WORDPRESS_API_URL=https://to-site-sas.gr/wp-json/wp/v2
+ * Ρύθμιση: βάλτε στο .env.local (και στο Vercel → Environment Variables)
+ *   WORDPRESS_API_URL=https://gym-mous-peiraia.att.sch.gr
+ * Γίνεται δεκτό και ολόκληρο το endpoint (…/wp-json/wp/v2).
  *
- * Όσο δεν υπάρχει διαθέσιμο WordPress, το site πέφτει αυτόματα σε
- * δείγμα περιεχομένου ώστε να δουλεύει η ανάπτυξη χωρίς backend.
+ * ΠΡΟΣΟΧΗ: εδώ μπαίνει η διεύθυνση του WORDPRESS, όχι του νέου site.
+ * Αν η διεύθυνση δεν απαντά, το site πέφτει σιωπηλά σε δείγμα
+ * περιεχομένου — δείτε το log του server για γραμμές «[wp]».
  * Τα δεδομένα ανανεώνονται με ISR (revalidate) — ο διαχειριστής γράφει
  * στο WordPress και το Next.js ενημερώνεται μόνο του.
  */
 
 import { unstable_noStore } from "next/cache";
 
-export const WP_API_URL = process.env.WORDPRESS_API_URL?.replace(/\/$/, "") ?? "";
+/**
+ * Δέχεται ΕΙΤΕ τη διεύθυνση του site ΕΙΤΕ το REST endpoint και επιστρέφει
+ * πάντα το endpoint — το «/wp-json/wp/v2» ξεχνιέται εύκολα.
+ */
+function toRestBase(raw: string | undefined): string {
+  const url = raw?.trim().replace(/\/+$/, "") ?? "";
+  if (!url) return "";
+  if (/\/wp-json\/wp\/v2$/.test(url)) return url;
+  if (/\/wp-json$/.test(url)) return url + "/wp/v2";
+  return url + "/wp-json/wp/v2";
+}
+
+export const WP_API_URL = toRestBase(process.env.WORDPRESS_API_URL);
 
 /** Δευτερόλεπτα μέχρι το Next.js να ξαναρωτήσει το WordPress. */
 export const REVALIDATE_SECONDS = Number(process.env.WORDPRESS_REVALIDATE ?? 300);
@@ -239,6 +253,44 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed=true`);
   if (!raw?.length) return SAMPLE_POSTS.find((p) => p.slug === slug) ?? null;
   return normalize(raw[0]);
+}
+
+/**
+ * Κλειδί σύγκρισης κατηγοριών: χωρίς τόνους, πεζά, «ς»→«σ».
+ * Έτσι «ΣΥΝΑΥΛΙΕΣ», «Συναυλίες» και το slug «συναυλιεσ» ταιριάζουν όλα.
+ */
+function categoryKey(value: string): string {
+  let text = decodeHtml(value);
+  try {
+    text = decodeURIComponent(text); // τα ελληνικά slugs έρχονται ως %ce%b1…
+  } catch {
+    /* όνομα με «%» που δεν είναι κωδικοποίηση — μένει ως έχει */
+  }
+  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/ς/g, "σ").trim();
+}
+
+/**
+ * Άρθρα από μία ή περισσότερες κατηγορίες του WordPress (όνομα ή slug).
+ * Χωρίς δείγμα περιεχομένου: αν η κατηγορία δεν υπάρχει ή είναι άδεια,
+ * επιστρέφει κενή λίστα και η σελίδα δείχνει «δεν υπάρχουν αναρτήσεις».
+ */
+export async function getPostsByCategories(names: string[], count = 12): Promise<Post[]> {
+  if (!names.length) return [];
+  const categories = await wpFetch<Pick<WPTerm, "id" | "name" | "slug">[]>(
+    "/categories?per_page=100&_fields=id,name,slug",
+  );
+  if (!categories?.length) return [];
+
+  const wanted = new Set(names.map(categoryKey));
+  const ids = categories
+    .filter((c) => wanted.has(categoryKey(c.name)) || wanted.has(categoryKey(c.slug)))
+    .map((c) => c.id);
+  if (!ids.length) return [];
+
+  const raw = await wpFetch<WPRawPost[]>(
+    `/posts?categories=${ids.join(",")}&per_page=${count}&_embed=true&orderby=date&order=desc`,
+  );
+  return raw?.map(normalize) ?? [];
 }
 
 /** Σελίδα (WordPress page) με βάση το slug — για ΤΟ ΣΧΟΛΕΙΟ, ΕΠΙΚΟΙΝΩΝΙΑ κ.λπ. */

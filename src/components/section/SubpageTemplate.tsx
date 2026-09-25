@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getSubpage, shortTitle, subpageHref, type SectionSlug } from "@/content";
 import type { Section, Subpage } from "@/content/types";
 import Blocks from "./Blocks";
+import CategoryFeed from "./CategoryFeed";
 import PageIntro from "./PageIntro";
 
 /**
@@ -12,6 +13,7 @@ import PageIntro from "./PageIntro";
  *   ┌──────────────┬───────────────────────────────┐
  *   │ πλαϊνό μενού │ τουβλάκια περιεχομένου         │
  *   │ της ενότητας │ (γκρι κουτιά)                  │
+ *   │              │ αναρτήσεις WordPress (αν ορίζονται) │
  *   │ (sticky)     │ ← Προηγούμενη    Επόμενη →     │
  *   └──────────────┴───────────────────────────────┘
  *
@@ -92,6 +94,9 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
 
         <div className="min-w-0">
           <Blocks blocks={page.blocks} />
+
+          {/* Άρθρα WordPress — μόνο όπου η υποσελίδα ορίζει wpCategories. */}
+          {page.wpCategories?.length ? <CategoryFeed categories={page.wpCategories} /> : null}
 
           {(prev || next) && (
             <nav aria-label="Περιήγηση ενότητας" className="mt-10 grid gap-4 sm:grid-cols-2">

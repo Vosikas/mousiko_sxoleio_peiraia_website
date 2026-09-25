@@ -5,6 +5,10 @@ import type { Section } from "./types";
  *
  * Τα κείμενα είναι ΕΝΔΕΙΚΤΙΚΑ (draft: true). Αντικατάστησέ τα με το
  * τελικό κείμενο και σβήσε το `draft: true`.
+ *
+ * ΑΡΘΡΑ ΑΠΟ ΤΟ WORDPRESS: κάθε υποσελίδα δείχνει τα άρθρα των κατηγοριών
+ * του `wpCategories`. Φτιάξε στο WordPress κατηγορίες με αυτά τα ονόματα
+ * και βάλε τα άρθρα σε αυτές — εμφανίζονται μόνα τους.
  * Τύποι τουβλακιών και οδηγίες: src/content/types.ts
  */
 export const DRASEIS: Section = {
@@ -16,6 +20,7 @@ export const DRASEIS: Section = {
   subpages: [
     {
       slug: "ergastiria",
+      wpCategories: ["Εργαστήρια"],
       title: "Παρουσιάσεις Εργαστηρίων",
       shortTitle: "Εργαστήρια",
       summary:
@@ -42,6 +47,7 @@ export const DRASEIS: Section = {
     },
     {
       slug: "synavlies",
+      wpCategories: ["Συναυλίες"],
       title: "Συναυλίες",
       summary:
         "Οι συναυλίες των συνόλων, της χορωδίας και των σολίστ του σχολείου, μέσα και έξω από τον Πειραιά.",
@@ -62,6 +68,7 @@ export const DRASEIS: Section = {
     },
     {
       slug: "ekdiloseis",
+      wpCategories: ["Εκδηλώσεις"],
       title: "Εκδηλώσεις",
       summary:
         "Σχολικές γιορτές, επετειακές εκδηλώσεις και ανοιχτές εκδηλώσεις για γονείς και κοινό.",
@@ -77,6 +84,7 @@ export const DRASEIS: Section = {
     },
     {
       slug: "programmata",
+      wpCategories: ["Προγράμματα", "Erasmus"],
       title: "Προγράμματα (Εθνικά & Ευρωπαϊκά)",
       shortTitle: "Προγράμματα",
       summary:
@@ -98,6 +106,7 @@ export const DRASEIS: Section = {
     },
     {
       slug: "ekdromes",
+      wpCategories: ["Εκδρομές"],
       title: "Εκδρομές",
       summary:
         "Εκπαιδευτικές εκδρομές, επισκέψεις σε χώρους πολιτισμού και μουσικά ταξίδια των τάξεων.",
