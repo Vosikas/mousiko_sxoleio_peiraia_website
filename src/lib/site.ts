@@ -42,7 +42,7 @@ export const site = {
     { label: "ΤΟ ΣΧΟΛΕΙΟ", href: "/to-scholeio" },
     { label: "ΤΜΗΜΑΤΑ", href: "/tmimata" },
     { label: "ΝΕΑ", href: "/nea" },
-    { label: "ΕΚΔΗΛΩΣΕΙΣ", href: "/ekdiloseis" },
+    { label: "ΔΡΑΣΕΙΣ", href: "/draseis" },
     { label: "ΕΠΙΚΟΙΝΩΝΙΑ", href: "/epikoinonia" },
   ],
 

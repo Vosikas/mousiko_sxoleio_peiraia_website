@@ -5,6 +5,7 @@ import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { site } from "@/lib/site";
+import { NAV } from "@/content";
 import { LanguageProvider } from "@/hooks/useLanguage";
 
 const manrope = Manrope({
@@ -54,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="el" className={manrope.variable}>
       <body className="grain min-h-screen antialiased">
         <LanguageProvider>
-          <SiteHeader />
+          <SiteHeader nav={NAV} />
           <main id="main">{children}</main>
           <SiteFooter />
         </LanguageProvider>

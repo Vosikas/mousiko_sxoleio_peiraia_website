@@ -32,6 +32,15 @@ const nextConfig: NextConfig = {
     ],
     formats: ["image/avif", "image/webp"],
   },
+  // Η καρτέλα «Δράσεις» μετακόμισε από /ekdiloseis σε /draseis (αλλιώς η
+  // υποσελίδα «Εκδηλώσεις» θα γινόταν /ekdiloseis/ekdiloseis). Τα παλιά
+  // links συνεχίζουν να δουλεύουν.
+  async redirects() {
+    return [
+      { source: "/ekdiloseis", destination: "/draseis", permanent: true },
+      { source: "/ekdiloseis/:path*", destination: "/draseis/:path*", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

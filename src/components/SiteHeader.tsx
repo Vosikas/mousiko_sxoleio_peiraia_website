@@ -6,37 +6,15 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Logo from "@/components/Logo";
 import { useLanguage, type Language } from "@/hooks/useLanguage";
 
-type MenuItem = { label: string; href: string };
-type NavItem = MenuItem & { children?: MenuItem[] };
+import type { NavItem, NavLink } from "@/content/types";
 
-const navItems: NavItem[] = [
-  { label: "Αρχική", href: "/" },
-  {
-    label: "Το Σχολείο μας", href: "/to-scholeio", children: [
-      { label: "Ιστορία του Σχολείου – Κτιριακή Υποδομή", href: "/to-scholeio#istoria" },
-      { label: "Μαθητές – Φοίτηση (μαθήματα, τμήματα, μαθητικές κοινότητες)", href: "/to-scholeio#foitisi" },
-      { label: "Εκπαιδευτικοί", href: "/to-scholeio#ekpaideftikoi" },
-      { label: "Σύλλογος Γονέων & Κηδεμόνων", href: "/to-scholeio#goneis" },
-      { label: "Ωρολόγιο Πρόγραμμα", href: "/to-scholeio#orologio" },
-      { label: "Κανονισμός Λειτουργίας", href: "/to-scholeio#kanonismos" },
-      { label: "Αυτοαξιολόγηση Σχολικής Μονάδας", href: "/to-scholeio#aftoaxiologisi" },
-      { label: "Σχέδιο Πολιτικής Προστασίας – Μνημόνιο Ενεργειών", href: "/to-scholeio#politiki-prostasias" },
-    ],
-  },
-  { label: "Νέα – Ανακοινώσεις", href: "/nea" },
-  {
-    label: "Δράσεις", href: "/ekdiloseis", children: [
-      { label: "Παρουσιάσεις Εργαστηρίων", href: "/ekdiloseis#ergastiria" },
-      { label: "Συναυλίες", href: "/ekdiloseis#synavlies" },
-      { label: "Εκδηλώσεις", href: "/ekdiloseis#ekdiloseis" },
-      { label: "Προγράμματα (Εθνικά & Ευρωπαϊκά)", href: "/ekdiloseis#programmata" },
-      { label: "Εκδρομές", href: "/ekdiloseis#ekdromes" },
-    ],
-  },
-  { label: "Επικοινωνία", href: "/epikoinonia" },
-];
+/*
+ * Το μενού ΔΕΝ ορίζεται εδώ: έρχεται ως prop από το layout, χτισμένο από το
+ * src/content/index.ts (NAV). Έτσι μια νέα υποσελίδα μπαίνει στο μενού μόνη
+ * της, και τα κείμενα των σελίδων δεν φορτώνονται ποτέ στον browser.
+ */
 
-export default function SiteHeader() {
+export default function SiteHeader({ nav }: { nav: NavItem[] }) {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -108,7 +86,7 @@ export default function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-1 min-[900px]:flex" aria-label="Κύρια πλοήγηση">
-          {navItems.map((item, index) => {
+          {nav.map((item, index) => {
             const expanded = openMenu === item.label;
             const activeClass = isActive(item.href) ? "bg-plum-100 text-plum-500 " : "text-cream/75 ";
             return item.children ? (
@@ -134,7 +112,7 @@ export default function SiteHeader() {
 
       <div className={(mobileOpen ? "visible opacity-100 " : "pointer-events-none invisible opacity-0 ") + "absolute inset-x-4 top-[calc(100%-0.25rem)] max-h-[calc(100vh-5.5rem)] overflow-y-auto rounded-2xl border border-cream/15 bg-white p-3 shadow-[0_18px_45px_rgba(16,42,67,0.16)] transition-opacity min-[900px]:hidden sm:inset-x-6"}>
         <nav aria-label="Κύρια πλοήγηση κινητού" className="flex flex-col">
-          {navItems.map((item) => {
+          {nav.map((item) => {
             const expanded = openMenu === item.label;
             return item.children ? (
               <div key={item.label} className="border-b border-cream/8 last:border-0">
@@ -156,7 +134,7 @@ function Chevron({ expanded }: { expanded: boolean }) {
   return <svg aria-hidden viewBox="0 0 12 8" className={(expanded ? "rotate-180 " : "") + "h-2 w-3 transition-transform"} fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m1 1 5 5 5-5" /></svg>;
 }
 
-function Dropdown({ items, open }: { items: MenuItem[]; open: boolean }) {
+function Dropdown({ items, open }: { items: NavLink[]; open: boolean }) {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {

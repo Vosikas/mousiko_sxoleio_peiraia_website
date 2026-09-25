@@ -16,6 +16,7 @@ const translations: Record<string, string> = {
   "ΤΜΗΜΑΤΑ": "DEPARTMENTS",
   "ΝΕΑ": "NEWS",
   "ΕΚΔΗΛΩΣΕΙΣ": "EVENTS",
+  "ΔΡΑΣΕΙΣ": "ACTIVITIES",
   "ΕΠΙΚΟΙΝΩΝΙΑ": "CONTACT",
   "Εκδηλώσεις": "Events",
   "Τμήματα": "Departments",
