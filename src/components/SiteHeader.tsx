@@ -91,9 +91,12 @@ export default function SiteHeader({ nav }: { nav: NavItem[] }) {
             const activeClass = isActive(item.href) ? "bg-plum-100 text-plum-500 " : "text-cream/75 ";
             return item.children ? (
               <div key={item.label} className="relative" onMouseEnter={() => setOpenMenu(item.label)} onFocus={() => setOpenMenu(item.label)}>
-                <div className="flex items-center">
-                  <Link href={item.href} className={activeClass + "rounded-l-full px-3 py-2 text-[0.68rem] font-medium transition hover:bg-plum-100 hover:text-plum-500"}>{item.label}</Link>
-                  <button type="button" data-menu-trigger aria-label={`Άνοιγμα ${item.label}`} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.label)} onKeyDown={(event) => handleMenuKeyDown(event, index)} onFocus={() => setOpenMenu(item.label)} className={activeClass + "rounded-r-full px-2 py-2 transition hover:bg-plum-100 hover:text-plum-500"}><Chevron expanded={expanded} /></button>
+                {/* ΕΝΑ pill για σύνδεσμο + βελάκι: κοινό φόντο και κοινή καμπύλη,
+                    ίδιο ύψος με τα υπόλοιπα στοιχεία (items-stretch). Μένει
+                    τονισμένο όσο το dropdown είναι ανοιχτό. */}
+                <div className={(isActive(item.href) || expanded ? "bg-plum-100 text-plum-500 " : "text-cream/75 ") + "flex items-stretch rounded-full transition hover:bg-plum-100 hover:text-plum-500"}>
+                  <Link href={item.href} className="flex items-center rounded-l-full py-2 pl-3.5 pr-1.5 text-[0.68rem] font-medium">{item.label}</Link>
+                  <button type="button" data-menu-trigger aria-label={`Άνοιγμα ${item.label}`} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.label)} onKeyDown={(event) => handleMenuKeyDown(event, index)} onFocus={() => setOpenMenu(item.label)} className="flex items-center rounded-r-full py-2 pl-1 pr-3"><Chevron expanded={expanded} /></button>
                 </div>
                 <Dropdown items={item.children} open={expanded} />
               </div>
