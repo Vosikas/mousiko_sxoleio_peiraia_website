@@ -11,9 +11,8 @@ export default function SectionIndex({ section: slug }: { section: SectionSlug }
   const section = SECTIONS[slug];
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 pb-24 pt-10 sm:px-8 sm:pt-14">
+    <div className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8 sm:pt-24">
       <PageIntro
-        crumbs={[{ label: "Αρχική", href: "/" }, { label: section.title }]}
         eyebrow={section.eyebrow}
         title={section.title}
         lead={section.intro}

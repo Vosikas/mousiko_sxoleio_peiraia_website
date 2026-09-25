@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getSubpage, sectionHref, shortTitle, subpageHref, type SectionSlug } from "@/content";
+import { getSubpage, shortTitle, subpageHref, type SectionSlug } from "@/content";
 import type { Section, Subpage } from "@/content/types";
 import Blocks from "./Blocks";
 import PageIntro from "./PageIntro";
@@ -8,7 +8,7 @@ import PageIntro from "./PageIntro";
 /**
  * ΤΟ TEMPLATE ΚΑΘΕ ΥΠΟΣΕΛΙΔΑΣ
  *
- *   Διαδρομή · ετικέτα · τίτλος · εισαγωγή
+ *   Ετικέτα · τίτλος · εισαγωγή
  *   ┌──────────────┬───────────────────────────────┐
  *   │ πλαϊνό μενού │ τουβλάκια περιεχομένου         │
  *   │ της ενότητας │ (γκρι κουτιά)                  │
@@ -24,13 +24,8 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
   const { section, page, prev, next } = found;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 pb-24 pt-10 sm:px-8 sm:pt-14">
+    <div className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8 sm:pt-24">
       <PageIntro
-        crumbs={[
-          { label: "Αρχική", href: "/" },
-          { label: section.title, href: sectionHref(section) },
-          { label: shortTitle(page) },
-        ]}
         eyebrow={section.title}
         title={page.title}
         lead={page.summary}

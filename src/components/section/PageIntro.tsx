@@ -1,21 +1,17 @@
-import Link from "next/link";
-
-export type Crumb = { label: string; href?: string };
-
 /**
- * Η κεφαλίδα κάθε σελίδας ενότητας: διαδρομή (breadcrumbs), ετικέτα,
- * τίτλος και εισαγωγή. Κοινή για την κεντρική σελίδα και τις υποσελίδες,
- * ώστε όλες να «μιλάνε» με τον ίδιο τρόπο.
+ * Η κεφαλίδα κάθε σελίδας ενότητας: ετικέτα, τίτλος και εισαγωγή.
+ * (Χωρίς γραμμή διαδρομής: θα κολλούσε στο λογότυπο πάνω αριστερά, και
+ * τον προσανατολισμό τον δίνουν ήδη η ετικέτα και το πλαϊνό μενού.)
+ * Κοινή για την κεντρική σελίδα και τις υποσελίδες, ώστε όλες να
+ * «μιλάνε» με τον ίδιο τρόπο.
  */
 export default function PageIntro({
-  crumbs,
   eyebrow,
   title,
   lead,
   draft = false,
   size = "lg",
 }: {
-  crumbs: Crumb[];
   eyebrow: string;
   title: string;
   lead: string;
@@ -25,31 +21,8 @@ export default function PageIntro({
 }) {
   return (
     <header className="max-w-3xl">
-      <nav aria-label="Διαδρομή">
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.72rem] text-muted">
-          {crumbs.map((crumb, i) => (
-            <li key={crumb.label} className="flex items-center gap-2">
-              {i > 0 && (
-                <span aria-hidden className="text-cream/25">
-                  /
-                </span>
-              )}
-              {crumb.href ? (
-                <Link href={crumb.href} className="transition hover:text-plum-500">
-                  {crumb.label}
-                </Link>
-              ) : (
-                <span aria-current="page" className="text-cream/80">
-                  {crumb.label}
-                </span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
-
       <p
-        className="mt-10 flex items-center gap-3 text-[0.62rem] font-medium uppercase tracking-[0.3em] text-plum-500"
+        className="flex items-center gap-3 text-[0.62rem] font-medium uppercase tracking-[0.3em] text-plum-500"
         style={{ animation: "rise 0.9s 0.05s both" }}
       >
         <span aria-hidden className="h-px w-10 bg-current opacity-60" />
