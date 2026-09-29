@@ -37,15 +37,6 @@ export const site = {
     subtitle: "Ορχήστρα, χορωδία, παραδοσιακά σύνολα και καθημερινή δημιουργία.",
   },
 
-  nav: [
-    { label: "ΑΡΧΙΚΗ", href: "/" },
-    { label: "ΤΟ ΣΧΟΛΕΙΟ", href: "/to-scholeio" },
-    { label: "ΤΜΗΜΑΤΑ", href: "/tmimata" },
-    { label: "ΝΕΑ", href: "/nea" },
-    { label: "ΔΡΑΣΕΙΣ", href: "/draseis" },
-    { label: "ΕΠΙΚΟΙΝΩΝΙΑ", href: "/epikoinonia" },
-  ],
-
   social: [
     { label: "Facebook", href: "#" },
     { label: "Instagram", href: "#" },

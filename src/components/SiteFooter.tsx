@@ -4,8 +4,10 @@ import Link from "next/link";
 import Logo from "./Logo";
 import { site } from "@/lib/site";
 import { useLanguage } from "@/hooks/useLanguage";
+import type { NavItem } from "@/content/types";
 
-export default function SiteFooter() {
+/** Το «Πλοήγηση» είναι το ίδιο κεντρικό μενού με το header (NAV, από το layout). */
+export default function SiteFooter({ nav }: { nav: NavItem[] }) {
   const { t } = useLanguage();
 
   return (
@@ -40,7 +42,7 @@ export default function SiteFooter() {
         <div>
           <h3 className="text-[0.68rem] uppercase tracking-[0.3em] text-plum-400">{t("Πλοήγηση")}</h3>
           <ul className="mt-5 space-y-3">
-            {site.nav.map((item) => (
+            {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

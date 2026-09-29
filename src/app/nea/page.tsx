@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Reveal from "@/components/Reveal";
 import NewsBrowser from "@/components/NewsBrowser";
 import { getAllPosts } from "@/lib/wordpress";
+import { NEWS_CATEGORIES } from "@/content/news";
 
 export const revalidate = 300;
 
@@ -24,7 +25,8 @@ export default async function NewsPage() {
         </p>
       </Reveal>
 
-      <NewsBrowser posts={posts} />
+      {/* Βασικές κατηγορίες της δεξιάς στήλης: src/content/news.ts */}
+      <NewsBrowser posts={posts} pinnedCategories={NEWS_CATEGORIES} />
     </div>
   );
 }

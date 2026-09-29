@@ -13,6 +13,7 @@
  */
 
 import { unstable_noStore } from "next/cache";
+import { categoryKey } from "./text";
 
 /**
  * Δέχεται ΕΙΤΕ τη διεύθυνση του site ΕΙΤΕ το REST endpoint και επιστρέφει
@@ -100,7 +101,10 @@ export interface Post {
   excerpt: string;
   date: string;
   href: string;
+  /** Η κύρια κατηγορία — η ετικέτα πάνω στην κάρτα. */
   category: string | null;
+  /** Όλες οι κατηγορίες του άρθρου (για το φίλτρο στα Νέα). */
+  categories: string[];
   author: string | null;
   image: { src: string; alt: string } | null;
   readingMinutes: number;
@@ -170,7 +174,9 @@ function normalize(raw: WPRawPost): Post {
     media?.media_details?.sizes?.large?.source_url ??
     inlineImageSrc;
   const terms = raw._embedded?.["wp:term"]?.flat() ?? [];
-  const category = terms.find((t) => t?.taxonomy === "category" && t.slug !== "uncategorized");
+  const categories = terms
+    .filter((t) => t?.taxonomy === "category" && t.slug !== "uncategorized")
+    .map((t) => decodeHtml(t.name));
   const plainExcerpt = stripHtml(raw.excerpt?.rendered ?? "");
   const words = stripHtml(raw.content?.rendered ?? "").split(" ").length;
 
@@ -181,7 +187,8 @@ function normalize(raw: WPRawPost): Post {
     excerpt: truncate(plainExcerpt || stripHtml(raw.content?.rendered ?? ""), 165),
     date: raw.date,
     href: `/nea/${raw.slug}`,
-    category: category ? decodeHtml(category.name) : null,
+    category: categories[0] ?? null,
+    categories,
     author: raw._embedded?.author?.[0]?.name ?? null,
     image: imageSrc
       ? {
@@ -256,20 +263,6 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 /**
- * Κλειδί σύγκρισης κατηγοριών: χωρίς τόνους, πεζά, «ς»→«σ».
- * Έτσι «ΣΥΝΑΥΛΙΕΣ», «Συναυλίες» και το slug «συναυλιεσ» ταιριάζουν όλα.
- */
-function categoryKey(value: string): string {
-  let text = decodeHtml(value);
-  try {
-    text = decodeURIComponent(text); // τα ελληνικά slugs έρχονται ως %ce%b1…
-  } catch {
-    /* όνομα με «%» που δεν είναι κωδικοποίηση — μένει ως έχει */
-  }
-  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/ς/g, "σ").trim();
-}
-
-/**
  * Άρθρα από μία ή περισσότερες κατηγορίες του WordPress (όνομα ή slug).
  * Χωρίς δείγμα περιεχομένου: αν η κατηγορία δεν υπάρχει ή είναι άδεια,
  * επιστρέφει κενή λίστα και η σελίδα δείχνει «δεν υπάρχουν αναρτήσεις».
@@ -317,6 +310,7 @@ export const SAMPLE_POSTS: Post[] = [
     date: daysAgo(2),
     href: "/nea/christougenniatiki-synavlia",
     category: "Εκδηλώσεις",
+    categories: ["Εκδηλώσεις"],
     author: "Γραμματεία",
     image: null,
     readingMinutes: 2,
@@ -330,6 +324,7 @@ export const SAMPLE_POSTS: Post[] = [
     date: daysAgo(6),
     href: "/nea/eggrafes-2026",
     category: "Ανακοινώσεις",
+    categories: ["Ανακοινώσεις"],
     author: "Διεύθυνση",
     image: null,
     readingMinutes: 3,
@@ -343,6 +338,7 @@ export const SAMPLE_POSTS: Post[] = [
     date: daysAgo(11),
     href: "/nea/diakrisi-panelladiko-diagonismo",
     category: "Διακρίσεις",
+    categories: ["Διακρίσεις"],
     author: "Σύλλογος Καθηγητών",
     image: null,
     readingMinutes: 2,
@@ -356,6 +352,7 @@ export const SAMPLE_POSTS: Post[] = [
     date: daysAgo(18),
     href: "/nea/erasmus-mousiki-gefyra",
     category: "Προγράμματα",
+    categories: ["Προγράμματα"],
     author: "Ομάδα Erasmus+",
     image: null,
     readingMinutes: 4,

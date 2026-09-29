@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LanguageProvider>
           <SiteHeader nav={NAV} />
           <main id="main">{children}</main>
-          <SiteFooter />
+          <SiteFooter nav={NAV} />
         </LanguageProvider>
       </body>
     </html>

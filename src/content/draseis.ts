@@ -84,9 +84,9 @@ export const DRASEIS: Section = {
     },
     {
       slug: "programmata",
-      wpCategories: ["Προγράμματα", "Erasmus"],
-      title: "Προγράμματα (Εθνικά & Ευρωπαϊκά)",
-      shortTitle: "Προγράμματα",
+      // Το Erasmus έχει δική του σελίδα στο μενού (src/content/erasmus.ts).
+      wpCategories: ["Προγράμματα"],
+      title: "Προγράμματα",
       summary:
         "Τα εθνικά και ευρωπαϊκά προγράμματα στα οποία συμμετέχει το σχολείο, όπως ανταλλαγές και συνεργασίες.",
       draft: true,

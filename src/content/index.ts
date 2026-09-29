@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { DRASEIS } from "./draseis";
+import { ERASMUS } from "./erasmus";
 import { TO_SCHOLEIO } from "./to-scholeio";
-import type { NavItem, Section, Subpage } from "./types";
+import type { NavItem, Section, StandalonePage, Subpage } from "./types";
 
 /**
  * Το «μητρώο» των ενοτήτων. Από εδώ βγαίνουν ΟΛΑ:
@@ -58,6 +59,25 @@ export function subpageMetadata(sectionSlug: SectionSlug, slug: string): Metadat
   };
 }
 
+/* ------------------------------------------------------ αυτόνομες σελίδες */
+
+export const PAGES = {
+  erasmus: ERASMUS,
+} as const;
+
+export type PageSlug = keyof typeof PAGES;
+
+export const pageHref = (page: StandalonePage) => `/${page.slug}`;
+
+export function pageMetadata(slug: PageSlug): Metadata {
+  const page = PAGES[slug];
+  return {
+    title: page.title,
+    description: page.summary,
+    alternates: { canonical: pageHref(page) },
+  };
+}
+
 /* ------------------------------------------------------------------ μενού */
 
 function sectionNav(section: Section): NavItem {
@@ -73,6 +93,7 @@ export const NAV: NavItem[] = [
   { label: "Αρχική", href: "/" },
   sectionNav(TO_SCHOLEIO),
   { label: "Νέα – Ανακοινώσεις", href: "/nea" },
+  { label: "Erasmus", href: pageHref(ERASMUS) },
   sectionNav(DRASEIS),
   { label: "Επικοινωνία", href: "/epikoinonia" },
 ];
