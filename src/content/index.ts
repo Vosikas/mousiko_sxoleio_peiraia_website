@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { el } from "@/i18n/l10n";
 import { DRASEIS } from "./draseis";
 import { ERASMUS } from "./erasmus";
 import { TO_SCHOLEIO } from "./to-scholeio";
@@ -43,8 +44,8 @@ export const subpageParams = (sectionSlug: SectionSlug) =>
 export function sectionMetadata(sectionSlug: SectionSlug): Metadata {
   const section = SECTIONS[sectionSlug];
   return {
-    title: section.title,
-    description: section.intro,
+    title: el(section.title),
+    description: el(section.intro),
     alternates: { canonical: sectionHref(section) },
   };
 }
@@ -53,8 +54,8 @@ export function subpageMetadata(sectionSlug: SectionSlug, slug: string): Metadat
   const found = getSubpage(sectionSlug, slug);
   if (!found) return {};
   return {
-    title: shortTitle(found.page),
-    description: found.page.summary,
+    title: el(shortTitle(found.page)),
+    description: el(found.page.summary),
     alternates: { canonical: subpageHref(found.section, found.page) },
   };
 }
@@ -72,8 +73,8 @@ export const pageHref = (page: StandalonePage) => `/${page.slug}`;
 export function pageMetadata(slug: PageSlug): Metadata {
   const page = PAGES[slug];
   return {
-    title: page.title,
-    description: page.summary,
+    title: el(page.title),
+    description: el(page.summary),
     alternates: { canonical: pageHref(page) },
   };
 }
@@ -90,10 +91,10 @@ function sectionNav(section: Section): NavItem {
 
 /** Το κύριο μενού. Οι υποσελίδες προστίθενται αυτόματα από το περιεχόμενο. */
 export const NAV: NavItem[] = [
-  { label: "Αρχική", href: "/" },
+  { label: { el: "Αρχική", en: "Home" }, href: "/" },
   sectionNav(TO_SCHOLEIO),
-  { label: "Νέα – Ανακοινώσεις", href: "/nea" },
+  { label: { el: "Νέα – Ανακοινώσεις", en: "News & Announcements" }, href: "/nea" },
   { label: "Erasmus", href: pageHref(ERASMUS) },
   sectionNav(DRASEIS),
-  { label: "Επικοινωνία", href: "/epikoinonia" },
+  { label: { el: "Επικοινωνία", en: "Contact" }, href: "/epikoinonia" },
 ];

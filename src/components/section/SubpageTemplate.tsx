@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSubpage, shortTitle, subpageHref, type SectionSlug } from "@/content";
 import type { Section, Subpage } from "@/content/types";
+import T from "@/components/i18n/T";
+import { el } from "@/i18n/l10n";
 import Blocks from "./Blocks";
 import CategoryFeed from "./CategoryFeed";
 import PageIntro from "./PageIntro";
@@ -37,7 +39,7 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
 
       {/* Κινητό / tablet: οι υποσελίδες ως οριζόντια λίστα που κυλάει. */}
       <nav
-        aria-label={"Σελίδες: " + section.title}
+        aria-label={"Σελίδες: " + el(section.title)}
         className="-mx-6 mt-10 overflow-x-auto px-6 pb-1 sm:-mx-8 sm:px-8 lg:hidden"
       >
         <ul className="flex w-max gap-2">
@@ -53,7 +55,7 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
                     (active ? "bg-plum-500 text-white" : "bg-box text-cream/80 hover:text-plum-500")
                   }
                 >
-                  {shortTitle(p)}
+                  <T v={shortTitle(p)} />
                 </Link>
               </li>
             );
@@ -64,9 +66,9 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
       <div className="mt-8 grid gap-10 lg:mt-14 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-12">
         {/* Υπολογιστής: πλαϊνό μενού που ακολουθεί το scroll. */}
         <aside className="hidden lg:block">
-          <nav aria-label={"Σελίδες: " + section.title} className="surface-box sticky top-24 p-3">
+          <nav aria-label={"Σελίδες: " + el(section.title)} className="surface-box sticky top-24 p-3">
             <p className="px-3 pb-3 pt-2 text-[0.6rem] font-medium uppercase tracking-[0.28em] surface-box-accent">
-              {section.title}
+              <T v={section.title} />
             </p>
             <ul className="space-y-1">
               {section.subpages.map((p) => {
@@ -83,7 +85,7 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
                           : "text-cream/75 hover:bg-white/60 hover:text-plum-500")
                       }
                     >
-                      {shortTitle(p)}
+                      <T v={shortTitle(p)} />
                     </Link>
                   </li>
                 );
@@ -122,10 +124,10 @@ function PagerLink({ section, page, direction }: { section: Section; page: Subpa
       }
     >
       <span className="text-[0.62rem] uppercase tracking-[0.22em] text-muted">
-        {isNext ? "Επόμενη →" : "← Προηγούμενη"}
+        <T v={isNext ? "Επόμενη →" : "← Προηγούμενη"} />
       </span>
       <span className="font-display text-lg font-semibold leading-snug text-cream transition-colors group-hover:text-plum-500">
-        {shortTitle(page)}
+        <T v={shortTitle(page)} />
       </span>
     </Link>
   );

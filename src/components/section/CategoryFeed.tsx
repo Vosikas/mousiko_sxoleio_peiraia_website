@@ -1,5 +1,6 @@
 import PostCard from "@/components/PostCard";
 import { getPostsByCategories } from "@/lib/wordpress";
+import T from "@/components/i18n/T";
 
 /**
  * Τα άρθρα του WordPress για μια υποσελίδα, με βάση τις κατηγορίες της
@@ -13,7 +14,7 @@ export default async function CategoryFeed({ categories }: { categories: string[
   return (
     <section aria-labelledby="category-feed" className="mt-12">
       <h2 id="category-feed" className="font-display text-2xl font-semibold sm:text-3xl">
-        Αναρτήσεις
+        <T v="Αναρτήσεις" />
       </h2>
 
       {posts.length ? (
@@ -26,7 +27,7 @@ export default async function CategoryFeed({ categories }: { categories: string[
         </ul>
       ) : (
         <p className="surface-box mt-6 p-7 leading-relaxed text-muted">
-          Δεν υπάρχουν ακόμη αναρτήσεις σε αυτή την ενότητα.
+          <T v="Δεν υπάρχουν ακόμη αναρτήσεις σε αυτή την ενότητα." />
         </p>
       )}
     </section>

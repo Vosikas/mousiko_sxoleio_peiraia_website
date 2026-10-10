@@ -1,9 +1,12 @@
 import type { ReactNode } from "react";
 import type { Block } from "@/content/types";
+import { el, type L } from "@/i18n/l10n";
+import T from "@/components/i18n/T";
 
 /**
  * Ζωγραφίζει τα «τουβλάκια» μιας υποσελίδας, το καθένα σε γκρι κουτί
  * (.surface-box) με μωβ τονισμούς — το μοτίβο όλου του site.
+ * Κάθε κείμενο περνάει από το <T>, ώστε να ακολουθεί το κουμπί γλώσσας.
  * Νέος τύπος τουβλακιού: πρόσθεσέ τον στο src/content/types.ts και εδώ.
  */
 export default function Blocks({ blocks }: { blocks: Block[] }) {
@@ -23,7 +26,9 @@ function BlockView({ block }: { block: Block }) {
         <Box title={block.title}>
           <div className="max-w-3xl space-y-4 text-[1.02rem] leading-[1.8] text-cream/85">
             {block.paragraphs.map((p, i) => (
-              <p key={i}>{p}</p>
+              <p key={i}>
+                <T v={p} />
+              </p>
             ))}
           </div>
         </Box>
@@ -32,12 +37,18 @@ function BlockView({ block }: { block: Block }) {
     case "list":
       return (
         <Box title={block.title}>
-          {block.intro && <p className="mb-5 leading-relaxed text-muted">{block.intro}</p>}
+          {block.intro && (
+            <p className="mb-5 leading-relaxed text-muted">
+              <T v={block.intro} />
+            </p>
+          )}
           <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
             {block.items.map((item) => (
-              <li key={item} className="flex gap-3 leading-relaxed">
+              <li key={el(item)} className="flex gap-3 leading-relaxed">
                 <span aria-hidden className="mt-[0.6rem] h-1.5 w-1.5 shrink-0 rounded-full bg-plum-500" />
-                <span>{item}</span>
+                <span>
+                  <T v={item} />
+                </span>
               </li>
             ))}
           </ul>
@@ -50,8 +61,10 @@ function BlockView({ block }: { block: Block }) {
           <dl className="grid grid-cols-2 gap-x-10 gap-y-7 sm:grid-cols-3">
             {block.items.map((fact) => (
               // Σημασιολογικά πρώτα η ετικέτα, οπτικά πρώτα ο αριθμός.
-              <div key={fact.label} className="flex flex-col">
-                <dt className="order-2 mt-1 text-[0.62rem] uppercase tracking-[0.22em] text-muted">{fact.label}</dt>
+              <div key={el(fact.label)} className="flex flex-col">
+                <dt className="order-2 mt-1 text-[0.62rem] uppercase tracking-[0.22em] text-muted">
+                  <T v={fact.label} />
+                </dt>
                 <dd className="order-1 font-display text-4xl font-semibold surface-box-accent">{fact.value}</dd>
               </div>
             ))}
@@ -64,7 +77,7 @@ function BlockView({ block }: { block: Block }) {
         <Box title={block.title}>
           <ul className="divide-y divide-cream/10">
             {block.items.map((doc) => (
-              <li key={doc.title} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+              <li key={el(doc.title)} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                 <span
                   aria-hidden
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-plum-500"
@@ -72,8 +85,14 @@ function BlockView({ block }: { block: Block }) {
                   <FileIcon />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium leading-snug">{doc.title}</p>
-                  {doc.meta && <p className="mt-0.5 text-sm text-muted">{doc.meta}</p>}
+                  <p className="font-medium leading-snug">
+                    <T v={doc.title} />
+                  </p>
+                  {doc.meta && (
+                    <p className="mt-0.5 text-sm text-muted">
+                      <T v={doc.meta} />
+                    </p>
+                  )}
                 </div>
                 {doc.href ? (
                   <a
@@ -82,11 +101,14 @@ function BlockView({ block }: { block: Block }) {
                     rel="noreferrer"
                     className="btn-ghost shrink-0 rounded-full border bg-white px-4 py-2 text-[0.64rem] font-semibold uppercase tracking-[0.18em]"
                   >
-                    Άνοιγμα<span className="sr-only">: {doc.title}</span>
+                    <T v="Άνοιγμα" />
+                    <span className="sr-only">
+                      : <T v={doc.title} />
+                    </span>
                   </a>
                 ) : (
                   <span className="shrink-0 rounded-full border border-cream/15 px-3 py-1.5 text-[0.6rem] uppercase tracking-[0.18em] text-muted">
-                    Σύντομα
+                    <T v="Σύντομα" />
                   </span>
                 )}
               </li>
@@ -101,20 +123,22 @@ function BlockView({ block }: { block: Block }) {
           <dl className="divide-y divide-cream/10">
             {block.items.map((item) => (
               <div
-                key={item.label}
+                key={el(item.label)}
                 className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-4 first:pt-0 last:pb-0"
               >
-                <dt className="w-44 shrink-0 text-sm text-muted">{item.label}</dt>
+                <dt className="w-44 shrink-0 text-sm text-muted">
+                  <T v={item.label} />
+                </dt>
                 <dd className="min-w-0 text-lg">
                   {item.href ? (
                     <a
                       href={item.href}
                       className="break-all text-plum-500 underline decoration-plum-500/30 underline-offset-4 transition hover:decoration-plum-500"
                     >
-                      {item.value}
+                      <T v={item.value} />
                     </a>
                   ) : (
-                    item.value
+                    <T v={item.value} />
                   )}
                 </dd>
               </div>
@@ -132,11 +156,15 @@ function BlockView({ block }: { block: Block }) {
 }
 
 /** Το γκρι κουτί. Με τίτλο γίνεται <section>, χωρίς τίτλο απλό <div>. */
-function Box({ title, children }: { title?: string; children: ReactNode }) {
+function Box({ title, children }: { title?: L; children: ReactNode }) {
   const Tag = title ? "section" : "div";
   return (
     <Tag className="surface-box p-7 sm:p-10">
-      {title && <h2 className="mb-5 font-display text-xl font-semibold sm:text-2xl surface-box-accent">{title}</h2>}
+      {title && (
+        <h2 className="mb-5 font-display text-xl font-semibold sm:text-2xl surface-box-accent">
+          <T v={title} />
+        </h2>
+      )}
       {children}
     </Tag>
   );

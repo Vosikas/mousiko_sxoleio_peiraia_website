@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { clockLabel, DAY_END, DAY_START, OFFICE_HOURS } from "@/lib/school";
+import { useLanguage } from "@/hooks/useLanguage";
+import { el } from "@/i18n/l10n";
 
 /**
  * The week drawn to scale rather than listed: you can see at a glance that
@@ -15,6 +17,7 @@ const position = (minutes: number) => ((minutes - DAY_START) / SPAN) * 100;
 type Now = { day: number; minutes: number };
 
 export default function OfficeHours() {
+  const { t, l } = useLanguage();
   // resolved after mount: the server has no idea what time it is for the reader
   const [now, setNow] = useState<Now | null>(null);
 
@@ -38,8 +41,10 @@ export default function OfficeHours() {
       const day = OFFICE_HOURS[(now.day + step) % 7];
       if (day.open == null) continue;
       if (step === 0 && now.minutes >= day.open) continue;
-      const when = step === 0 ? "σήμερα" : step === 1 ? "αύριο" : day.label;
-      return `${when} στις ${clockLabel(day.open)}`;
+      const time = clockLabel(day.open);
+      if (step === 0) return t("σήμερα στις {time}", { time });
+      if (step === 1) return t("αύριο στις {time}", { time });
+      return t("{day} στις {time}", { day: l(day.label), time });
     }
     return null;
   };
@@ -47,7 +52,7 @@ export default function OfficeHours() {
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="font-display text-2xl font-semibold text-[#102a43] sm:text-3xl">Ωράριο γραμματείας</h2>
+        <h2 className="font-display text-2xl font-semibold text-[#102a43] sm:text-3xl">{t("Ωράριο γραμματείας")}</h2>
         <p
           aria-live="polite"
           className={
@@ -60,10 +65,12 @@ export default function OfficeHours() {
           }
         >
           {now === null
-            ? "Έλεγχος ώρας"
+            ? t("Έλεγχος ώρας")
             : openNow
-              ? `Ανοιχτά τώρα, έως τις ${clockLabel(today!.close!)}`
-              : `Κλειστά τώρα${nextOpening() ? `, ανοίγει ${nextOpening()}` : ""}`}
+              ? t("Ανοιχτά τώρα, έως τις {time}", { time: clockLabel(today!.close!) })
+              : nextOpening()
+                ? t("Κλειστά τώρα, ανοίγει {when}", { when: nextOpening()! })
+                : t("Κλειστά τώρα")}
         </p>
       </div>
 
@@ -86,7 +93,7 @@ export default function OfficeHours() {
             const closed = day.open == null || day.close == null;
             return (
               <li
-                key={day.label}
+                key={el(day.label)}
                 className={
                   "flex items-center gap-3 rounded-xl px-2 py-1.5 transition-colors sm:gap-4 " +
                   (isToday ? "bg-[var(--primary-purple)]/10 ring-1 ring-[var(--primary-purple)]/45" : "")
@@ -97,8 +104,8 @@ export default function OfficeHours() {
                     "w-[4.5rem] shrink-0 text-sm " + (isToday ? "font-semibold text-[#102a43]" : "text-[#5b7285]")
                   }
                 >
-                  <span className="hidden sm:inline">{day.label}</span>
-                  <span className="sm:hidden">{day.short}</span>
+                  <span className="hidden sm:inline">{l(day.label)}</span>
+                  <span className="sm:hidden">{l(day.short)}</span>
                 </span>
 
                 <div className="relative h-9 flex-1 overflow-hidden rounded-lg bg-white">
@@ -111,7 +118,7 @@ export default function OfficeHours() {
                     />
                   ))}
                   {closed ? (
-                    <span className="absolute inset-y-0 left-3 flex items-center text-xs text-[#8ea3b3]">Κλειστά</span>
+                    <span className="absolute inset-y-0 left-3 flex items-center text-xs text-[#8ea3b3]">{t("Κλειστά")}</span>
                   ) : (
                     <span
                       className="absolute inset-y-1 flex items-center rounded-md bg-[var(--primary-purple)] px-2.5 text-xs font-medium text-white"
@@ -142,8 +149,8 @@ export default function OfficeHours() {
         </ul>
 
         {OFFICE_HOURS.filter((day) => day.note).map((day) => (
-          <p key={day.label} className="mt-4 text-sm text-[#5b7285]">
-            <span className="font-medium text-[#102a43]">{day.label}:</span> {day.note}
+          <p key={el(day.label)} className="mt-4 text-sm text-[#5b7285]">
+            <span className="font-medium text-[#102a43]">{l(day.label)}:</span> {day.note && l(day.note)}
           </p>
         ))}
       </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SECTIONS, subpageHref, type SectionSlug } from "@/content";
+import T from "@/components/i18n/T";
 import PageIntro from "./PageIntro";
 
 /**
@@ -29,11 +30,11 @@ export default function SectionIndex({ section: slug }: { section: SectionSlug }
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h2 className="mt-4 font-display text-xl font-semibold leading-snug text-cream transition-colors group-hover:text-plum-500">
-                {page.title}
+                <T v={page.title} />
               </h2>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{page.summary}</p>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted"><T v={page.summary} /></p>
               <span className="mt-6 inline-flex items-center gap-2 text-[0.66rem] font-semibold uppercase tracking-[0.22em] surface-box-accent">
-                Δείτε περισσότερα
+                <T v="Δείτε περισσότερα" />
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1.5">
                   →
                 </span>

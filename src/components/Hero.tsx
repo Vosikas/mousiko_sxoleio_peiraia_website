@@ -41,7 +41,7 @@ export default function Hero() {
             className="h-auto w-[min(72%,20rem)] lg:w-full lg:max-w-[24rem]"
           />
           {/* Το <h1> για SEO/αναγνώστες οθόνης — οπτικά ο τίτλος είναι το λογότυπο. */}
-          <h1 className="sr-only">{site.name}</h1>
+          <h1 className="sr-only">{t(site.name)}</h1>
         </div>
 
         {/* ---------------- ΔΕΞΙΑ: γκρι κουτί ---------------- */}

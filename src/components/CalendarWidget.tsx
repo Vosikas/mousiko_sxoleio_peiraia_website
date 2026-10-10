@@ -4,33 +4,22 @@ import { useMemo, useState } from "react";
 import { useNow } from "@/hooks/useNow";
 import { useLanguage } from "@/hooks/useLanguage";
 import { WidgetLabel } from "./ClockWidget";
+import type { L } from "@/i18n/l10n";
 
-const MONTHS = [
-  "Ιανουάριος",
-  "Φεβρουάριος",
-  "Μάρτιος",
-  "Απρίλιος",
-  "Μάιος",
-  "Ιούνιος",
-  "Ιούλιος",
-  "Αύγουστος",
-  "Σεπτέμβριος",
-  "Οκτώβριος",
-  "Νοέμβριος",
-  "Δεκέμβριος",
-];
+/** Η εβδομάδα ξεκινά Δευτέρα (και στις δύο γλώσσες). */
+const WEEKDAYS = {
+  GR: ["Δε", "Τρ", "Τε", "Πε", "Πα", "Σα", "Κυ"],
+  EN: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+};
 
-/** Η ελληνική εβδομάδα ξεκινά Δευτέρα. */
-const WEEKDAYS = ["Δε", "Τρ", "Τε", "Πε", "Πα", "Σα", "Κυ"];
-
-export type SchoolEvent = { date: string; title: string; kind?: "concert" | "exam" | "trip" };
+export type SchoolEvent = { date: string; title: L; kind?: "concert" | "exam" | "trip" };
 
 /** Εκδηλώσεις — αργότερα μπορούν να έρθουν από custom post type του WordPress. */
 const EVENTS: SchoolEvent[] = [
-  { date: "2026-09-11", title: "Αγιασμός — έναρξη σχολικής χρονιάς", kind: "trip" },
-  { date: "2026-09-19", title: "Ακροάσεις για τα μουσικά σύνολα", kind: "exam" },
-  { date: "2026-09-27", title: "Συναυλία υποδοχής νέων μαθητών", kind: "concert" },
-  { date: "2026-10-16", title: "Ρεσιτάλ πιάνου — Αίθουσα Εκδηλώσεων", kind: "concert" },
+  { date: "2026-09-11", title: { el: "Αγιασμός — έναρξη σχολικής χρονιάς", en: "Blessing — start of the school year" }, kind: "trip" },
+  { date: "2026-09-19", title: { el: "Ακροάσεις για τα μουσικά σύνολα", en: "Auditions for the music ensembles" }, kind: "exam" },
+  { date: "2026-09-27", title: { el: "Συναυλία υποδοχής νέων μαθητών", en: "Welcome concert for new students" }, kind: "concert" },
+  { date: "2026-10-16", title: { el: "Ρεσιτάλ πιάνου — Αίθουσα Εκδηλώσεων", en: "Piano recital — Events Hall" }, kind: "concert" },
 ];
 
 const KIND_COLOR: Record<string, string> = {
@@ -43,7 +32,7 @@ const iso = (y: number, m: number, d: number) =>
   y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
 
 export default function CalendarWidget() {
-  const { language, t } = useLanguage();
+  const { language, t, l } = useLanguage();
   // Ανανέωση ανά λεπτό: αρκεί για να «γυρίσει» το σημερινό κελί τα μεσάνυχτα.
   const today = useNow(60_000);
 
@@ -98,7 +87,7 @@ export default function CalendarWidget() {
       <div className="mt-5 flex items-center justify-between">
         <button
           type="button"
-          aria-label="Προηγούμενος μήνας"
+          aria-label={t("Προηγούμενος μήνας")}
           onClick={() => shift(-1)}
           className="btn-ghost flex h-8 w-8 items-center justify-center rounded-full border"
         >
@@ -111,7 +100,7 @@ export default function CalendarWidget() {
         </p>
         <button
           type="button"
-          aria-label="Επόμενος μήνας"
+          aria-label={t("Επόμενος μήνας")}
           onClick={() => shift(1)}
           className="btn-ghost flex h-8 w-8 items-center justify-center rounded-full border"
         >
@@ -120,7 +109,7 @@ export default function CalendarWidget() {
       </div>
 
       <div className="mt-5 grid grid-cols-7 gap-y-1 text-center">
-        {WEEKDAYS.map((d) => (
+        {WEEKDAYS[language].map((d) => (
           <span key={d} className="pb-2 text-[0.58rem] uppercase tracking-widest text-muted/70">
             {d}
           </span>
@@ -136,7 +125,7 @@ export default function CalendarWidget() {
           return (
             <span key={key} className="relative flex flex-col items-center py-1">
               <span
-                title={dayEvents?.map((e) => e.title).join(" · ")}
+                title={dayEvents?.map((e) => l(e.title)).join(" · ")}
                 className={
                   "flex h-8 w-8 items-center justify-center rounded-full text-[0.78rem] tabular-nums transition " +
                   (isToday
@@ -172,7 +161,7 @@ export default function CalendarWidget() {
           {upcoming.map((e) => {
             const d = new Date(e.date);
             return (
-              <li key={e.date + e.title} className="flex gap-3">
+              <li key={e.date} className="flex gap-3">
                 <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-plum-400/25 bg-ink-900/70">
                   <span className="text-[0.8rem] font-semibold leading-none text-plum-600">
                     {d.getDate()}
@@ -183,7 +172,7 @@ export default function CalendarWidget() {
                     )}
                   </span>
                 </span>
-                <span className="text-[0.78rem] leading-snug text-cream/80">{e.title}</span>
+                <span className="text-[0.78rem] leading-snug text-cream/80">{l(e.title)}</span>
               </li>
             );
           })}

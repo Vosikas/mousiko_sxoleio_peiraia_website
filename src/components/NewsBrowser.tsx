@@ -107,7 +107,7 @@ export default function NewsBrowser({ posts, pinnedCategories }: { posts: Post[]
             {categories.map((c) => (
               <li key={c.key}>
                 <CategoryButton
-                  label={c.label}
+                  label={t(c.label)}
                   count={c.count}
                   active={category === c.key}
                   onClick={() => selectCategory(c.key)}
@@ -149,7 +149,7 @@ export default function NewsBrowser({ posts, pinnedCategories }: { posts: Post[]
         <div className="mt-6 flex items-center justify-between gap-4 text-[0.65rem] uppercase tracking-[0.18em] text-muted">
           <span>
             {filteredPosts.length} {t("ανακοινώσεις")}
-            {selected ? <span className="text-plum-500"> · {selected.label}</span> : null}
+            {selected ? <span className="text-plum-500"> · {t(selected.label)}</span> : null}
           </span>
           {query || category !== null ? (
             <button type="button" onClick={() => { changeQuery(""); selectCategory(null); }} className="text-plum-600 transition hover:text-plum-500">
@@ -167,7 +167,7 @@ export default function NewsBrowser({ posts, pinnedCategories }: { posts: Post[]
         ) : (
           <div className="mt-5 rounded-2xl border border-dashed border-cream/20 px-6 py-16 text-center text-sm text-muted">
             {selected && selected.count === 0 && !query
-              ? "Δεν υπάρχουν ακόμη δημοσιεύσεις σε αυτή την κατηγορία."
+              ? t("Δεν υπάρχουν ακόμη δημοσιεύσεις σε αυτή την κατηγορία.")
               : t("Δεν βρέθηκαν ανακοινώσεις με αυτά τα κριτήρια.")}
           </div>
         )}

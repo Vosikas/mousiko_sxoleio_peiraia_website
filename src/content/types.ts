@@ -1,3 +1,5 @@
+import type { L } from "@/i18n/l10n";
+
 /**
  * Οι τύποι του περιεχομένου των ενοτήτων «Το Σχολείο μας» και «Δράσεις».
  *
@@ -8,19 +10,22 @@
  *   src/content/to-scholeio.ts   και   src/content/draseis.ts
  * και η σελίδα, το μενού και οι σύνδεσμοι φτιάχνονται μόνα τους.
  *
+ * ΓΛΩΣΣΕΣ: κάθε κείμενο είναι `L` — σκέτα ελληνικά ή { el: "…", en: "…" }.
+ * Τα αγγλικά εμφανίζονται όταν ο επισκέπτης πατήσει EN (src/i18n/l10n.ts).
+ *
  * ΝΕΑ ΥΠΟΣΕΛΙΔΑ: πρόσθεσε ένα αντικείμενο στο `subpages` της ενότητας.
  * Εμφανίζεται αυτόματα στο μενού, στην κεντρική σελίδα της ενότητας
  * και στο πλαϊνό μενού των υπόλοιπων υποσελίδων.
  */
 
 /** Παράγραφοι κειμένου. */
-export type TextBlock = { type: "text"; title?: string; paragraphs: string[] };
+export type TextBlock = { type: "text"; title?: L; paragraphs: L[] };
 
 /** Λίστα με κουκκίδες (σε δύο στήλες στις μεγάλες οθόνες). */
-export type ListBlock = { type: "list"; title?: string; intro?: string; items: string[] };
+export type ListBlock = { type: "list"; title?: L; intro?: L; items: L[] };
 
 /** Μεγάλοι αριθμοί με λεζάντα — π.χ. «6 · τάξεις». */
-export type FactsBlock = { type: "facts"; title?: string; items: { value: string; label: string }[] };
+export type FactsBlock = { type: "facts"; title?: L; items: { value: string; label: L }[] };
 
 /**
  * Αρχεία για λήψη (PDF κ.λπ.).
@@ -29,15 +34,15 @@ export type FactsBlock = { type: "facts"; title?: string; items: { value: string
  */
 export type DocumentsBlock = {
   type: "documents";
-  title?: string;
-  items: { title: string; href?: string; meta?: string }[];
+  title?: L;
+  items: { title: L; href?: string; meta?: L }[];
 };
 
 /** Στοιχεία επικοινωνίας (ετικέτα → τιμή). Το `href` κάνει την τιμή σύνδεσμο. */
 export type ContactBlock = {
   type: "contact";
-  title?: string;
-  items: { label: string; value: string; href?: string }[];
+  title?: L;
+  items: { label: L; value: L; href?: string }[];
 };
 
 export type Block = TextBlock | ListBlock | FactsBlock | DocumentsBlock | ContactBlock;
@@ -46,11 +51,11 @@ export type Subpage = {
   /** Το τελευταίο κομμάτι του URL: /to-scholeio/<slug> */
   slug: string;
   /** Ο πλήρης τίτλος: στο μενού και ως επικεφαλίδα της σελίδας. */
-  title: string;
+  title: L;
   /** Σύντομος τίτλος για το πλαϊνό μενού και την «Προηγούμενη / Επόμενη». */
-  shortTitle?: string;
+  shortTitle?: L;
   /** 1–2 προτάσεις: στην κάρτα, κάτω από τον τίτλο και στην περιγραφή SEO. */
-  summary: string;
+  summary: L;
   blocks: Block[];
   /** true ⇒ σήμα «Ενδεικτικό περιεχόμενο». Βγάλ' το όταν μπει το τελικό κείμενο. */
   draft?: boolean;
@@ -66,10 +71,10 @@ export type Subpage = {
 export type Section = {
   /** Το URL της ενότητας: /<slug> */
   slug: string;
-  title: string;
+  title: L;
   /** Η μικρή ετικέτα πάνω από τον τίτλο. */
-  eyebrow: string;
-  intro: string;
+  eyebrow: L;
+  intro: L;
   subpages: Subpage[];
 };
 
@@ -80,10 +85,10 @@ export type Section = {
  */
 export type StandalonePage = Subpage & {
   /** Η μικρή ετικέτα πάνω από τον τίτλο. */
-  eyebrow: string;
+  eyebrow: L;
 };
 
 /* ------------------------------------------------------------------ μενού */
 
-export type NavLink = { label: string; href: string };
+export type NavLink = { label: L; href: string };
 export type NavItem = NavLink & { children?: NavLink[] };

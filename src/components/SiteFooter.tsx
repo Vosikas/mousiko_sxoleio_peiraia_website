@@ -8,7 +8,7 @@ import type { NavItem } from "@/content/types";
 
 /** Το «Πλοήγηση» είναι το ίδιο κεντρικό μενού με το header (NAV, από το layout). */
 export default function SiteFooter({ nav }: { nav: NavItem[] }) {
-  const { t } = useLanguage();
+  const { t, l } = useLanguage();
 
   return (
     <footer className="relative mt-28 border-t border-cream/8 bg-ink-900">
@@ -48,7 +48,7 @@ export default function SiteFooter({ nav }: { nav: NavItem[] }) {
                   href={item.href}
                   className="text-sm text-cream/70 transition hover:text-plum-600"
                 >
-                  {t(item.label)}
+                  {l(item.label)}
                 </Link>
               </li>
             ))}

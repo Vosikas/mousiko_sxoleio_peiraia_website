@@ -61,7 +61,7 @@ export default function PostCard({
 
         {post.category && (
           <span className="absolute left-4 top-4 rounded-full border border-plum-500/35 bg-white/85 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-plum-500 backdrop-blur-sm">
-            {post.category}
+            {t(post.category)}
           </span>
         )}
       </div>

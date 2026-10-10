@@ -1,3 +1,6 @@
+import T from "@/components/i18n/T";
+import type { L } from "@/i18n/l10n";
+
 /**
  * Η κεφαλίδα κάθε σελίδας ενότητας: ετικέτα, τίτλος και εισαγωγή.
  * (Χωρίς γραμμή διαδρομής: θα κολλούσε στο λογότυπο πάνω αριστερά, και
@@ -12,9 +15,9 @@ export default function PageIntro({
   draft = false,
   size = "lg",
 }: {
-  eyebrow: string;
-  title: string;
-  lead: string;
+  eyebrow: L;
+  title: L;
+  lead: L;
   draft?: boolean;
   /** lg: κεντρική σελίδα ενότητας · md: υποσελίδα (οι τίτλοι είναι μεγαλύτεροι) */
   size?: "lg" | "md";
@@ -26,7 +29,7 @@ export default function PageIntro({
         style={{ animation: "rise 0.9s 0.05s both" }}
       >
         <span aria-hidden className="h-px w-10 bg-current opacity-60" />
-        {eyebrow}
+        <T v={eyebrow} />
       </p>
 
       <h1
@@ -38,17 +41,17 @@ export default function PageIntro({
         }
         style={{ animation: "rise 1s 0.12s both" }}
       >
-        {title}
+        <T v={title} />
       </h1>
 
       <p className="mt-5 text-lg leading-relaxed text-muted" style={{ animation: "rise 1s 0.2s both" }}>
-        {lead}
+        <T v={lead} />
       </p>
 
       {draft && (
         <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-plum-500/25 bg-plum-100 px-3.5 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-plum-600">
           <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-plum-500" />
-          Ενδεικτικό περιεχόμενο — υπό συμπλήρωση
+          <T v="Ενδεικτικό περιεχόμενο — υπό συμπλήρωση" />
         </p>
       )}
     </header>

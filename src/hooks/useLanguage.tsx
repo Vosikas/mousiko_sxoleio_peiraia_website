@@ -1,135 +1,85 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore, type ReactNode } from "react";
+import { DICTIONARY } from "@/i18n/dictionary";
+import { fill, type L, type Lang } from "@/i18n/l10n";
 
-export type Language = "GR" | "EN";
+export type Language = Lang;
+
+type Vars = Record<string, string | number>;
 
 type LanguageContextValue = {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (greek: string) => string;
+  /** Κείμενο interface: ελληνικά → αγγλικά από το λεξικό (src/i18n/dictionary.ts). */
+  t: (greek: string, vars?: Vars) => string;
+  /** Κείμενο περιεχομένου (L): το `en` του, αλλιώς το λεξικό, αλλιώς τα ελληνικά. */
+  l: (value: L, vars?: Vars) => string;
 };
 
-const translations: Record<string, string> = {
-  "ΑΡΧΙΚΗ": "HOME",
-  "ΤΟ ΣΧΟΛΕΙΟ": "THE SCHOOL",
-  "ΤΜΗΜΑΤΑ": "DEPARTMENTS",
-  "ΝΕΑ": "NEWS",
-  "ΕΚΔΗΛΩΣΕΙΣ": "EVENTS",
-  "ΔΡΑΣΕΙΣ": "ACTIVITIES",
-  "ΕΠΙΚΟΙΝΩΝΙΑ": "CONTACT",
-  "Εκδηλώσεις": "Events",
-  "Τμήματα": "Departments",
-  "Το σχολείο": "The school",
-  "Εγγραφές": "Admissions",
-  "Μουσικό Σχολείο Πειραιά": "Music School of Piraeus",
-  "Μουσικό Σχολείο": "Music School",
-  "Πειραιά": "Piraeus",
-  "Παιδεία, τέχνη και ήχος από το 1988": "Education, art and sound since 1988",
-  "Πειραιάς, Αττική": "Piraeus, Attica",
-  "Το Μουσικό Σχολείο Πειραιά συνδυάζει την πλήρη γενική παιδεία με ολοκληρωμένη μουσική εκπαίδευση, ευρωπαϊκή και παραδοσιακή.": "The Music School of Piraeus combines a complete general education with comprehensive European and traditional music training.",
-  "Γυμνάσιο & Λύκειο · Δημόσια μουσική εκπαίδευση": "Secondary school · Public music education",
-  "Γνωρίστε το σχολείο": "Discover the school",
-  "Δείτε το βίντεο": "Watch the video",
-  "μαθητές & μαθήτριες": "students",
-  "μουσικά σύνολα": "music ensembles",
-  "χρόνια λειτουργίας": "years of excellence",
-  "Κύλιση": "Scroll",
-  "Όλα τα νέα": "All news",
-  "Τελευταία από το σχολείο": "Latest from the school",
-  "Νέα & ανακοινώσεις": "News & announcements",
-  "Πλοήγηση": "Navigation",
-  "Αρχική": "Home",
-  "Το Σχολείο μας": "Our school",
-  "Νέα – Ανακοινώσεις": "News & announcements",
-  "Δράσεις": "Activities",
-  "Μενού": "Menu",
-  "Κατηγορίες": "Categories",
-  "Όλες": "All",
-  "Σαν σήμερα": "On this day",
-  "Σήμερα είναι": "Today is",
-  "Επικοινωνία": "Contact",
-  "Με μουσική και προσοχή στη λεπτομέρεια": "With music and attention to detail",
-  "Η ενότητα ετοιμάζεται": "This section is coming soon",
-  "← Επιστροφή στην αρχική": "← Back to home",
-  "Παράλειψη intro": "Skip intro",
-  "Μια ορχήστρα ξεκινά": "An orchestra begins",
-  "Τώρα παίζουν όλοι": "Now playing together",
-  "Η σελίδα ετοιμάζεται": "Preparing the page",
-  "Μουσική παιδεία · Πειραιάς": "Music education · Piraeus",
-  "Ένα σύντομο μουσικό καλωσόρισμα από τις ομάδες του σχολείου.": "A short musical welcome from the school's ensembles.",
-  "Η κάμερα κινείται μέσα σε μια μπάντα καθώς το σχολείο βρίσκει τον ρυθμό του.": "The camera moves through a band as the school finds its rhythm.",
-  "Έγχορδα": "Strings",
-  "Πνευστά": "Winds",
-  "Κρουστά": "Percussion",
-  "Πιάνο": "Piano",
-  "χρώμα": "colour",
-  "ανάσα": "breath",
-  "ρυθμός": "rhythm",
-  "αρμονία": "harmony",
-  "Ώρα σχολείου": "School hours",
-  "Ανοιχτά τώρα": "Open now",
-  "Εκτός ωραρίου": "Outside school hours",
-  "Ημερολόγιο": "Calendar",
-  "Προσεχώς": "Coming up",
-  "Δεν υπάρχουν προγραμματισμένες εκδηλώσεις.": "No events are currently scheduled.",
-  "Διαβάστε περισσότερα": "Read more",
-  "ανάγνωση": "reading",
-  "Αναζήτηση": "Search",
-  "Αναζήτηση ανακοινώσεων": "Search announcements",
-  "Ταξινόμηση": "Sort",
-  "Νεότερα πρώτα": "Newest first",
-  "Παλαιότερα πρώτα": "Oldest first",
-  "Κατηγορία": "Category",
-  "Όλα": "All",
-  "ανακοινώσεις": "announcements",
-  "Καθαρισμός φίλτρων": "Clear filters",
-  "Δεν βρέθηκαν ανακοινώσεις με αυτά τα κριτήρια.": "No announcements match these criteria.",
-  "Σελιδοποίηση": "Pagination",
-  "Προβάλλεται δείγμα περιεχομένου. Συνδέστε το WordPress ορίζοντας": "Sample content is shown. Connect WordPress by setting",
-  "στο": "in",
-  "— τα άρθρα θα έρθουν αυτόματα.": "and articles will appear automatically.",
-  "Συναυλίες, ρεσιτάλ, φεστιβάλ και ανοιχτές πρόβες για το κοινό του Πειραιά.": "Concerts, recitals, festivals and open rehearsals for the Piraeus community.",
-  "Γραμματεία": "Secretariat",
-  "Στοιχεία επικοινωνίας, ωράριο γραμματείας, χάρτης πρόσβασης και φόρμα επικοινωνίας.": "Contact details, office hours, directions and a contact form.",
-  "Μουσική εκπαίδευση": "Music education",
-  "Οργανωμένα μουσικά τμήματα, όργανα, χορωδίες και σύνολα για κάθε μαθητή.": "Organised music departments, instruments, choirs and ensembles for every student.",
-  "Σχολείο": "School",
-  "Η ιστορία, η φιλοσοφία και οι άνθρωποι του Μουσικού Σχολείου Πειραιά.": "The history, philosophy and people of the Music School of Piraeus.",
-  "Μουσικά σύνολα": "Music ensembles",
-  "Συμφωνική Ορχήστρα": "Symphony Orchestra",
-  "Χορωδία": "Choir",
-  "Παραδοσιακό Σύνολο": "Traditional Ensemble",
-  "Μπάντα Πνευστών": "Wind Band",
-  "Σύνολο Τζαζ": "Jazz Ensemble",
-  "Εγγραφές & πληροφορίες": "Admissions & information",
-  "Η γραμματεία δέχεται ερωτήματα για εισαγωγικές εξετάσεις, μεταγραφές και μουσικά όργανα.": "The office answers questions about entrance exams, transfers and musical instruments.",
-  "Φόρμα επικοινωνίας →": "Contact form →",
-  "Βίντεο παρουσίασης": "Presentation video",
-  "Μια μέρα στο Μουσικό Σχολείο Πειραιά": "A day at the Music School of Piraeus",
-  "Ορχήστρα, χορωδία, παραδοσιακά σύνολα και καθημερινή δημιουργία.": "Orchestra, choir, traditional ensembles and everyday creativity.",
-  "Φιλμ": "Film",
-};
+/* ---------------------------------------------------------------------------
+ * Η επιλεγμένη γλώσσα ζει στο localStorage — εξωτερική πηγή, όχι state του
+ * React. Ο server αποδίδει πάντα ελληνικά· μετά το hydration ο browser
+ * περνάει στη γλώσσα που είχε διαλέξει ο επισκέπτης.
+ * ------------------------------------------------------------------------- */
+
+const KEY = "msp:language";
+const listeners = new Set<() => void>();
+
+function readLanguage(): Language {
+  try {
+    return window.localStorage.getItem(KEY) === "EN" ? "EN" : "GR";
+  } catch {
+    return "GR";
+  }
+}
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  // Αλλαγή γλώσσας σε άλλη καρτέλα του ίδιου site.
+  const onStorage = (event: StorageEvent) => event.key === KEY && callback();
+  window.addEventListener("storage", onStorage);
+  return () => {
+    listeners.delete(callback);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+function writeLanguage(language: Language) {
+  try {
+    window.localStorage.setItem(KEY, language);
+  } catch {
+    /* χωρίς storage η επιλογή απλώς δεν θυμάται */
+  }
+  for (const listener of listeners) listener();
+}
+
+const serverLanguage = (): Language => "GR";
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("GR");
+  const language = useSyncExternalStore(subscribe, readLanguage, serverLanguage);
 
-  useEffect(() => {
-    const stored = window.localStorage.getItem("msp:language");
-    if (stored === "EN" || stored === "GR") setLanguageState(stored);
-  }, []);
-
+  // Συγχρονισμός με το DOM (εξωτερικό σύστημα): <html lang="…">.
   useEffect(() => {
     document.documentElement.lang = language === "EN" ? "en" : "el";
-    window.localStorage.setItem("msp:language", language);
   }, [language]);
 
-  const setLanguage = (nextLanguage: Language) => setLanguageState(nextLanguage);
-  const t = (greek: string) => (language === "EN" ? translations[greek] ?? greek : greek);
+  const t = useCallback(
+    (greek: string, vars?: Vars) => fill(language === "EN" ? (DICTIONARY[greek] ?? greek) : greek, vars),
+    [language],
+  );
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>;
+  const l = useCallback(
+    (value: L, vars?: Vars) =>
+      typeof value === "string" ? t(value, vars) : fill(language === "EN" ? value.en : value.el, vars),
+    [language, t],
+  );
+
+  const context = useMemo(() => ({ language, setLanguage: writeLanguage, t, l }), [language, t, l]);
+
+  return <LanguageContext.Provider value={context}>{children}</LanguageContext.Provider>;
 }
 
 export function useLanguage() {

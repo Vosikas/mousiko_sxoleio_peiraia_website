@@ -1,3 +1,5 @@
+import type { L } from "@/i18n/l10n";
+
 /**
  * Every piece of contact information the site shows lives here.
  * Replace the placeholders with the school's real details.
@@ -13,10 +15,19 @@ export const SCHOOL = {
   email: "mail@gym-mous-peiraia.att.sch.gr",
   /** how people actually get here */
   transit: [
-    { mode: "Μετρό", detail: "Γραμμή 1, στάση Πειραιάς — 10 λεπτά με τα πόδια" },
-    { mode: "Λεωφορείο", detail: "Γραμμές 826, 843, 909 — στάση επί της κεντρικής οδού" },
-    { mode: "Αυτοκίνητο", detail: "Ελεύθερη στάθμευση στον περιβάλλοντα χώρο" },
-  ],
+    {
+      mode: { el: "Μετρό", en: "Metro" },
+      detail: { el: "Γραμμή 1, στάση Πειραιάς — 10 λεπτά με τα πόδια", en: "Line 1, Piraeus station — a 10-minute walk" },
+    },
+    {
+      mode: { el: "Λεωφορείο", en: "Bus" },
+      detail: { el: "Γραμμές 826, 843, 909 — στάση επί της κεντρικής οδού", en: "Lines 826, 843, 909 — stop on the main road" },
+    },
+    {
+      mode: { el: "Αυτοκίνητο", en: "Car" },
+      detail: { el: "Ελεύθερη στάθμευση στον περιβάλλοντα χώρο", en: "Free parking nearby" },
+    },
+  ] as { mode: L; detail: L }[],
 } as const;
 
 export const ADDRESS_LINE = `${SCHOOL.street}, ${SCHOOL.postcode} ${SCHOOL.area}`;
@@ -30,16 +41,22 @@ export const MAPS_LINK = `https://www.google.com/maps/search/?api=1&query=${enco
 )}`;
 
 /** Γραμματεία — minutes from midnight, so the schedule can be drawn to scale. */
-export type Day = { label: string; short: string; open: number | null; close: number | null; note?: string };
+export type Day = { label: L; short: L; open: number | null; close: number | null; note?: L };
 
 export const OFFICE_HOURS: Day[] = [
-  { label: "Δευτέρα", short: "Δε", open: 8 * 60, close: 15 * 60 },
-  { label: "Τρίτη", short: "Τρ", open: 8 * 60, close: 15 * 60 },
-  { label: "Τετάρτη", short: "Τε", open: 8 * 60, close: 17 * 60, note: "Απογευματινή βάρδια για ραντεβού γονέων" },
-  { label: "Πέμπτη", short: "Πε", open: 8 * 60, close: 15 * 60 },
-  { label: "Παρασκευή", short: "Πα", open: 8 * 60, close: 14 * 60 },
-  { label: "Σάββατο", short: "Σα", open: null, close: null },
-  { label: "Κυριακή", short: "Κυ", open: null, close: null },
+  { label: { el: "Δευτέρα", en: "Monday" }, short: { el: "Δε", en: "Mon" }, open: 8 * 60, close: 15 * 60 },
+  { label: { el: "Τρίτη", en: "Tuesday" }, short: { el: "Τρ", en: "Tue" }, open: 8 * 60, close: 15 * 60 },
+  {
+    label: { el: "Τετάρτη", en: "Wednesday" },
+    short: { el: "Τε", en: "Wed" },
+    open: 8 * 60,
+    close: 17 * 60,
+    note: { el: "Απογευματινή βάρδια για ραντεβού γονέων", en: "Afternoon shift for parent appointments" },
+  },
+  { label: { el: "Πέμπτη", en: "Thursday" }, short: { el: "Πε", en: "Thu" }, open: 8 * 60, close: 15 * 60 },
+  { label: { el: "Παρασκευή", en: "Friday" }, short: { el: "Πα", en: "Fri" }, open: 8 * 60, close: 14 * 60 },
+  { label: { el: "Σάββατο", en: "Saturday" }, short: { el: "Σα", en: "Sat" }, open: null, close: null },
+  { label: { el: "Κυριακή", en: "Sunday" }, short: { el: "Κυ", en: "Sun" }, open: null, close: null },
 ];
 
 /** window drawn on the schedule strip */

@@ -13,34 +13,34 @@ import type { Section } from "./types";
  */
 export const DRASEIS: Section = {
   slug: "draseis",
-  title: "Δράσεις",
-  eyebrow: "Σχολική ζωή",
+  title: { el: "Δράσεις", en: "Activities" },
+  eyebrow: { el: "Σχολική ζωή", en: "School life" },
   intro:
-    "Η μουσική ζωή του σχολείου πέρα από την τάξη: εργαστήρια, συναυλίες, εκδηλώσεις, προγράμματα και εκδρομές.",
+    { el: "Η μουσική ζωή του σχολείου πέρα από την τάξη: εργαστήρια, συναυλίες, εκδηλώσεις, προγράμματα και εκδρομές.", en: "The school's musical life beyond the classroom: workshops, concerts, events, programmes and trips." },
   subpages: [
     {
       slug: "ergastiria",
       wpCategories: ["Εργαστήρια"],
-      title: "Παρουσιάσεις Εργαστηρίων",
-      shortTitle: "Εργαστήρια",
+      title: { el: "Παρουσιάσεις Εργαστηρίων", en: "Workshop Presentations" },
+      shortTitle: { el: "Εργαστήρια", en: "Workshops" },
       summary:
-        "Οι μαθητές και οι μαθήτριες παρουσιάζουν δημόσια ό,τι δημιούργησαν στα εργαστήρια της χρονιάς.",
+        { el: "Οι μαθητές και οι μαθήτριες παρουσιάζουν δημόσια ό,τι δημιούργησαν στα εργαστήρια της χρονιάς.", en: "Students present in public what they created in the year's workshops." },
       draft: true,
       blocks: [
         {
           type: "text",
           paragraphs: [
-            "Σε κάθε παρουσίαση τα εργαστήρια ανοίγουν στο κοινό: οι μαθητές δείχνουν τη δουλειά τους και μοιράζονται τη διαδικασία που οδήγησε σε αυτήν.",
+            { el: "Σε κάθε παρουσίαση τα εργαστήρια ανοίγουν στο κοινό: οι μαθητές δείχνουν τη δουλειά τους και μοιράζονται τη διαδικασία που οδήγησε σε αυτήν.", en: "At each presentation the workshops open to the public: students show their work and share the process behind it." },
           ],
         },
         {
           type: "list",
-          title: "Τι παρουσιάζεται",
+          title: { el: "Τι παρουσιάζεται", en: "What is presented" },
           items: [
-            "Εργαστήρια σύνθεσης και αυτοσχεδιασμού",
-            "Εργαστήρια μουσικής τεχνολογίας",
-            "Μουσικό θέατρο",
-            "Διαθεματικά εργαστήρια",
+            { el: "Εργαστήρια σύνθεσης και αυτοσχεδιασμού", en: "Composition and improvisation workshops" },
+            { el: "Εργαστήρια μουσικής τεχνολογίας", en: "Music technology workshops" },
+            { el: "Μουσικό θέατρο", en: "Music theatre" },
+            { el: "Διαθεματικά εργαστήρια", en: "Cross-curricular workshops" },
           ],
         },
       ],
@@ -48,36 +48,36 @@ export const DRASEIS: Section = {
     {
       slug: "synavlies",
       wpCategories: ["Συναυλίες"],
-      title: "Συναυλίες",
+      title: { el: "Συναυλίες", en: "Concerts" },
       summary:
-        "Οι συναυλίες των συνόλων, της χορωδίας και των σολίστ του σχολείου, μέσα και έξω από τον Πειραιά.",
+        { el: "Οι συναυλίες των συνόλων, της χορωδίας και των σολίστ του σχολείου, μέσα και έξω από τον Πειραιά.", en: "Concerts by the school's ensembles, choir and soloists, in Piraeus and beyond." },
       draft: true,
       blocks: [
         {
           type: "text",
           paragraphs: [
-            "Εδώ συγκεντρώνονται οι συναυλίες της χρονιάς: τα μουσικά σύνολα, η χορωδία και τα ρεσιτάλ των μαθητών, με ημερομηνίες, χώρους και πρόγραμμα.",
+            { el: "Εδώ συγκεντρώνονται οι συναυλίες της χρονιάς: τα μουσικά σύνολα, η χορωδία και τα ρεσιτάλ των μαθητών, με ημερομηνίες, χώρους και πρόγραμμα.", en: "This is where the year's concerts are gathered: the music ensembles, the choir and student recitals, with dates, venues and programmes." },
           ],
         },
         {
           type: "list",
-          title: "Σύνολα που εμφανίζονται",
-          items: ["Ορχήστρα", "Χορωδία", "Σύνολα παραδοσιακής μουσικής", "Σύνολα μοντέρνας μουσικής"],
+          title: { el: "Σύνολα που εμφανίζονται", en: "Performing ensembles" },
+          items: [{ el: "Ορχήστρα", en: "Orchestra" }, { el: "Χορωδία", en: "Choir" }, { el: "Σύνολα παραδοσιακής μουσικής", en: "Traditional music ensembles" }, { el: "Σύνολα μοντέρνας μουσικής", en: "Contemporary music ensembles" }],
         },
       ],
     },
     {
       slug: "ekdiloseis",
       wpCategories: ["Εκδηλώσεις"],
-      title: "Εκδηλώσεις",
+      title: { el: "Εκδηλώσεις", en: "Events" },
       summary:
-        "Σχολικές γιορτές, επετειακές εκδηλώσεις και ανοιχτές εκδηλώσεις για γονείς και κοινό.",
+        { el: "Σχολικές γιορτές, επετειακές εκδηλώσεις και ανοιχτές εκδηλώσεις για γονείς και κοινό.", en: "School celebrations, commemorations and open events for parents and the public." },
       draft: true,
       blocks: [
         {
           type: "text",
           paragraphs: [
-            "Οι εκδηλώσεις της σχολικής χρονιάς — από τις εθνικές επετείους μέχρι τη γιορτή λήξης — με το πρόγραμμα και τις πληροφορίες για όσους θέλουν να τις παρακολουθήσουν.",
+            { el: "Οι εκδηλώσεις της σχολικής χρονιάς — από τις εθνικές επετείους μέχρι τη γιορτή λήξης — με το πρόγραμμα και τις πληροφορίες για όσους θέλουν να τις παρακολουθήσουν.", en: "The events of the school year — from national anniversaries to the end-of-year celebration — with programmes and information for anyone who would like to attend." },
           ],
         },
       ],
@@ -86,36 +86,36 @@ export const DRASEIS: Section = {
       slug: "programmata",
       // Το Erasmus έχει δική του σελίδα στο μενού (src/content/erasmus.ts).
       wpCategories: ["Προγράμματα"],
-      title: "Προγράμματα",
+      title: { el: "Προγράμματα", en: "Programmes" },
       summary:
-        "Τα εθνικά και ευρωπαϊκά προγράμματα στα οποία συμμετέχει το σχολείο, όπως ανταλλαγές και συνεργασίες.",
+        { el: "Τα εθνικά και ευρωπαϊκά προγράμματα στα οποία συμμετέχει το σχολείο, όπως ανταλλαγές και συνεργασίες.", en: "The national and European programmes the school takes part in, such as exchanges and partnerships." },
       draft: true,
       blocks: [
         {
           type: "text",
           paragraphs: [
-            "Κάθε πρόγραμμα με μια σύντομη περιγραφή: στόχος, συνεργαζόμενα σχολεία, διάρκεια και ό,τι προέκυψε από αυτό.",
+            { el: "Κάθε πρόγραμμα με μια σύντομη περιγραφή: στόχος, συνεργαζόμενα σχολεία, διάρκεια και ό,τι προέκυψε από αυτό.", en: "Each programme with a short description: its goal, partner schools, duration and outcomes." },
           ],
         },
         {
           type: "list",
-          title: "Κατηγορίες",
-          items: ["Ευρωπαϊκά προγράμματα", "Εθνικά προγράμματα", "Πολιτιστικά προγράμματα", "Προγράμματα σχολικών δραστηριοτήτων"],
+          title: { el: "Κατηγορίες", en: "Categories" },
+          items: [{ el: "Ευρωπαϊκά προγράμματα", en: "European programmes" }, { el: "Εθνικά προγράμματα", en: "National programmes" }, { el: "Πολιτιστικά προγράμματα", en: "Cultural programmes" }, { el: "Προγράμματα σχολικών δραστηριοτήτων", en: "School activity programmes" }],
         },
       ],
     },
     {
       slug: "ekdromes",
       wpCategories: ["Εκδρομές"],
-      title: "Εκδρομές",
+      title: { el: "Εκδρομές", en: "Trips" },
       summary:
-        "Εκπαιδευτικές εκδρομές, επισκέψεις σε χώρους πολιτισμού και μουσικά ταξίδια των τάξεων.",
+        { el: "Εκπαιδευτικές εκδρομές, επισκέψεις σε χώρους πολιτισμού και μουσικά ταξίδια των τάξεων.", en: "Educational trips, visits to cultural venues and musical journeys by our classes." },
       draft: true,
       blocks: [
         {
           type: "text",
           paragraphs: [
-            "Οι εκδρομές και οι επισκέψεις της χρονιάς, με προορισμό, τάξεις που συμμετέχουν και σύντομο απολογισμό.",
+            { el: "Οι εκδρομές και οι επισκέψεις της χρονιάς, με προορισμό, τάξεις που συμμετέχουν και σύντομο απολογισμό.", en: "The year's trips and visits, with destinations, participating classes and a short review." },
           ],
         },
       ],

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import T from "@/components/i18n/T";
+import { el } from "@/i18n/l10n";
 import ContactForm from "@/components/contact/ContactForm";
 import OfficeHours from "@/components/contact/OfficeHours";
 import { ADDRESS_LINE, MAPS_EMBED, MAPS_LINK, SCHOOL } from "@/lib/school";
@@ -17,11 +19,10 @@ export default function ContactPage() {
         <div className="relative mx-auto w-full max-w-6xl px-6 pb-20 pt-16 sm:px-8 sm:pt-24">
           <header className="max-w-2xl">
             <h1 className="font-display text-[clamp(2.4rem,7vw,4.2rem)] font-semibold leading-[1.02] tracking-tight">
-              Επικοινωνία
+              <T v="Επικοινωνία" />
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-[#3d5568]">
-              Η γραμματεία απαντά σε ερωτήματα για εγγραφές, εισαγωγικές εξετάσεις, μεταγραφές και μουσικά όργανα.
-              Τηλεφωνήστε, γράψτε μας ή περάστε από το σχολείο.
+              <T v="Η γραμματεία απαντά σε ερωτήματα για εγγραφές, εισαγωγικές εξετάσεις, μεταγραφές και μουσικά όργανα. Τηλεφωνήστε, γράψτε μας ή περάστε από το σχολείο." />
             </p>
           </header>
 
@@ -29,7 +30,7 @@ export default function ContactPage() {
             {/* ΓΚΡΙ ΚΟΥΤΙ — ίδιο μοτίβο με τις κάρτες στα «Νέα». */}
             <section aria-labelledby="details" className="surface-box p-7 sm:p-10">
               <h2 id="details" className="sr-only">
-                Στοιχεία επικοινωνίας
+                <T v="Στοιχεία επικοινωνίας" />
               </h2>
 
               <a
@@ -43,12 +44,12 @@ export default function ContactPage() {
                   <br />
                   {SCHOOL.postcode} {SCHOOL.area}
                 </p>
-                <p className="mt-2 text-sm text-[var(--primary-purple)]">Άνοιγμα στους Χάρτες Google</p>
+                <p className="mt-2 text-sm text-[var(--primary-purple)]"><T v="Άνοιγμα στους Χάρτες Google" /></p>
               </a>
 
               <dl className="mt-10 divide-y divide-[#dde8ee] border-y border-[#dde8ee]">
                 <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-5">
-                  <dt className="w-28 shrink-0 text-sm text-[#5b7285]">Τηλέφωνο</dt>
+                  <dt className="w-28 shrink-0 text-sm text-[#5b7285]"><T v="Τηλέφωνο" /></dt>
                   <dd className="text-lg">
                     <a
                       href={`tel:${SCHOOL.phone.replace(/\s/g, "")}`}
@@ -70,20 +71,20 @@ export default function ContactPage() {
                   </dd>
                 </div>
                 <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-5">
-                  <dt className="w-28 shrink-0 text-sm text-[#5b7285]">Ταχυδρομείο</dt>
+                  <dt className="w-28 shrink-0 text-sm text-[#5b7285]"><T v="Ταχυδρομείο" /></dt>
                   <dd className="text-lg">{ADDRESS_LINE}</dd>
                 </div>
               </dl>
 
               <div className="mt-10">
-                <h3 className="text-sm font-medium text-[#5b7285]">Πώς θα έρθετε</h3>
+                <h3 className="text-sm font-medium text-[#5b7285]"><T v="Πώς θα έρθετε" /></h3>
                 <ul className="mt-4 space-y-4">
                   {SCHOOL.transit.map((item) => (
-                    <li key={item.mode} className="flex gap-4">
+                    <li key={el(item.mode)} className="flex gap-4">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary-purple)]" aria-hidden />
                       <p className="leading-relaxed">
-                        <span className="font-medium">{item.mode}.</span>{" "}
-                        <span className="text-[#3d5568]">{item.detail}</span>
+                        <span className="font-medium"><T v={item.mode} />.</span>{" "}
+                        <span className="text-[#3d5568]"><T v={item.detail} /></span>
                       </p>
                     </li>
                   ))}
@@ -93,7 +94,7 @@ export default function ContactPage() {
 
             <section aria-labelledby="form-heading" className="surface-box p-7 sm:p-10">
               <h2 id="form-heading" className="sr-only">
-                Φόρμα επικοινωνίας
+                <T v="Φόρμα επικοινωνίας" />
               </h2>
               <ContactForm />
             </section>
@@ -110,7 +111,7 @@ export default function ContactPage() {
       <section aria-labelledby="map-heading" className="mx-auto w-full max-w-6xl px-6 pb-24 sm:px-8">
         <div className="flex flex-wrap items-baseline justify-between gap-4">
           <h2 id="map-heading" className="font-display text-2xl font-semibold sm:text-3xl">
-            Στον χάρτη
+            <T v="Στον χάρτη" />
           </h2>
           <a
             href={MAPS_LINK}
@@ -118,7 +119,7 @@ export default function ContactPage() {
             rel="noreferrer"
             className="text-sm font-medium text-[var(--primary-purple)] underline decoration-[var(--primary-purple)]/30 underline-offset-4 transition hover:decoration-[var(--primary-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-purple)]"
           >
-            Οδηγίες πλοήγησης
+            <T v="Οδηγίες πλοήγησης" />
           </a>
         </div>
         <div className="surface-box mt-6 overflow-hidden p-2">

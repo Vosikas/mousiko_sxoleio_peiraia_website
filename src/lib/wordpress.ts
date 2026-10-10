@@ -14,6 +14,7 @@
 
 import { unstable_noStore } from "next/cache";
 import { categoryKey } from "./text";
+import { POSTS_SINCE } from "@/content/news";
 
 /**
  * Δέχεται ΕΙΤΕ τη διεύθυνση του site ΕΙΤΕ το REST endpoint και επιστρέφει
@@ -202,6 +203,19 @@ function normalize(raw: WPRawPost): Post {
 
 /* ---------------------------------------------------------------- fetch */
 
+/**
+ * «&after=…» για κάθε ερώτημα άρθρων: μόνο δημοσιεύσεις από το POSTS_SINCE
+ * (src/content/news.ts) και μετά. Το `after` του WordPress είναι αυστηρό
+ * («μετά από»), οπότε στέλνουμε το τελευταίο δευτερόλεπτο της προηγούμενης
+ * μέρας — έτσι μετράει και ό,τι δημοσιεύτηκε ακριβώς τα μεσάνυχτα.
+ */
+const SINCE_FILTER = (() => {
+  if (!POSTS_SINCE) return "";
+  const start = new Date(POSTS_SINCE + "T00:00:00Z");
+  if (Number.isNaN(start.getTime())) return "";
+  return "&after=" + new Date(start.getTime() - 1000).toISOString().slice(0, 19);
+})();
+
 type FetchOptions = { revalidate?: number; noStore?: boolean };
 
 async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | null> {
@@ -225,12 +239,15 @@ async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | nu
   }
 }
 
-/** Τα N πιο πρόσφατα άρθρα. Πέφτει σε δείγμα αν λείπει το WordPress. */
+/**
+ * Τα N πιο πρόσφατα άρθρα. Δείγμα ΜΟΝΟ αν το WordPress δεν απαντά (null)·
+ * αν απαντά «κανένα άρθρο» (π.χ. λόγω POSTS_SINCE) επιστρέφει κενή λίστα.
+ */
 export async function getRecentPosts(count = 4): Promise<Post[]> {
   const raw = await wpFetch<WPRawPost[]>(
-    `/posts?per_page=${count}&_embed=true&orderby=date&order=desc`,
+    `/posts?per_page=${count}&_embed=true&orderby=date&order=desc${SINCE_FILTER}`,
   );
-  if (!raw?.length) return SAMPLE_POSTS.slice(0, count);
+  if (raw === null) return SAMPLE_POSTS.slice(0, count);
   return raw.map(normalize);
 }
 
@@ -244,20 +261,24 @@ export async function getAllPosts(): Promise<Post[]> {
 
   while (true) {
     const raw = await wpFetch<WPRawPost[]>(
-      `/posts?per_page=${perPage}&page=${page}&_embed=true&orderby=date&order=desc`,
+      `/posts?per_page=${perPage}&page=${page}&_embed=true&orderby=date&order=desc${SINCE_FILTER}`,
     );
-    if (!raw?.length) break;
+    if (raw === null) {
+      // Το WordPress δεν απαντά: δείγμα μόνο αν απέτυχε ήδη η 1η σελίδα.
+      if (page === 1) return SAMPLE_POSTS;
+      break;
+    }
     all.push(...raw);
     if (raw.length < perPage) break;
     page += 1;
   }
 
-  return all.length ? all.map(normalize) : SAMPLE_POSTS;
+  return all.map(normalize);
 }
 
 /** Ένα άρθρο με βάση το slug. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed=true`);
+  const raw = await wpFetch<WPRawPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed=true${SINCE_FILTER}`);
   if (!raw?.length) return SAMPLE_POSTS.find((p) => p.slug === slug) ?? null;
   return normalize(raw[0]);
 }
@@ -281,7 +302,7 @@ export async function getPostsByCategories(names: string[], count = 12): Promise
   if (!ids.length) return [];
 
   const raw = await wpFetch<WPRawPost[]>(
-    `/posts?categories=${ids.join(",")}&per_page=${count}&_embed=true&orderby=date&order=desc`,
+    `/posts?categories=${ids.join(",")}&per_page=${count}&_embed=true&orderby=date&order=desc${SINCE_FILTER}`,
   );
   return raw?.map(normalize) ?? [];
 }

@@ -9,6 +9,7 @@ import {
   type ContactErrors,
   type ContactInput,
 } from "@/lib/contact";
+import { useLanguage } from "@/hooks/useLanguage";
 
 type Status = "idle" | "sending" | "sent" | "failed";
 
@@ -18,6 +19,7 @@ const ok = "border-[#dbe6ec]";
 const bad = "border-[#d1534a] ring-4 ring-[#d1534a]/10";
 
 export default function ContactForm() {
+  const { t } = useLanguage();
   const id = useId();
   const [values, setValues] = useState<ContactInput>(EMPTY_CONTACT);
   const [errors, setErrors] = useState<ContactErrors>({});
@@ -67,7 +69,7 @@ export default function ContactForm() {
       setStatus("failed");
       setFailure(
         response.status === 429
-          ? "Στάλθηκαν πολλά μηνύματα από αυτή τη σύνδεση. Δοκιμάστε ξανά σε λίγα λεπτά."
+          ? "Στάλθηκαν πολλά μηνύματα από αυτή τη σύνδεση. Δοκιμάστε ξανά σε λίγα λεπτά."  // μεταφράζεται στην εμφάνιση
           : data.message || "Το μήνυμα δεν στάλθηκε. Δοκιμάστε ξανά ή τηλεφωνήστε στη γραμματεία.",
       );
     } catch {
@@ -79,9 +81,9 @@ export default function ContactForm() {
   if (status === "sent") {
     return (
       <div className="rounded-2xl border border-[var(--primary-purple)]/25 bg-white p-8">
-        <p className="font-display text-2xl font-semibold text-[var(--primary-purple)]">Το μήνυμα στάλθηκε</p>
+        <p className="font-display text-2xl font-semibold text-[var(--primary-purple)]">{t("Το μήνυμα στάλθηκε")}</p>
         <p className="mt-3 max-w-prose text-[#3d5568]">
-          Η γραμματεία απαντά συνήθως μέσα σε δύο εργάσιμες ημέρες. Θα λάβετε απάντηση στο {values.email}.
+          {t("Η γραμματεία απαντά συνήθως μέσα σε δύο εργάσιμες ημέρες. Θα λάβετε απάντηση στο {email}.", { email: values.email })}
         </p>
         <button
           type="button"
@@ -91,7 +93,7 @@ export default function ContactForm() {
           }}
           className="btn-ghost mt-6 rounded-full border px-5 py-2.5 font-medium"
         >
-          Στείλτε κι άλλο μήνυμα
+          {t("Στείλτε κι άλλο μήνυμα")}
         </button>
       </div>
     );
@@ -99,13 +101,13 @@ export default function ContactForm() {
 
   return (
     <div ref={formRef}>
-      <h2 className="font-display text-2xl font-semibold text-[#102a43]">Στείλτε μας μήνυμα</h2>
-      <p className="mt-2 text-sm text-[#5b7285]">Τα πεδία με αστερίσκο είναι υποχρεωτικά.</p>
+      <h2 className="font-display text-2xl font-semibold text-[#102a43]">{t("Στείλτε μας μήνυμα")}</h2>
+      <p className="mt-2 text-sm text-[#5b7285]">{t("Τα πεδία με αστερίσκο είναι υποχρεωτικά.")}</p>
 
       <div className="mt-7 grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-1">
           <label htmlFor={`${id}-name`} className="mb-1.5 block text-sm font-medium text-[#102a43]">
-            Ονοματεπώνυμο *
+            {t("Ονοματεπώνυμο *")}
           </label>
           <input
             id={`${id}-name`}
@@ -141,7 +143,7 @@ export default function ContactForm() {
 
         <div className="sm:col-span-1">
           <label htmlFor={`${id}-phone`} className="mb-1.5 block text-sm font-medium text-[#102a43]">
-            Τηλέφωνο
+            {t("Τηλέφωνο")}
           </label>
           <input
             id={`${id}-phone`}
@@ -149,7 +151,7 @@ export default function ContactForm() {
             type="tel"
             inputMode="tel"
             autoComplete="tel"
-            placeholder="Προαιρετικό"
+            placeholder={t("Προαιρετικό")}
             value={values.phone}
             onChange={(event) => set("phone", event.target.value)}
             aria-invalid={Boolean(errors.phone)}
@@ -161,7 +163,7 @@ export default function ContactForm() {
 
         <div className="sm:col-span-1">
           <label htmlFor={`${id}-topic`} className="mb-1.5 block text-sm font-medium text-[#102a43]">
-            Θέμα *
+            {t("Θέμα *")}
           </label>
           <select
             id={`${id}-topic`}
@@ -176,7 +178,7 @@ export default function ContactForm() {
           >
             {TOPICS.map((topic) => (
               <option key={topic} value={topic}>
-                {topic}
+                {t(topic)}
               </option>
             ))}
           </select>
@@ -184,7 +186,7 @@ export default function ContactForm() {
 
         <div className="sm:col-span-2">
           <label htmlFor={`${id}-message`} className="mb-1.5 block text-sm font-medium text-[#102a43]">
-            Μήνυμα *
+            {t("Μήνυμα *")}
           </label>
           <textarea
             id={`${id}-message`}
@@ -225,7 +227,7 @@ export default function ContactForm() {
               aria-describedby={describe("consent")}
               className="mt-0.5 h-5 w-5 shrink-0 rounded border-[#c6d5df] text-[var(--primary-purple)] focus:ring-[var(--primary-purple)]"
             />
-            <span>Συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου αποκλειστικά για την απάντηση σε αυτό το μήνυμα. *</span>
+            <span>{t("Συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου αποκλειστικά για την απάντηση σε αυτό το μήνυμα. *")}</span>
           </label>
           <FieldError id={`${id}-consent-error`} message={errors.consent} />
         </div>
@@ -241,21 +243,21 @@ export default function ContactForm() {
           {status === "sending" ? (
             <>
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-              Αποστολή
+              {t("Αποστολή")}
             </>
           ) : (
-            "Αποστολή μηνύματος"
+            t("Αποστολή μηνύματος")
           )}
         </button>
-        <p className="text-sm text-[#5b7285]">Απαντάμε συνήθως σε δύο εργάσιμες ημέρες.</p>
+        <p className="text-sm text-[#5b7285]">{t("Απαντάμε συνήθως σε δύο εργάσιμες ημέρες.")}</p>
       </div>
 
       <p aria-live="assertive" className="sr-only">
-        {status === "failed" ? failure : ""}
+        {status === "failed" ? t(failure) : ""}
       </p>
       {status === "failed" ? (
         <p className="mt-5 rounded-xl border border-[#d1534a]/30 bg-[#d1534a]/[0.06] px-4 py-3 text-sm text-[#a03a32]">
-          {failure}
+          {t(failure)}
         </p>
       ) : null}
     </div>
@@ -263,10 +265,11 @@ export default function ContactForm() {
 }
 
 function FieldError({ id, message }: { id: string; message?: string }) {
+  const { t } = useLanguage();
   if (!message) return null;
   return (
     <p id={id} className="mt-1.5 text-sm text-[#c0392b]">
-      {message}
+      {t(message)}
     </p>
   );
 }

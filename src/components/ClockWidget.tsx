@@ -4,22 +4,6 @@ import { useNow } from "@/hooks/useNow";
 import { useLanguage } from "@/hooks/useLanguage";
 import { site } from "@/lib/site";
 
-const DAYS = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
-const MONTHS = [
-  "Ιαν",
-  "Φεβ",
-  "Μαρ",
-  "Απρ",
-  "Μαΐ",
-  "Ιουν",
-  "Ιουλ",
-  "Αυγ",
-  "Σεπ",
-  "Οκτ",
-  "Νοε",
-  "Δεκ",
-];
-
 const pad = (n: number) => String(n).padStart(2, "0");
 
 export default function ClockWidget() {

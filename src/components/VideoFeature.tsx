@@ -79,7 +79,7 @@ export default function VideoFeature() {
                 <button
                   type="button"
                   onClick={() => setPlaying(true)}
-                  aria-label={"Αναπαραγωγή: " + title}
+                  aria-label={t("Αναπαραγωγή: {title}", { title: t(title) })}
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <span className="btn-solid relative flex h-20 w-20 items-center justify-center rounded-full backdrop-blur-sm duration-300 group-hover:scale-110 sm:h-24 sm:w-24">
