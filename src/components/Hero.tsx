@@ -26,19 +26,28 @@ export default function Hero() {
   // Χωρίς δικό του φόντο: αφήνει να φανεί το υδατογράφημα από πίσω.
   return (
     <section className="relative pt-28">
-      <div className="mx-auto grid w-full max-w-[1500px] items-center gap-12 px-5 pb-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.3fr)] lg:gap-16 lg:px-10">
+      {/* Η αριστερή στήλη (auto) παίρνει ακριβώς το πλάτος του λογοτύπου·
+          το γκρι κουτί καλύπτει όλο το υπόλοιπο. */}
+      <div className="mx-auto grid w-full max-w-[1500px] items-center gap-12 px-5 pb-24 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-16 lg:px-10">
         {/* ---------------- ΑΡΙΣΤΕΡΑ: λογότυπο ---------------- */}
         <div
           className="flex justify-center lg:justify-start"
           style={{ animation: "rise 1s 0.1s both" }}
         >
+          {/* ΜΕΓΕΘΟΣ ΛΟΓΟΤΥΠΟΥ — ανάλογο με την οθόνη, ώστε σε laptop και σε
+              μεγάλο monitor να πιάνει το ίδιο ποσοστό του χώρου:
+                26vw  = 26% του πλάτους της οθόνης (το βασικό μέγεθος)
+                60vh  = όριο από το ύψος — δεν ξεπερνά το ορατό μέρος
+                20rem = ελάχιστο, για μικρά laptop
+              Μεγαλύτερο/μικρότερο λογότυπο: άλλαξε το 26vw. */}
           <Image
             src="/logomousiko.png"
             alt={site.name}
             width={643}
             height={756}
             priority
-            className="h-auto w-[min(72%,20rem)] lg:w-full lg:max-w-[24rem]"
+            sizes="(min-width: 1024px) 26vw, 72vw"
+            className="h-auto w-[min(72%,20rem)] lg:w-[max(20rem,min(26vw,60vh))]"
           />
           {/* Το <h1> για SEO/αναγνώστες οθόνης — οπτικά ο τίτλος είναι το λογότυπο. */}
           <h1 className="sr-only">{t(site.name)}</h1>
