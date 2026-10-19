@@ -14,7 +14,11 @@
 
 import { unstable_noStore } from "next/cache";
 import { categoryKey } from "./text";
+import { parseSongTable, type Song } from "./song-table";
+import { cleanWpHtml } from "./wp-clean";
 import { POSTS_SINCE } from "@/content/news";
+import { SONGS_PAGE_SLUG } from "@/content/songs";
+import type { WpSource } from "@/content/types";
 
 /**
  * Δέχεται ΕΙΤΕ τη διεύθυνση του site ΕΙΤΕ το REST endpoint και επιστρέφει
@@ -218,25 +222,74 @@ const SINCE_FILTER = (() => {
 
 type FetchOptions = { revalidate?: number; noStore?: boolean };
 
-async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | null> {
-  if (!WP_API_URL) return null;
+/**
+ * Ο server του sch.gr κόβει τις «ριπές» αιτημάτων (π.χ. στο build, όπου
+ * χτίζονται πολλές σελίδες μαζί). Γι' αυτό: λίγα αιτήματα ταυτόχρονα και
+ * νέα προσπάθεια, με αναμονή, όταν αποτύχει η σύνδεση ή ζητηθεί «πιο αργά».
+ */
+const MAX_PARALLEL = 3;
+const RETRY_DELAYS_MS = [1000, 3000];
+let active = 0;
+const waiting: (() => void)[] = [];
+
+async function withSlot<T>(task: () => Promise<T>): Promise<T> {
+  if (active < MAX_PARALLEL) active++;
+  else await new Promise<void>((resolve) => waiting.push(resolve)); // παίρνει τη θέση κάποιου που τελείωσε
+  try {
+    return await task();
+  } finally {
+    const next = waiting.shift();
+    if (next) next();
+    else active--;
+  }
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Τα δεδομένα, ή null με το HTTP status της αποτυχίας (0 = καμία σύνδεση). */
+async function wpRequest<T>(path: string, opts: FetchOptions = {}): Promise<{ data: T | null; status: number }> {
+  if (!WP_API_URL) return { data: null, status: 0 };
   if (opts.noStore) unstable_noStore();
 
-  try {
-    const res = await fetch(`${WP_API_URL}${path}`, {
-      headers: { Accept: "application/json" },
-      next: opts.noStore ? undefined : { revalidate: opts.revalidate ?? REVALIDATE_SECONDS },
-      cache: opts.noStore ? "no-store" : undefined,
+  for (let attempt = 0; ; attempt++) {
+    const result = await withSlot(async () => {
+      try {
+        const res = await fetch(`${WP_API_URL}${path}`, {
+          headers: { Accept: "application/json" },
+          next: opts.noStore ? undefined : { revalidate: opts.revalidate ?? REVALIDATE_SECONDS },
+          cache: opts.noStore ? "no-store" : undefined,
+        });
+        if (!res.ok) return { data: null, status: res.status, reason: `${res.status} ${res.statusText}` };
+        return { data: (await res.json()) as T, status: res.status, reason: "" };
+      } catch (err) {
+        const cause = (err as { cause?: { code?: string } }).cause?.code;
+        return { data: null, status: 0, reason: `${(err as Error).message}${cause ? ` (${cause})` : ""}` };
+      }
     });
-    if (!res.ok) {
-      console.warn(`[wp] ${res.status} ${res.statusText} για ${path}`);
-      return null;
+    if (result.data !== null) return result;
+
+    const retryable = result.status === 0 || result.status === 429 || result.status >= 500;
+    if (retryable && attempt < RETRY_DELAYS_MS.length) {
+      await sleep(RETRY_DELAYS_MS[attempt]);
+      continue;
     }
-    return (await res.json()) as T;
-  } catch (err) {
-    console.warn("[wp] αποτυχία σύνδεσης με το WordPress:", (err as Error).message);
-    return null;
+    console.warn(`[wp] ${result.reason} για ${path}${attempt ? ` (μετά από ${attempt + 1} προσπάθειες)` : ""}`);
+    return { data: null, status: result.status };
   }
+}
+
+async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | null> {
+  return (await wpRequest<T>(path, opts)).data;
+}
+
+/**
+ * Το WordPress ΔΕΝ ΑΠΑΝΤΑ: πετάμε σφάλμα, ώστε το Next.js να κρατήσει την
+ * τελευταία καλή έκδοση της σελίδας (ISR) αντί να τη χαλάσει. Εξαίρεση το
+ * build και το dev, όπου μια στιγμιαία αποτυχία δεν πρέπει να σταματά τίποτα.
+ */
+function keepLastGoodVersion(what: string): void {
+  if (process.env.NEXT_PHASE === "phase-production-build" || process.env.NODE_ENV !== "production") return;
+  throw new Error(`[wp] ${what}: το WordPress δεν απαντά — κρατάμε την προηγούμενη έκδοση.`);
 }
 
 /**
@@ -312,6 +365,49 @@ export async function getPageBySlug(slug: string): Promise<{ title: string; html
   const raw = await wpFetch<WPRawPost[]>(`/pages?slug=${encodeURIComponent(slug)}&_embed=true`);
   if (!raw?.length) return null;
   return { title: decodeHtml(stripHtml(raw[0].title.rendered)), html: raw[0].content.rendered };
+}
+
+/**
+ * «Τραγούδι της ημέρας»: ο πίνακας της σελίδας SONGS_PAGE_SLUG
+ * (οδηγίες στο src/content/songs.ts).
+ *
+ * Σελίδα που λείπει ή είναι άδεια → [] και η κάρτα κρύβεται. Αν όμως το
+ * WordPress δεν απαντά, η αρχική κρατά την τελευταία καλή έκδοση
+ * (keepLastGoodVersion) αντί να «χαθούν» τα τραγούδια.
+ */
+export async function getSongs(): Promise<Song[]> {
+  if (!WP_API_URL) return [];
+  const raw = await wpFetch<Pick<WPRawPost, "content">[]>(
+    `/pages?slug=${encodeURIComponent(SONGS_PAGE_SLUG)}&_fields=content`,
+  );
+  if (raw === null) {
+    keepLastGoodVersion("Τραγούδια");
+    return [];
+  }
+  return raw.length ? parseSongTable(raw[0].content?.rendered ?? "") : [];
+}
+
+export type WpEntry = { title: string; html: string; modified: string; link: string };
+
+/**
+ * Μια σελίδα του παλιού site (πεδίο `wpContent`, src/content/types.ts),
+ * καθαρισμένη για το νέο (src/lib/wp-clean.ts).
+ * null αν σβήστηκε, έγινε ιδιωτική ή είναι άδεια — τότε η υποσελίδα δείχνει
+ * τα δικά της blocks. Αν το WordPress δεν απαντά, η υποσελίδα κρατά την
+ * τελευταία καλή έκδοση.
+ */
+export async function getWpEntry(source: WpSource): Promise<WpEntry | null> {
+  if (!WP_API_URL) return null;
+  const { data, status } = await wpRequest<Pick<WPRawPost, "title" | "content" | "modified" | "link">>(
+    `/${source.type === "page" ? "pages" : "portfolio"}/${source.id}?_fields=title,content,modified,link`,
+  );
+  if (!data) {
+    if (![401, 403, 404, 410].includes(status)) keepLastGoodVersion(`${source.type}/${source.id}`);
+    return null;
+  }
+  const html = cleanWpHtml(data.content?.rendered ?? "", { base: data.link || WP_API_URL, until: source.until });
+  if (!html) return null;
+  return { title: decodeHtml(stripHtml(data.title?.rendered ?? "")), html, modified: data.modified, link: data.link };
 }
 
 /** true όταν υπάρχει ρυθμισμένο WordPress endpoint. */

@@ -5,6 +5,8 @@ type Props = { params: Promise<{ slug: string }> };
 
 // Μόνο οι υποσελίδες του src/content/to-scholeio.ts υπάρχουν· οτιδήποτε άλλο → 404.
 export const dynamicParams = false;
+// Όσες υποσελίδες έχουν `wpContent` ανανεώνονται από το WordPress κάθε 5 λεπτά.
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return subpageParams("to-scholeio");

@@ -14,9 +14,15 @@ export const TO_SCHOLEIO: Section = {
   eyebrow: { el: "Ταυτότητα", en: "About us" },
   intro:
     { el: "Η ιστορία, οι άνθρωποι και η λειτουργία του Μουσικού Σχολείου Πειραιά — όσα χρειάζεται να γνωρίζουν μαθητές, γονείς και επισκέπτες.", en: "The history, the people and the day-to-day life of the Music School of Piraeus — everything students, parents and visitors need to know." },
+  // `wpContent`: η υποσελίδα δείχνει το κείμενο της αντίστοιχης σελίδας του
+  // παλιού site (WordPress) αντί για τα `blocks` — βλ. src/content/types.ts.
   subpages: [
     {
       slug: "istoria",
+      wpContent: [
+        { type: "page", id: 367, until: "Πληροφορίες & Λειτουργία" }, // «Το σχολείο» (μόνο η εισαγωγή)
+        { type: "portfolio", id: 403 }, // «Εγκαταστάσεις»
+      ],
       title: { el: "Ιστορία του Σχολείου – Κτιριακή Υποδομή", en: "School History – Buildings & Facilities" },
       shortTitle: { el: "Ιστορία & Υποδομή", en: "History & Facilities" },
       summary:
@@ -80,6 +86,7 @@ export const TO_SCHOLEIO: Section = {
     {
       // Οι εξετάσεις και οι λοιπές πληροφορίες φοίτησης. (Κρατάει το παλιό URL.)
       slug: "foitisi",
+      wpContent: [{ type: "page", id: 63 }], // «Εισαγωγή στο Μουσικό»
       title: { el: "Φοίτηση", en: "Studies & Attendance" },
       summary:
         { el: "Οι εξετάσεις του σχολείου και όλες οι πληροφορίες που αφορούν τη φοίτηση.", en: "The school's exams and all the information about studying and attendance." },
@@ -123,6 +130,7 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "ekpaideftikoi",
+      wpContent: [{ type: "portfolio", id: 399 }], // «Εκπαιδευτικοί»
       title: { el: "Εκπαιδευτικοί", en: "Teachers" },
       summary:
         { el: "Ο Σύλλογος Διδασκόντων: οι καθηγητές και οι καθηγήτριες γενικής και μουσικής παιδείας του σχολείου.", en: "The teaching staff: the school's general education and music teachers." },
@@ -151,6 +159,7 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "goneis",
+      wpContent: [{ type: "portfolio", id: 549 }], // «Σύλλογος Γονέων»
       title: { el: "Σύλλογος Γονέων & Κηδεμόνων", en: "Parents' Association" },
       shortTitle: { el: "Σύλλογος Γονέων", en: "Parents' Association" },
       summary:
@@ -181,6 +190,7 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "orologio",
+      wpContent: [{ type: "portfolio", id: 334 }], // «Εβδομαδιαίο – Ωρολόγιο Πρόγραμμα»
       title: { el: "Ωρολόγιο Πρόγραμμα", en: "Timetable" },
       summary:
         { el: "Οι ώρες διδασκαλίας ανά τάξη για τα μαθήματα γενικής και μουσικής παιδείας.", en: "Weekly teaching hours per year for general education and music subjects." },
@@ -204,6 +214,7 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "scholika-leoforeia",
+      wpContent: [{ type: "portfolio", id: 400 }], // «Λεωφορεία»
       title: { el: "Σχολικά Λεωφορεία", en: "School Buses" },
       summary:
         { el: "Τα δρομολόγια των σχολικών λεωφορείων: στάσεις, ώρες και πληροφορίες για τη μεταφορά των μαθητών.", en: "School bus routes: stops, times and information about student transport." },
@@ -239,6 +250,7 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "kanonismos",
+      wpContent: [{ type: "portfolio", id: 402 }], // «Αρχές Λειτουργίας»
       title: { el: "Κανονισμός Λειτουργίας", en: "School Rules" },
       summary:
         { el: "Οι κανόνες που διέπουν την καθημερινή ζωή του σχολείου — για μαθητές, γονείς και εκπαιδευτικούς.", en: "The rules that shape everyday school life — for students, parents and teachers." },

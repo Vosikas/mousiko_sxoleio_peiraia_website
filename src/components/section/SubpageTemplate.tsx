@@ -4,9 +4,11 @@ import { getSubpage, shortTitle, subpageHref, type SectionSlug } from "@/content
 import type { Section, Subpage } from "@/content/types";
 import T from "@/components/i18n/T";
 import { el } from "@/i18n/l10n";
+import { getWpEntry } from "@/lib/wordpress";
 import Blocks from "./Blocks";
 import CategoryFeed from "./CategoryFeed";
 import PageIntro from "./PageIntro";
+import WpContent from "./WpContent";
 
 /**
  * ΤΟ TEMPLATE ΚΑΘΕ ΥΠΟΣΕΛΙΔΑΣ
@@ -20,12 +22,17 @@ import PageIntro from "./PageIntro";
  *   └──────────────┴───────────────────────────────┘
  *
  * Όλο το περιεχόμενο έρχεται από src/content/ — εδώ μόνο η διάταξη.
+ * Με `wpContent`, τα τουβλάκια αντικαθίστανται από το κείμενο του παλιού site.
  * Server component: δεν στέλνει JavaScript στον browser.
  */
-export default function SubpageTemplate({ section: sectionSlug, slug }: { section: SectionSlug; slug: string }) {
+export default async function SubpageTemplate({ section: sectionSlug, slug }: { section: SectionSlug; slug: string }) {
   const found = getSubpage(sectionSlug, slug);
   if (!found) notFound();
   const { section, page, prev, next } = found;
+
+  const wp = page.wpContent?.length
+    ? (await Promise.all(page.wpContent.map(getWpEntry))).filter((entry) => entry !== null)
+    : [];
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8 sm:pt-24">
@@ -33,7 +40,7 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
         eyebrow={section.title}
         title={page.title}
         lead={page.summary}
-        draft={page.draft}
+        draft={page.draft && !wp.length}
         size="md"
       />
 
@@ -95,7 +102,7 @@ export default function SubpageTemplate({ section: sectionSlug, slug }: { sectio
         </aside>
 
         <div className="min-w-0">
-          <Blocks blocks={page.blocks} />
+          {wp.length ? <WpContent entries={wp} /> : <Blocks blocks={page.blocks} />}
 
           {/* Άρθρα WordPress — μόνο όπου η υποσελίδα ορίζει wpCategories. */}
           {page.wpCategories?.length ? <CategoryFeed categories={page.wpCategories} /> : null}

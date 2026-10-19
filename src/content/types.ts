@@ -66,6 +66,27 @@ export type Subpage = {
    * Χωρίς αυτό το πεδίο η σελίδα δεν αγγίζει καθόλου το WordPress.
    */
   wpCategories?: string[];
+  /**
+   * ΠΕΡΙΕΧΟΜΕΝΟ ΑΠΟ ΤΟ ΠΑΛΙΟ SITE: μία ή περισσότερες σελίδες του WordPress.
+   * Όταν οριστεί, η υποσελίδα δείχνει ΑΥΤΟ το κείμενο (καθαρισμένο, με την
+   * εμφάνιση του νέου site) αντί για τα `blocks`. Τα `blocks` μένουν ως
+   * εφεδρεία, αν η σελίδα του WordPress σβηστεί. Για επιστροφή στο δικό μας
+   * κείμενο: σβήσε αυτό το πεδίο.
+   */
+  wpContent?: WpSource[];
+};
+
+/**
+ * Μια σελίδα του παλιού site. Το `id` φαίνεται στο WordPress όταν ανοίγεις
+ * τη σελίδα για επεξεργασία (…post.php?post=<id>).
+ *   type "page"      → Σελίδες
+ *   type "portfolio" → Portfolio Items του θέματος Enfold (οι διευθύνσεις /msp/…)
+ */
+export type WpSource = {
+  type: "page" | "portfolio";
+  id: number;
+  /** Κόβει το κείμενο ΠΡΙΝ από την επικεφαλίδα με αυτό το κείμενο. */
+  until?: string;
 };
 
 export type Section = {

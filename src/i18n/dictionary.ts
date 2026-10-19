@@ -73,6 +73,11 @@ export const DICTIONARY: Record<string, string> = {
   "πριν από {n} χρόνια": "{n} years ago",
   "Για σήμερα δεν υπάρχει καταχωρισμένο γεγονός.": "Nothing is recorded for today.",
   "μουσικό γεγονός": "music event",
+  "Τραγούδι της ημέρας": "Song of the day",
+  "Αφιέρωμα της ημέρας": "Today's special",
+  "Ακρόαση": "Listen",
+  "Άνοιγμα στο YouTube": "Open on YouTube",
+  "Άνοιγμα στο Spotify": "Open on Spotify",
 
   /* ------------------------------------------------ σύνολα & μαθήματα */
   "Μουσικά σύνολα": "Music ensembles",
@@ -135,6 +140,9 @@ export const DICTIONARY: Record<string, string> = {
 
   /* ------------------------------------------------------ σελίδες ενοτήτων */
   "Ενδεικτικό περιεχόμενο — υπό συμπλήρωση": "Sample content — being completed",
+  "Από το site του σχολείου": "From the school's website",
+  "ενημέρωση": "updated",
+  "Το κείμενο αυτής της σελίδας είναι διαθέσιμο μόνο στα ελληνικά.": "The text of this page is available in Greek only.",
   "Δείτε περισσότερα": "See more",
   "Επόμενη →": "Next →",
   "← Προηγούμενη": "← Previous",

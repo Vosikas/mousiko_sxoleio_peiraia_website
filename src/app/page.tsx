@@ -6,6 +6,7 @@ import PostsPool, { PostsPoolSkeleton } from "@/components/PostsPool";
 import ClockWidget from "@/components/ClockWidget";
 import CalendarWidget from "@/components/CalendarWidget";
 import TodayWidget from "@/components/TodayWidget";
+import SongOfTheDay from "@/components/SongOfTheDay";
 import StickyRail from "@/components/StickyRail";
 import { ContactCard, EnsemblesCard, Marquee } from "@/components/RailCards";
 import Reveal from "@/components/Reveal";
@@ -56,6 +57,10 @@ export default function HomePage() {
             <Reveal delay={80}>
               <CalendarWidget />
             </Reveal>
+            {/* Από τη σελίδα «tragoudia» του WordPress — βλ. src/content/songs.ts */}
+            <Suspense fallback={null}>
+              <SongOfTheDay delay={130} />
+            </Suspense>
             <Reveal delay={180}>
               <ContactCard />
             </Reveal>
