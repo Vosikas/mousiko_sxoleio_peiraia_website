@@ -463,16 +463,38 @@ export async function getWpVideoGroups(gallery: VideoGallery): Promise<VideoGrou
     }))
     .filter((item) => item.videos.length);
 
-  return gallery.groups
-    .map((group) => {
+  const groups = await Promise.all(
+    gallery.groups.map(async (group) => {
       const groupTags = new Set(group.tags.map(categoryKey));
-      return {
-        id: group.id,
-        title: group.title,
-        items: videos.filter((v) => v.tags.some((t) => groupTags.has(t))).map(({ title, videos }) => ({ title, videos })),
-      };
-    })
-    .filter((group) => group.items.length);
+      const items = await Promise.all(
+        videos
+          .filter((v) => v.tags.some((t) => groupTags.has(t)))
+          .map(async ({ title, videos }) => {
+            const alive = await Promise.all(videos.map(youtubeAvailable));
+            return { title, videos: videos.filter((_, i) => alive[i]) };
+          }),
+      );
+      return { id: group.id, title: group.title, items: items.filter((item) => item.videos.length) };
+    }),
+  );
+  return groups.filter((group) => group.items.length);
+}
+
+/**
+ * Υπάρχει ακόμη το βίντεο στο YouTube και επιτρέπει ενσωμάτωση; (oEmbed —
+ * ελέγχεται μία φορά τη μέρα). Σβησμένα (404) ή ιδιωτικά/χωρίς ενσωμάτωση
+ * (401/403) κρύβονται· αν το YouTube δεν απαντά, δεν κρύβουμε τίποτα.
+ */
+async function youtubeAvailable(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      "https://www.youtube.com/oembed?format=json&url=" + encodeURIComponent(`https://www.youtube.com/watch?v=${id}`),
+      { next: { revalidate: 86_400 } },
+    );
+    return ![400, 401, 403, 404].includes(res.status);
+  } catch {
+    return true;
+  }
 }
 
 /** true όταν υπάρχει ρυθμισμένο WordPress endpoint. */

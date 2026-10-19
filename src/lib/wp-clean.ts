@@ -92,20 +92,35 @@ function parse(html: string): Node[] {
 
 const YOUTUBE = /(?:youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})(?![\w-])/;
 
+export type VideoSource =
+  | { kind: "embed"; src: string }
+  | { kind: "link"; href: string; thumb: string; site: string };
+
 /**
- * Embed μόνο από γνωστές υπηρεσίες βίντεο, ξαναχτισμένο από το id του
- * (το YouTube χωρίς cookies). Οτιδήποτε άλλο iframe πετιέται.
+ * Βίντεο μόνο από γνωστές υπηρεσίες, ξαναχτισμένο από το id του· οτιδήποτε
+ * άλλο iframe πετιέται.
+ *   YouTube, Vimeo → ενσωματωμένος player (το YouTube χωρίς cookies)
+ *   Dailymotion    → κάρτα με τη μικρογραφία που ανοίγει το βίντεο στο
+ *                    Dailymotion: ο ενσωματωμένος player του απαντά «Forbidden».
  */
-export function videoEmbed(raw: string | undefined): string | null {
+export function videoSource(raw: string | undefined): VideoSource | null {
   if (!raw) return null;
   const playlist = raw.match(/youtube(?:-nocookie)?\.com\/embed\/videoseries\?(?:.*&)?list=([\w-]+)/);
-  if (playlist) return `https://www.youtube-nocookie.com/embed/videoseries?list=${playlist[1]}`;
+  if (playlist) return { kind: "embed", src: `https://www.youtube-nocookie.com/embed/videoseries?list=${playlist[1]}` };
   const youtube = raw.match(YOUTUBE);
-  if (youtube && youtube[1] !== "videoseries") return `https://www.youtube-nocookie.com/embed/${youtube[1]}`;
+  if (youtube && youtube[1] !== "videoseries") return { kind: "embed", src: `https://www.youtube-nocookie.com/embed/${youtube[1]}` };
   const dailymotion = raw.match(/^(?:https?:)?\/\/(?:www\.)?dailymotion\.com\/(?:embed\/)?video\/([a-z0-9]+)/i);
-  if (dailymotion) return `https://www.dailymotion.com/embed/video/${dailymotion[1]}`;
+  if (dailymotion) {
+    const id = dailymotion[1];
+    return {
+      kind: "link",
+      href: `https://www.dailymotion.com/video/${id}`,
+      thumb: `https://www.dailymotion.com/thumbnail/video/${id}`,
+      site: "Dailymotion",
+    };
+  }
   const vimeo = raw.match(/^(?:https?:)?\/\/(?:player\.)?vimeo\.com\/(?:video\/)?(\d+)/);
-  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  if (vimeo) return { kind: "embed", src: `https://player.vimeo.com/video/${vimeo[1]}` };
   return null;
 }
 
@@ -153,8 +168,12 @@ function clean(node: Node, ctx: Ctx): Node[] {
     return href ? [{ tag: "a", attrs: { href, class: "wp-button" }, children: [] }] : [];
   }
   if (node.tag === "iframe") {
-    const src = videoEmbed(a.src);
-    return src ? [{ tag: "iframe", attrs: { src, title: a.title?.trim() || "Βίντεο" }, children: [] }] : [];
+    const video = videoSource(a.src);
+    const title = a.title?.trim() || "Βίντεο";
+    if (!video) return [];
+    return video.kind === "embed"
+      ? [{ tag: "iframe", attrs: { src: video.src, title }, children: [] }]
+      : [{ tag: "videolink", attrs: { href: video.href, thumb: video.thumb, site: video.site, title }, children: [] }];
   }
   if (DROP.has(node.tag) || a["aria-hidden"] === "true" || "hidden" in a) return [];
   // Βελάκια/τελείες των sliders του Enfold («1 2 3 4»).
@@ -249,8 +268,11 @@ function dedupeHeadings(nodes: Node[]): Node[] {
   });
 }
 
+/** Στοιχεία που μετράνε ως περιεχόμενο χωρίς κείμενο. */
+const MEDIA = new Set(["img", "iframe", "videolink"]);
+
 const meaningful = (n: Node): boolean =>
-  typeof n === "string" ? norm(decode(n)) !== "" : n.tag === "img" || n.tag === "iframe" || n.children.some(meaningful);
+  typeof n === "string" ? norm(decode(n)) !== "" : MEDIA.has(n.tag) || n.children.some(meaningful);
 
 const isBr = (n: Node | undefined) => typeof n === "object" && n.tag === "br";
 const onlyImages = (n: Node): boolean =>
@@ -285,7 +307,7 @@ function prune(nodes: Node[], top = false): Node[] {
     for (let edge = children.findLast(solid); isBr(edge); edge = children.findLast(solid)) children.splice(children.lastIndexOf(edge!), 1);
     const el = { ...n, children };
     if (n.tag === "td" || n.tag === "th") out.push(el); // κρατάμε το πλέγμα του πίνακα
-    else if (n.tag === "img" || n.tag === "iframe" || children.some(meaningful)) out.push(el);
+    else if (MEDIA.has(n.tag) || children.some(meaningful)) out.push(el);
   }
   return gallery(out);
 }
@@ -319,6 +341,7 @@ const IMAGE_SIZES = "(min-width: 1024px) 760px, 90vw";
 const GALLERY_SIZES = "(min-width: 1024px) 240px, 45vw";
 
 const escapeAttr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+const escapeText = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 function render(nodes: Node[]): string {
   return nodes
@@ -335,6 +358,15 @@ function render(nodes: Node[]): string {
       if (n.tag === "br") return "<br>";
       if (n.tag === "iframe") {
         return `<div class="wp-video"><iframe${attrs} loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+      }
+      if (n.tag === "videolink") {
+        const { href, thumb, site, title } = n.attrs;
+        return (
+          `<a class="wp-video wp-video-link" href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer">` +
+          `<img src="${escapeAttr(thumb)}" alt="" loading="lazy" decoding="async">` +
+          `<span class="wp-video-play" aria-hidden="true"></span>` +
+          `<span class="wp-video-caption">${escapeText(title)}<small>${escapeText(site)} ↗</small></span></a>`
+        );
       }
       const html = `<${n.tag}${attrs}>${render(n.children)}</${n.tag}>`;
       // Οι πίνακες του παλιού site είναι φαρδιοί: κυλάνε οριζόντια στο κινητό.
