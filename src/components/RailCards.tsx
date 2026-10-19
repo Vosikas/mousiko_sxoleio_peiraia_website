@@ -4,18 +4,55 @@ import Link from "next/link";
 import { WidgetLabel } from "./ClockWidget";
 import { site } from "@/lib/site";
 import { useLanguage } from "@/hooks/useLanguage";
+import type { L } from "@/i18n/l10n";
 
-const ENSEMBLES = [
-  { name: "Συμφωνική Ορχήστρα", href: "/tmimata#orchestra" },
-  { name: "Χορωδία", href: "/tmimata#xorodia" },
-  { name: "Παραδοσιακό Σύνολο", href: "/tmimata#paradosiako" },
-  { name: "Μπάντα Πνευστών", href: "/tmimata#pnefsta" },
-  { name: "Σύνολο Τζαζ", href: "/tmimata#jazz" },
+/**
+ * Τα σύνολα του σχολείου, όπως τα οργανώνει το παλιό site στα βίντεό του.
+ * Κάθε σύνδεσμος ανοίγει τα βίντεο του συνόλου στις Συναυλίες
+ * (τα #id ορίζονται στο src/content/draseis.ts → videos).
+ */
+const ENSEMBLES: { name: L; href: string }[] = [
+  { name: { el: "Συμφωνική Ορχήστρα", en: "Symphony Orchestra" }, href: "/draseis/synavlies#symfoniki" },
+  { name: { el: "Λαϊκή Ορχήστρα", en: "Popular Music Orchestra" }, href: "/draseis/synavlies#laiki" },
+  { name: { el: "Παραδοσιακά Σύνολα", en: "Traditional Ensembles" }, href: "/draseis/synavlies#paradosiaka" },
+  { name: { el: "Έντεχνο", en: "Entechno Ensemble" }, href: "/draseis/synavlies#entechno" },
+  { name: { el: "Χορωδίες", en: "Choirs" }, href: "/draseis/synavlies#chorodies" },
+];
+
+/** Τα όργανα που διδάσκονται — από τον πίνακα «Εκπαιδευτικοί» του παλιού site. */
+const INSTRUMENTS: L[] = [
+  { el: "Πιάνο", en: "Piano" },
+  { el: "Ακορντεόν", en: "Accordion" },
+  { el: "Κιθάρα", en: "Guitar" },
+  { el: "Μαντολίνο", en: "Mandolin" },
+  { el: "Μπουζούκι", en: "Bouzouki" },
+  { el: "Βιολί", en: "Violin" },
+  { el: "Βιόλα", en: "Viola" },
+  { el: "Τσέλο", en: "Cello" },
+  { el: "Κοντραμπάσο", en: "Double bass" },
+  { el: "Ηλεκτρικό μπάσο", en: "Electric bass" },
+  { el: "Φλάουτο", en: "Flute" },
+  { el: "Κλαρινέτο", en: "Clarinet" },
+  { el: "Όμποε", en: "Oboe" },
+  { el: "Σαξόφωνο", en: "Saxophone" },
+  { el: "Φαγκότο", en: "Bassoon" },
+  { el: "Τρομπέτα", en: "Trumpet" },
+  { el: "Τρομπόνι", en: "Trombone" },
+  { el: "Γαλλικό κόρνο", en: "French horn" },
+  { el: "Κρουστά", en: "Percussion" },
+  { el: "Παραδοσιακά κρουστά", en: "Traditional percussion" },
+  { el: "Παραδοσιακό βιολί", en: "Traditional violin" },
+  { el: "Κανονάκι", en: "Kanonaki" },
+  { el: "Σαντούρι", en: "Santouri" },
+  { el: "Κρητική λύρα", en: "Cretan lyra" },
+  { el: "Ούτι", en: "Oud" },
+  { el: "Παραδοσιακό κλαρίνο", en: "Traditional clarinet" },
+  { el: "Ταμπουράς", en: "Tambouras" },
 ];
 
 /** Αριστερή στήλη: γρήγορη πρόσβαση στα μουσικά σύνολα. */
 export function EnsemblesCard() {
-  const { t } = useLanguage();
+  const { l } = useLanguage();
 
   return (
     <article className="glass rounded-xl2 p-6">
@@ -31,7 +68,7 @@ export function EnsemblesCard() {
                 <span className="text-plum-400/70 transition-transform duration-300 group-hover:scale-125">
                   ♪
                 </span>
-                {t(e.name)}
+                {l(e.name)}
               </span>
               <span className="text-muted/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-plum-300">
                 →
@@ -81,48 +118,36 @@ export function ContactCard() {
   );
 }
 
-/** Οριζόντια ταινία με τα αντικείμενα σπουδών. */
+/** Οριζόντια ταινία με τα μουσικά όργανα που διδάσκονται. */
 export function Marquee() {
-  const { t } = useLanguage();
-  const items = [
-    "Πιάνο",
-    "Βιολί",
-    "Κιθάρα",
-    "Βυζαντινή Μουσική",
-    "Παραδοσιακά Όργανα",
-    "Αρμονία",
-    "Χορωδία",
-    "Τζαζ",
-    "Κρουστά",
-    "Πνευστά",
-  ];
-  const row = [...items, ...items];
+  const { l } = useLanguage();
+  const row = [...INSTRUMENTS, ...INSTRUMENTS].map((item) => l(item));
 
   return (
     <div className="relative flex overflow-hidden border-y border-cream/8 py-5">
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-ink-950 to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-ink-950 to-transparent" />
-      <div className="flex shrink-0 animate-[marquee_38s_linear_infinite] items-center gap-10 pr-10">
+      <div className="flex shrink-0 animate-[marquee_100s_linear_infinite] items-center gap-10 pr-10">
         {row.map((item, i) => (
           <span
             key={item + i}
             className="flex items-center gap-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.32em] text-cream/45"
           >
-            {t(item)}
+            {item}
             <span className="text-plum-400/70">♪</span>
           </span>
         ))}
       </div>
       <div
         aria-hidden
-        className="flex shrink-0 animate-[marquee_38s_linear_infinite] items-center gap-10 pr-10"
+        className="flex shrink-0 animate-[marquee_100s_linear_infinite] items-center gap-10 pr-10"
       >
         {row.map((item, i) => (
           <span
             key={item + i}
             className="flex items-center gap-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.32em] text-cream/45"
           >
-            {t(item)}
+            {item}
             <span className="text-plum-400/70">♪</span>
           </span>
         ))}

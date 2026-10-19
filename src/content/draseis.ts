@@ -7,8 +7,9 @@ import type { Section } from "./types";
  * τελικό κείμενο και σβήσε το `draft: true`.
  *
  * ΑΡΘΡΑ ΑΠΟ ΤΟ WORDPRESS: κάθε υποσελίδα δείχνει τα άρθρα των κατηγοριών
- * του `wpCategories`. Φτιάξε στο WordPress κατηγορίες με αυτά τα ονόματα
- * και βάλε τα άρθρα σε αυτές — εμφανίζονται μόνα τους.
+ * του `wpCategories` — είτε είναι στην κατηγορία στο WordPress είτε ο
+ * τίτλος τους περιέχει τις λέξεις του CATEGORY_KEYWORDS (src/content/news.ts).
+ * ΒΙΝΤΕΟ / ΚΕΙΜΕΝΑ ΑΠΟ ΤΟ ΠΑΛΙΟ SITE: πεδία `videos` και `wpContent`.
  * Τύποι τουβλακιών και οδηγίες: src/content/types.ts
  */
 export const DRASEIS: Section = {
@@ -48,6 +49,18 @@ export const DRASEIS: Section = {
     {
       slug: "synavlies",
       wpCategories: ["Συναυλίες"],
+      // Τα βίντεο του παλιού site (Portfolio «Βίντεο»), ανά μουσικό σύνολο —
+      // ομάδα = tag του WordPress. Τα #id ανοίγουν από την κάρτα της αρχικής.
+      videos: {
+        category: "Βίντεο",
+        groups: [
+          { id: "symfoniki", title: { el: "Συμφωνική Ορχήστρα", en: "Symphony Orchestra" }, tags: ["ΣΥΜΦΩΝΙΚΗ ΟΡΧΗΣΤΡΑ"] },
+          { id: "laiki", title: { el: "Λαϊκή Ορχήστρα", en: "Popular Music Orchestra" }, tags: ["ΛΑΙΚΗ ΟΡΧΗΣΤΡΑ"] },
+          { id: "paradosiaka", title: { el: "Παραδοσιακά Σύνολα", en: "Traditional Music Ensembles" }, tags: ["ΠΑΡΑΔΟΣΙΑΚΑ"] },
+          { id: "entechno", title: { el: "Έντεχνο", en: "Entechno Ensemble" }, tags: ["ΕΝΤΕΧΝΟ"] },
+          { id: "chorodies", title: { el: "Χορωδίες", en: "Choirs" }, tags: ["ΧΟΡΩΔΙΕΣ"] },
+        ],
+      },
       title: { el: "Συναυλίες", en: "Concerts" },
       summary:
         { el: "Οι συναυλίες των συνόλων, της χορωδίας και των σολίστ του σχολείου, μέσα και έξω από τον Πειραιά.", en: "Concerts by the school's ensembles, choir and soloists, in Piraeus and beyond." },
@@ -69,6 +82,16 @@ export const DRASEIS: Section = {
     {
       slug: "ekdiloseis",
       wpCategories: ["Εκδηλώσεις"],
+      videos: {
+        category: "Βίντεο",
+        groups: [
+          {
+            id: "scholikes",
+            title: { el: "Σχολικές εκδηλώσεις", en: "School events" },
+            tags: ["ΣΧΟΛΙΚΕΣ ΕΚΔΗΛΩΣΕΙΣ", "ΝΕΑ ΜΟΥΣΙΚΟΥ"],
+          },
+        ],
+      },
       title: { el: "Εκδηλώσεις", en: "Events" },
       summary:
         { el: "Σχολικές γιορτές, επετειακές εκδηλώσεις και ανοιχτές εκδηλώσεις για γονείς και κοινό.", en: "School celebrations, commemorations and open events for parents and the public." },
@@ -86,6 +109,10 @@ export const DRASEIS: Section = {
       slug: "programmata",
       // Το Erasmus έχει δική του σελίδα στο μενού (src/content/erasmus.ts).
       wpCategories: ["Προγράμματα"],
+      wpContent: [
+        { type: "portfolio", id: 1071 }, // «School Exchange» — e-twinning 2014
+        { type: "portfolio", id: 1063 }, // Αδελφοποίηση με το Λύκειο Capriotti
+      ],
       title: { el: "Προγράμματα", en: "Programmes" },
       summary:
         { el: "Τα εθνικά και ευρωπαϊκά προγράμματα στα οποία συμμετέχει το σχολείο, όπως ανταλλαγές και συνεργασίες.", en: "The national and European programmes the school takes part in, such as exchanges and partnerships." },
@@ -107,6 +134,11 @@ export const DRASEIS: Section = {
     {
       slug: "ekdromes",
       wpCategories: ["Εκδρομές"],
+      // Οι «Επισκέψεις» του παλιού site.
+      wpContent: [
+        { type: "portfolio", id: 1099 }, // Γερμανική Εκκλησία Αθηνών, 21/11/2019
+        { type: "portfolio", id: 1287 }, // Ο Τίτος Πατρίκιος στο ΜΣΠ
+      ],
       title: { el: "Εκδρομές", en: "Trips" },
       summary:
         { el: "Εκπαιδευτικές εκδρομές, επισκέψεις σε χώρους πολιτισμού και μουσικά ταξίδια των τάξεων.", en: "Educational trips, visits to cultural venues and musical journeys by our classes." },

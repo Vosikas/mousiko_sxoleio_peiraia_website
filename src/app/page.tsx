@@ -10,8 +10,6 @@ import SongOfTheDay from "@/components/SongOfTheDay";
 import StickyRail from "@/components/StickyRail";
 import { ContactCard, EnsemblesCard, Marquee } from "@/components/RailCards";
 import Reveal from "@/components/Reveal";
-import T from "@/components/i18n/T";
-import { REVALIDATE_SECONDS } from "@/lib/wordpress";
 
 export const revalidate = 300;
 
@@ -66,10 +64,6 @@ export default function HomePage() {
             </Reveal>
           </StickyRail>
         </div>
-
-        <p className="mt-20 text-center text-[0.6rem] uppercase tracking-[0.25em] text-muted/40">
-          <T v="Το περιεχόμενο ανανεώνεται από το WordPress κάθε {n} λεπτά" vars={{ n: REVALIDATE_SECONDS / 60 }} />
-        </p>
       </div>
     </>
   );

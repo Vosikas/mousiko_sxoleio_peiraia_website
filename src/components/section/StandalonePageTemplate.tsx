@@ -13,7 +13,7 @@ export default function StandalonePageTemplate({ page: slug }: { page: PageSlug 
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 pb-24 pt-16 sm:px-8 sm:pt-24">
-      <PageIntro eyebrow={page.eyebrow} title={page.title} lead={page.summary} draft={page.draft} />
+      <PageIntro eyebrow={page.eyebrow} title={page.title} lead={page.summary} />
 
       <div className="mt-14">
         <Blocks blocks={page.blocks} />

@@ -2,17 +2,18 @@ import type { L } from "@/i18n/l10n";
 
 /**
  * Every piece of contact information the site shows lives here.
- * Replace the placeholders with the school's real details.
+ * Πηγή: η σελίδα «Επικοινωνία» του παλιού site (gym-mous-peiraia.att.sch.gr).
  */
 
 export const SCHOOL = {
   name: "Μουσικό Σχολείο Πειραιά",
-  street: "Οδός και αριθμός",           // TODO
-  area: "Πειραιάς, Αττική",
-  postcode: "185 00",                    // TODO
-  phone: "210 0000000",                  // TODO
+  street: "Κ. Μαυρομιχάλη 27",
+  area: "Αγία Σοφία, Πειραιάς",
+  postcode: "185 45",
+  phone: "210 4204426",
+  phone2: "210 4204432",
   fax: "",
-  email: "mail@gym-mous-peiraia.att.sch.gr",
+  email: "msp@sch.gr",
   /** how people actually get here */
   transit: [
     {

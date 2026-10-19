@@ -10,26 +10,21 @@ import T from "@/components/i18n/T";
  */
 export default async function CategoryFeed({ categories }: { categories: string[] }) {
   const posts = await getPostsByCategories(categories);
+  // Χωρίς άρθρα η ενότητα απλώς δεν εμφανίζεται.
+  if (!posts.length) return null;
 
   return (
     <section aria-labelledby="category-feed" className="mt-12">
       <h2 id="category-feed" className="font-display text-2xl font-semibold sm:text-3xl">
         <T v="Αναρτήσεις" />
       </h2>
-
-      {posts.length ? (
-        <ul className="mt-6 grid gap-6 sm:grid-cols-2">
-          {posts.map((post, i) => (
-            <li key={post.id} className="h-full">
-              <PostCard post={post} index={i} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="surface-box mt-6 p-7 leading-relaxed text-muted">
-          <T v="Δεν υπάρχουν ακόμη αναρτήσεις σε αυτή την ενότητα." />
-        </p>
-      )}
+      <ul className="mt-6 grid gap-6 sm:grid-cols-2">
+        {posts.map((post, i) => (
+          <li key={post.id} className="h-full">
+            <PostCard post={post} index={i} />
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

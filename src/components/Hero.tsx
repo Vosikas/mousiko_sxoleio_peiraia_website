@@ -5,10 +5,12 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { useLanguage } from "@/hooks/useLanguage";
 
+// Από το παλιό site: ίδρυση 1995-96 («Το σχολείο») και ο πίνακας
+// «Εκπαιδευτικοί» (81 καθηγητές, 27 μουσικά όργανα — Οκτ. 2025).
 const STATS = [
-  { value: "420", label: "μαθητές & μαθήτριες" },
-  { value: "18", label: "μουσικά σύνολα" },
-  { value: "35", label: "χρόνια λειτουργίας" },
+  { value: String(new Date().getFullYear() - site.founded), label: "χρόνια λειτουργίας" },
+  { value: "81", label: "εκπαιδευτικοί" },
+  { value: "27", label: "μουσικά όργανα" },
 ];
 
 /**
@@ -97,7 +99,8 @@ export default function Hero() {
                   <div key={s.label}>
                     <dt className="sr-only">{t(s.label)}</dt>
                     <dd>
-                      <span className="block font-display text-4xl font-semibold surface-box-accent">
+                      {/* Τα «χρόνια» υπολογίζονται από τη χρονιά — ίδια σε server και browser, εκτός από την Πρωτοχρονιά. */}
+                      <span className="block font-display text-4xl font-semibold surface-box-accent" suppressHydrationWarning>
                         {s.value}
                       </span>
                       <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.22em] opacity-70">

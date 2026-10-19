@@ -15,10 +15,11 @@
 import { unstable_noStore } from "next/cache";
 import { categoryKey } from "./text";
 import { parseSongTable, type Song } from "./song-table";
-import { cleanWpHtml } from "./wp-clean";
-import { POSTS_SINCE } from "@/content/news";
+import { cleanWpHtml, youtubeIds } from "./wp-clean";
+import { CATEGORY_KEYWORDS, POSTS_SINCE } from "@/content/news";
 import { SONGS_PAGE_SLUG } from "@/content/songs";
-import type { WpSource } from "@/content/types";
+import type { VideoGallery, WpSource } from "@/content/types";
+import type { L } from "@/i18n/l10n";
 
 /**
  * Δέχεται ΕΙΤΕ τη διεύθυνση του site ΕΙΤΕ το REST endpoint και επιστρέφει
@@ -133,8 +134,13 @@ const ENTITIES: Record<string, string> = {
   "&nbsp;": " ",
 };
 
+/** Όλες οι αριθμητικές οντότητες (&#8230; → …) και οι συνηθισμένες με όνομα. */
 export function decodeHtml(input: string): string {
-  return input.replace(/&[#a-zA-Z0-9]+;/g, (m) => ENTITIES[m] ?? m);
+  return input.replace(/&(?:#(\d+)|#x([0-9a-f]+)|[a-z]+);/gi, (m, dec?: string, hex?: string) => {
+    if (!dec && !hex) return ENTITIES[m] ?? m;
+    const code = dec ? Number(dec) : parseInt(hex!, 16);
+    return code > 0 && code < 0x110000 ? String.fromCodePoint(code) : m;
+  });
 }
 
 export function stripHtml(input: string): string {
@@ -168,6 +174,19 @@ export function formatGreekDate(iso: string): string {
   return `${d.getDate()} ${GREEK_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+/**
+ * Οι κατηγορίες του WordPress + όσες προκύπτουν από τον τίτλο
+ * (CATEGORY_KEYWORDS στο src/content/news.ts).
+ */
+function withKeywordCategories(title: string, categories: string[]): string[] {
+  const key = categoryKey(title);
+  const seen = new Set(categories.map(categoryKey));
+  const extra = Object.entries(CATEGORY_KEYWORDS)
+    .filter(([name, words]) => !seen.has(categoryKey(name)) && words.some((w) => key.includes(categoryKey(w))))
+    .map(([name]) => name);
+  return [...categories, ...extra];
+}
+
 function normalize(raw: WPRawPost): Post {
   const media = raw._embedded?.["wp:featuredmedia"]?.[0];
   const inlineImageSrc = !media
@@ -179,16 +198,18 @@ function normalize(raw: WPRawPost): Post {
     media?.media_details?.sizes?.large?.source_url ??
     inlineImageSrc;
   const terms = raw._embedded?.["wp:term"]?.flat() ?? [];
-  const categories = terms
-    .filter((t) => t?.taxonomy === "category" && t.slug !== "uncategorized")
-    .map((t) => decodeHtml(t.name));
+  const title = decodeHtml(stripHtml(raw.title?.rendered ?? ""));
+  const categories = withKeywordCategories(
+    title,
+    terms.filter((t) => t?.taxonomy === "category" && t.slug !== "uncategorized").map((t) => decodeHtml(t.name)),
+  );
   const plainExcerpt = stripHtml(raw.excerpt?.rendered ?? "");
   const words = stripHtml(raw.content?.rendered ?? "").split(" ").length;
 
   return {
     id: raw.id,
     slug: raw.slug,
-    title: decodeHtml(stripHtml(raw.title?.rendered ?? "")),
+    title,
     excerpt: truncate(plainExcerpt || stripHtml(raw.content?.rendered ?? ""), 165),
     date: raw.date,
     href: `/nea/${raw.slug}`,
@@ -304,29 +325,29 @@ export async function getRecentPosts(count = 4): Promise<Post[]> {
   return raw.map(normalize);
 }
 
-/** Όλες οι αναρτήσεις, σελίδα-σελίδα ώστε να μην περιορίζονται στις 100. */
-export async function getAllPosts(): Promise<Post[]> {
-  if (!WP_API_URL) return SAMPLE_POSTS;
-
+/** Όλες οι αναρτήσεις, σελίδα-σελίδα ώστε να μην περιορίζονται στις 100· null αν το WordPress δεν απαντά. */
+async function fetchAllPosts(): Promise<Post[] | null> {
   const all: WPRawPost[] = [];
   const perPage = 100;
-  let page = 1;
 
-  while (true) {
+  for (let page = 1; ; page++) {
     const raw = await wpFetch<WPRawPost[]>(
       `/posts?per_page=${perPage}&page=${page}&_embed=true&orderby=date&order=desc${SINCE_FILTER}`,
     );
     if (raw === null) {
-      // Το WordPress δεν απαντά: δείγμα μόνο αν απέτυχε ήδη η 1η σελίδα.
-      if (page === 1) return SAMPLE_POSTS;
+      if (page === 1) return null;
       break;
     }
     all.push(...raw);
     if (raw.length < perPage) break;
-    page += 1;
   }
-
   return all.map(normalize);
+}
+
+/** Όλες οι αναρτήσεις· δείγμα μόνο αν το WordPress δεν απαντά καθόλου. */
+export async function getAllPosts(): Promise<Post[]> {
+  if (!WP_API_URL) return SAMPLE_POSTS;
+  return (await fetchAllPosts()) ?? SAMPLE_POSTS;
 }
 
 /** Ένα άρθρο με βάση το slug. */
@@ -337,27 +358,20 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 /**
- * Άρθρα από μία ή περισσότερες κατηγορίες του WordPress (όνομα ή slug).
- * Χωρίς δείγμα περιεχομένου: αν η κατηγορία δεν υπάρχει ή είναι άδεια,
- * επιστρέφει κενή λίστα και η σελίδα δείχνει «δεν υπάρχουν αναρτήσεις».
+ * Άρθρα μίας ή περισσότερων κατηγοριών (όνομα — τόνοι/κεφαλαία δεν μετράνε).
+ * Μετράνε και οι κατηγορίες από τον τίτλο (CATEGORY_KEYWORDS), αφού στο
+ * WordPress του σχολείου σχεδόν όλα τα άρθρα είναι «Ανακοινώσεις».
+ * Χωρίς δείγμα περιεχομένου: αν δεν βρεθεί τίποτα, κενή λίστα.
  */
 export async function getPostsByCategories(names: string[], count = 12): Promise<Post[]> {
-  if (!names.length) return [];
-  const categories = await wpFetch<Pick<WPTerm, "id" | "name" | "slug">[]>(
-    "/categories?per_page=100&_fields=id,name,slug",
-  );
-  if (!categories?.length) return [];
-
+  if (!names.length || !WP_API_URL) return [];
+  const posts = await fetchAllPosts();
+  if (posts === null) {
+    keepLastGoodVersion("Άρθρα κατηγορίας");
+    return [];
+  }
   const wanted = new Set(names.map(categoryKey));
-  const ids = categories
-    .filter((c) => wanted.has(categoryKey(c.name)) || wanted.has(categoryKey(c.slug)))
-    .map((c) => c.id);
-  if (!ids.length) return [];
-
-  const raw = await wpFetch<WPRawPost[]>(
-    `/posts?categories=${ids.join(",")}&per_page=${count}&_embed=true&orderby=date&order=desc${SINCE_FILTER}`,
-  );
-  return raw?.map(normalize) ?? [];
+  return posts.filter((post) => post.categories.some((c) => wanted.has(categoryKey(c)))).slice(0, count);
 }
 
 /** Σελίδα (WordPress page) με βάση το slug — για ΤΟ ΣΧΟΛΕΙΟ, ΕΠΙΚΟΙΝΩΝΙΑ κ.λπ. */
@@ -387,7 +401,9 @@ export async function getSongs(): Promise<Song[]> {
   return raw.length ? parseSongTable(raw[0].content?.rendered ?? "") : [];
 }
 
-export type WpEntry = { title: string; html: string; modified: string; link: string };
+export type WpEntry = { title: string; html: string; link: string };
+
+const ENDPOINT: Record<WpSource["type"], string> = { page: "pages", post: "posts", portfolio: "portfolio" };
 
 /**
  * Μια σελίδα του παλιού site (πεδίο `wpContent`, src/content/types.ts),
@@ -398,8 +414,8 @@ export type WpEntry = { title: string; html: string; modified: string; link: str
  */
 export async function getWpEntry(source: WpSource): Promise<WpEntry | null> {
   if (!WP_API_URL) return null;
-  const { data, status } = await wpRequest<Pick<WPRawPost, "title" | "content" | "modified" | "link">>(
-    `/${source.type === "page" ? "pages" : "portfolio"}/${source.id}?_fields=title,content,modified,link`,
+  const { data, status } = await wpRequest<Pick<WPRawPost, "title" | "content" | "link">>(
+    `/${ENDPOINT[source.type]}/${source.id}?_fields=title,content,link`,
   );
   if (!data) {
     if (![401, 403, 404, 410].includes(status)) keepLastGoodVersion(`${source.type}/${source.id}`);
@@ -407,7 +423,56 @@ export async function getWpEntry(source: WpSource): Promise<WpEntry | null> {
   }
   const html = cleanWpHtml(data.content?.rendered ?? "", { base: data.link || WP_API_URL, until: source.until });
   if (!html) return null;
-  return { title: decodeHtml(stripHtml(data.title?.rendered ?? "")), html, modified: data.modified, link: data.link };
+  return { title: decodeHtml(stripHtml(data.title?.rendered ?? "")), html, link: data.link };
+}
+
+export type VideoGroup = { id: string; title: L; items: { title: string; videos: string[] }[] };
+
+/**
+ * Τα βίντεο του παλιού site — τα Portfolio Items μιας κατηγορίας (π.χ.
+ * «Βίντεο») — σε ομάδες ανάλογα με τα tags τους (πεδίο `videos` της
+ * υποσελίδας, src/content/types.ts). Από κάθε item κρατάμε τα βίντεο YouTube.
+ */
+export async function getWpVideoGroups(gallery: VideoGallery): Promise<VideoGroup[]> {
+  if (!WP_API_URL) return [];
+  const [terms, tags] = await Promise.all([
+    wpFetch<{ id: number; name: string; slug: string }[]>("/portfolio_entries?per_page=100&_fields=id,name,slug"),
+    wpFetch<{ id: number; name: string }[]>("/tags?per_page=100&_fields=id,name"),
+  ]);
+  if (!terms || !tags) {
+    keepLastGoodVersion("Βίντεο");
+    return [];
+  }
+  const wanted = categoryKey(gallery.category);
+  const term = terms.find((t) => categoryKey(t.name) === wanted || categoryKey(t.slug) === wanted);
+  if (!term) return [];
+
+  const items = await wpFetch<{ title: WPRendered; content: WPRendered; tags?: number[] }[]>(
+    `/portfolio?portfolio_entries=${term.id}&per_page=100&orderby=date&order=desc&_fields=title,content,tags`,
+  );
+  if (!items) {
+    keepLastGoodVersion("Βίντεο");
+    return [];
+  }
+  const tagKey = new Map(tags.map((t) => [t.id, categoryKey(decodeHtml(t.name))]));
+  const videos = items
+    .map((item) => ({
+      title: decodeHtml(stripHtml(item.title?.rendered ?? "")),
+      videos: youtubeIds(item.content?.rendered ?? ""),
+      tags: (item.tags ?? []).map((id) => tagKey.get(id) ?? ""),
+    }))
+    .filter((item) => item.videos.length);
+
+  return gallery.groups
+    .map((group) => {
+      const groupTags = new Set(group.tags.map(categoryKey));
+      return {
+        id: group.id,
+        title: group.title,
+        items: videos.filter((v) => v.tags.some((t) => groupTags.has(t))).map(({ title, videos }) => ({ title, videos })),
+      };
+    })
+    .filter((group) => group.items.length);
 }
 
 /** true όταν υπάρχει ρυθμισμένο WordPress endpoint. */

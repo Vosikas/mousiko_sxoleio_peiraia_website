@@ -1,7 +1,7 @@
 import PostCard from "./PostCard";
 import PostsHeading from "./PostsHeading";
 import Reveal from "./Reveal";
-import { getRecentPosts, isWordPressConfigured } from "@/lib/wordpress";
+import { getRecentPosts } from "@/lib/wordpress";
 
 /**
  * «Δεξαμενή» άρθρων: τα 4 πιο πρόσφατα από το WordPress.
@@ -14,7 +14,7 @@ export default async function PostsPool() {
   return (
     <section aria-labelledby="posts-title">
       <Reveal>
-        <PostsHeading wordpressConfigured={isWordPressConfigured()} />
+        <PostsHeading />
       </Reveal>
 
       <div className="mt-9 space-y-6">

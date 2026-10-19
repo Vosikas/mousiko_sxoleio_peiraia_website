@@ -39,6 +39,9 @@ const nextConfig: NextConfig = {
     return [
       { source: "/ekdiloseis", destination: "/draseis", permanent: true },
       { source: "/ekdiloseis/:path*", destination: "/draseis/:path*", permanent: true },
+      // Η παλιά σελίδα «Τμήματα & Σύνολα» (ήταν «ετοιμάζεται»): τα σύνολα ζουν
+      // πλέον στα βίντεο των Συναυλιών. Όχι μόνιμο, αν ξαναγίνει δική τους σελίδα.
+      { source: "/tmimata", destination: "/draseis/synavlies", permanent: false },
     ];
   },
 };

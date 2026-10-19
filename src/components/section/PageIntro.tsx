@@ -12,13 +12,11 @@ export default function PageIntro({
   eyebrow,
   title,
   lead,
-  draft = false,
   size = "lg",
 }: {
   eyebrow: L;
   title: L;
   lead: L;
-  draft?: boolean;
   /** lg: κεντρική σελίδα ενότητας · md: υποσελίδα (οι τίτλοι είναι μεγαλύτεροι) */
   size?: "lg" | "md";
 }) {
@@ -48,12 +46,6 @@ export default function PageIntro({
         <T v={lead} />
       </p>
 
-      {draft && (
-        <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-plum-500/25 bg-plum-100 px-3.5 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.18em] text-plum-600">
-          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-plum-500" />
-          <T v="Ενδεικτικό περιεχόμενο — υπό συμπλήρωση" />
-        </p>
-      )}
     </header>
   );
 }

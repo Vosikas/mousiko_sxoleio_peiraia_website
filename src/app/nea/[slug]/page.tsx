@@ -27,7 +27,7 @@ export default async function ArticlePage({ params }: Params) {
     ({
       id: post.id,
       title: { rendered: post.title },
-      content: { rendered: `<p>${post.excerpt}</p><p>Το πλήρες κείμενο θα εμφανιστεί μόλις συνδεθεί το WordPress.</p>` },
+      content: { rendered: `<p>${post.excerpt}</p>` },
     } satisfies WPData);
   const imageUrl = item._embedded?.['wp:featuredmedia']?.[0]?.source_url;
   const imageAlt = item._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || post.title;

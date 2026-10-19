@@ -51,12 +51,17 @@ export default function ContactPage() {
                 <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-5">
                   <dt className="w-28 shrink-0 text-sm text-[#5b7285]"><T v="Τηλέφωνο" /></dt>
                   <dd className="text-lg">
-                    <a
-                      href={`tel:${SCHOOL.phone.replace(/\s/g, "")}`}
-                      className="tabular-nums transition hover:text-[var(--primary-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-purple)]"
-                    >
-                      {SCHOOL.phone}
-                    </a>
+                    {[SCHOOL.phone, SCHOOL.phone2].map((phone, i) => (
+                      <span key={phone}>
+                        {i > 0 && <span className="mx-2 text-[#5b7285]">·</span>}
+                        <a
+                          href={`tel:${phone.replace(/\s/g, "")}`}
+                          className="tabular-nums transition hover:text-[var(--primary-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-purple)]"
+                        >
+                          {phone}
+                        </a>
+                      </span>
+                    ))}
                   </dd>
                 </div>
                 <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-5">

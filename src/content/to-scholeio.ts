@@ -86,7 +86,10 @@ export const TO_SCHOLEIO: Section = {
     {
       // Οι εξετάσεις και οι λοιπές πληροφορίες φοίτησης. (Κρατάει το παλιό URL.)
       slug: "foitisi",
-      wpContent: [{ type: "page", id: 63 }], // «Εισαγωγή στο Μουσικό»
+      wpContent: [
+        { type: "page", id: 63 }, // «Εισαγωγή στο Μουσικό»
+        { type: "post", id: 1274 }, // «Ατομικό Δελτίο Μαθητή» (το PDF του δελτίου υγείας)
+      ],
       title: { el: "Φοίτηση", en: "Studies & Attendance" },
       summary:
         { el: "Οι εξετάσεις του σχολείου και όλες οι πληροφορίες που αφορούν τη φοίτηση.", en: "The school's exams and all the information about studying and attendance." },
@@ -159,7 +162,10 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "goneis",
-      wpContent: [{ type: "portfolio", id: 549 }], // «Σύλλογος Γονέων»
+      wpContent: [
+        { type: "portfolio", id: 549 }, // «Σύλλογος Γονέων»
+        { type: "post", id: 2184 }, // «Χορωδία Γονέων» — η χορωδία γονέων & φίλων «Ex Parente»
+      ],
       title: { el: "Σύλλογος Γονέων & Κηδεμόνων", en: "Parents' Association" },
       shortTitle: { el: "Σύλλογος Γονέων", en: "Parents' Association" },
       summary:
@@ -281,6 +287,8 @@ export const TO_SCHOLEIO: Section = {
     },
     {
       slug: "aftoaxiologisi",
+      // Και τα άρθρα με «αξιολόγηση» στον τίτλο (src/content/news.ts).
+      wpCategories: ["Αυτοαξιολόγηση"],
       title: { el: "Αυτοαξιολόγηση Σχολικής Μονάδας", en: "School Self-Evaluation" },
       shortTitle: { el: "Αυτοαξιολόγηση", en: "Self-Evaluation" },
       summary:
@@ -295,8 +303,21 @@ export const TO_SCHOLEIO: Section = {
         },
         {
           type: "documents",
-          title: { el: "Εκθέσεις και σχέδια δράσης", en: "Reports and action plans" },
-          items: [{ title: { el: "Ετήσια έκθεση αυτοαξιολόγησης", en: "Annual self-evaluation report" } }, { title: { el: "Σχέδια δράσης", en: "Action plans" } }],
+          title: { el: "Εκθέσεις εσωτερικής αξιολόγησης", en: "Internal evaluation reports" },
+          // Από τα άρθρα του παλιού site «Αυτοαξιολόγηση σχολικής μονάδας» (2026) και
+          // «Ετήσια Έκθεση Εσωτερικής Αξιολόγησης 2022».
+          items: [
+            {
+              title: { el: "Ετήσια Έκθεση Εσωτερικής Αξιολόγησης 2025–2026", en: "Annual Internal Evaluation Report 2025–2026" },
+              href: "https://www.dropbox.com/scl/fi/9rps8mmqzmqcrltltxn0s/2026-5.pdf?rlkey=v3pmi9d7j0u3st48a10780x40&st=h89zibhx&dl=0",
+              meta: "PDF",
+            },
+            {
+              title: { el: "Έκθεση Εσωτερικής Αξιολόγησης 2022", en: "Internal Evaluation Report 2022" },
+              href: "https://www.dropbox.com/s/ndjgu9oye7b42n6/%CE%88%CE%BA%CE%B8%CE%B5%CF%83%CE%B7%20%CE%95%CF%83%CF%89%CF%84%CE%B5%CF%81%CE%B9%CE%BA%CE%AE%CF%82%20%CE%91%CE%BE%CE%B9%CE%BF%CE%BB%CF%8C%CE%B3%CE%B7%CF%83%CE%B7%CF%82%20%CE%9C%CE%A3%CE%A0%20-%20%CE%93%CE%B9%CE%B1%20%CE%B9%CF%83%CF%84%CE%BF%CF%83%CE%B5%CE%BB%CE%AF%CE%B4%CE%B1%20%CE%B1%CE%BD%CE%B1%CE%BB%CF%85%CF%84%CE%B9%CE%BA%CE%AE.pdf?dl=0",
+              meta: "PDF",
+            },
+          ],
         },
       ],
     },

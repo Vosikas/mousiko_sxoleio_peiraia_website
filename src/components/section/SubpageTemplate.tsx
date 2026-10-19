@@ -4,10 +4,11 @@ import { getSubpage, shortTitle, subpageHref, type SectionSlug } from "@/content
 import type { Section, Subpage } from "@/content/types";
 import T from "@/components/i18n/T";
 import { el } from "@/i18n/l10n";
-import { getWpEntry } from "@/lib/wordpress";
+import { getWpEntry, getWpVideoGroups } from "@/lib/wordpress";
 import Blocks from "./Blocks";
 import CategoryFeed from "./CategoryFeed";
 import PageIntro from "./PageIntro";
+import VideoGallery from "./VideoGallery";
 import WpContent from "./WpContent";
 
 /**
@@ -22,7 +23,8 @@ import WpContent from "./WpContent";
  *   └──────────────┴───────────────────────────────┘
  *
  * Όλο το περιεχόμενο έρχεται από src/content/ — εδώ μόνο η διάταξη.
- * Με `wpContent`, τα τουβλάκια αντικαθίστανται από το κείμενο του παλιού site.
+ * Με `wpContent`, τα τουβλάκια αντικαθίστανται από το κείμενο του παλιού site·
+ * με `videos`, προστίθενται τα βίντεο του παλιού site σε ομάδες.
  * Server component: δεν στέλνει JavaScript στον browser.
  */
 export default async function SubpageTemplate({ section: sectionSlug, slug }: { section: SectionSlug; slug: string }) {
@@ -30,9 +32,14 @@ export default async function SubpageTemplate({ section: sectionSlug, slug }: { 
   if (!found) notFound();
   const { section, page, prev, next } = found;
 
-  const wp = page.wpContent?.length
-    ? (await Promise.all(page.wpContent.map(getWpEntry))).filter((entry) => entry !== null)
-    : [];
+  const [wp, videos] = await Promise.all([
+    page.wpContent?.length
+      ? Promise.all(page.wpContent.map(getWpEntry)).then((entries) => entries.filter((entry) => entry !== null))
+      : [],
+    page.videos ? getWpVideoGroups(page.videos) : [],
+  ]);
+  // Τα ενδεικτικά (draft) τουβλάκια φεύγουν όταν η σελίδα έχει πραγματικό περιεχόμενο.
+  const showBlocks = !wp.length && !(page.draft && videos.length);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8 sm:pt-24">
@@ -40,7 +47,6 @@ export default async function SubpageTemplate({ section: sectionSlug, slug }: { 
         eyebrow={section.title}
         title={page.title}
         lead={page.summary}
-        draft={page.draft && !wp.length}
         size="md"
       />
 
@@ -102,7 +108,11 @@ export default async function SubpageTemplate({ section: sectionSlug, slug }: { 
         </aside>
 
         <div className="min-w-0">
-          {wp.length ? <WpContent entries={wp} /> : <Blocks blocks={page.blocks} />}
+          <div className="space-y-6">
+            {wp.length ? <WpContent entries={wp} /> : null}
+            {showBlocks ? <Blocks blocks={page.blocks} /> : null}
+            {videos.length ? <VideoGallery groups={videos} /> : null}
+          </div>
 
           {/* Άρθρα WordPress — μόνο όπου η υποσελίδα ορίζει wpCategories. */}
           {page.wpCategories?.length ? <CategoryFeed categories={page.wpCategories} /> : null}

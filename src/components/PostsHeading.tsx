@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/hooks/useLanguage";
 
-export default function PostsHeading({ wordpressConfigured }: { wordpressConfigured: boolean }) {
+export default function PostsHeading() {
   const { t } = useLanguage();
 
   return (
@@ -21,14 +21,6 @@ export default function PostsHeading({ wordpressConfigured }: { wordpressConfigu
           <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
         </Link>
       </div>
-      {!wordpressConfigured && (
-        <p className="mt-6 rounded-xl border border-plum-400/25 bg-plum-400/[0.06] px-4 py-3 text-[0.72rem] leading-relaxed text-plum-600">
-          {t("Προβάλλεται δείγμα περιεχομένου. Συνδέστε το WordPress ορίζοντας")} {" "}
-          <code className="text-plum-600">WORDPRESS_API_URL</code> {t("στο")} {" "}
-          <code className="text-plum-600">.env.local</code> {" "}
-          {t("— τα άρθρα θα έρθουν αυτόματα.")}
-        </p>
-      )}
     </>
   );
 }

@@ -57,7 +57,7 @@ export type Subpage = {
   /** 1–2 προτάσεις: στην κάρτα, κάτω από τον τίτλο και στην περιγραφή SEO. */
   summary: L;
   blocks: Block[];
-  /** true ⇒ σήμα «Ενδεικτικό περιεχόμενο». Βγάλ' το όταν μπει το τελικό κείμενο. */
+  /** true ⇒ το κείμενο είναι ακόμη ενδεικτικό (δεν φαίνεται στον επισκέπτη· σημείωση για εμάς). */
   draft?: boolean;
   /**
    * Κατηγορίες του WordPress: η σελίδα δείχνει τα άρθρα τους κάτω από το
@@ -74,16 +74,29 @@ export type Subpage = {
    * κείμενο: σβήσε αυτό το πεδίο.
    */
   wpContent?: WpSource[];
+  /**
+   * ΒΙΝΤΕΟ ΑΠΟ ΤΟ ΠΑΛΙΟ SITE: τα Portfolio Items μιας κατηγορίας (π.χ.
+   * «Βίντεο»), σε ομάδες ανάλογα με τα tags τους. Κάθε ομάδα είναι ένα κουτί
+   * με δικό της `id`, ώστε να ανοίγει απευθείας: /draseis/synavlies#symfoniki
+   */
+  videos?: VideoGallery;
+};
+
+export type VideoGallery = {
+  /** Η κατηγορία Portfolio στο WordPress (όνομα — τόνοι/κεφαλαία δεν μετράνε). */
+  category: string;
+  groups: { id: string; title: L; tags: string[] }[];
 };
 
 /**
  * Μια σελίδα του παλιού site. Το `id` φαίνεται στο WordPress όταν ανοίγεις
  * τη σελίδα για επεξεργασία (…post.php?post=<id>).
  *   type "page"      → Σελίδες
+ *   type "post"      → Άρθρα
  *   type "portfolio" → Portfolio Items του θέματος Enfold (οι διευθύνσεις /msp/…)
  */
 export type WpSource = {
-  type: "page" | "portfolio";
+  type: "page" | "post" | "portfolio";
   id: number;
   /** Κόβει το κείμενο ΠΡΙΝ από την επικεφαλίδα με αυτό το κείμενο. */
   until?: string;
