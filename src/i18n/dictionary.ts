@@ -72,6 +72,7 @@ export const DICTIONARY: Record<string, string> = {
   "μουσικό γεγονός": "music event",
   "Βίντεο {n} από {total}": "Video {n} of {total}",
   "Τραγούδι της ημέρας": "Song of the day",
+  "Ενεργοποίηση ήχου": "Turn sound on",
   /* ------------------------------------------------------------- Erasmus+ */
   "Το πρόγραμμά μας": "Our programme",
   "Δράση": "Action",

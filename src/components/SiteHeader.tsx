@@ -17,21 +17,27 @@ import type { NavItem, NavLink } from "@/content/types";
 export default function SiteHeader({ nav }: { nav: NavItem[] }) {
   const pathname = usePathname();
   const { language, setLanguage, t, l } = useLanguage();
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  // Τα μενού θυμούνται σε ποια σελίδα άνοιξαν: με κάθε αλλαγή σελίδας
+  // (επιλογή από το μενού, «πίσω» του browser…) κλείνουν μόνα τους.
+  const [dropdown, setDropdown] = useState<{ href: string; path: string } | null>(null);
+  const [mobileAt, setMobileAt] = useState<string | null>(null);
+  const openMenu = dropdown?.path === pathname ? dropdown.href : null;
+  const mobileOpen = mobileAt === pathname;
+  const setOpenMenu = (href: string | null) => setDropdown(href ? { href, path: pathname } : null);
+  const setMobileOpen = (open: boolean) => setMobileAt(open ? pathname : null);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const closeOutside = (event: MouseEvent) => {
       if (!headerRef.current?.contains(event.target as Node)) {
-        setOpenMenu(null);
-        setMobileOpen(false);
+        setDropdown(null);
+        setMobileAt(null);
       }
     };
     const closeEscape = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
-        setOpenMenu(null);
-        setMobileOpen(false);
+        setDropdown(null);
+        setMobileAt(null);
       }
     };
     document.addEventListener("mousedown", closeOutside);
@@ -45,9 +51,12 @@ export default function SiteHeader({ nav }: { nav: NavItem[] }) {
   }, [mobileOpen]);
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  /** Επιλογή από το μενού: κλείνουν όλα, και η εστίαση φεύγει από το μενού
+   *  ώστε να μην ξανανοίξει το dropdown (ανοίγει και με focus). */
   const closeMobile = () => {
-    setMobileOpen(false);
-    setOpenMenu(null);
+    setMobileAt(null);
+    setDropdown(null);
+    (document.activeElement as HTMLElement | null)?.blur();
   };
   const handleMenuKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const buttons = Array.from(headerRef.current?.querySelectorAll<HTMLButtonElement>("[data-menu-trigger]") ?? []);
@@ -95,18 +104,18 @@ export default function SiteHeader({ nav }: { nav: NavItem[] }) {
                     ίδιο ύψος με τα υπόλοιπα στοιχεία (items-stretch). Μένει
                     τονισμένο όσο το dropdown είναι ανοιχτό. */}
                 <div className={(isActive(item.href) || expanded ? "bg-plum-100 text-plum-500 " : "text-cream/75 ") + "flex items-stretch rounded-full transition hover:bg-plum-100 hover:text-plum-500"}>
-                  <Link href={item.href} className="flex items-center rounded-l-full py-2 pl-3.5 pr-1.5 text-[0.68rem] font-medium">{l(item.label)}</Link>
+                  <Link href={item.href} onClick={closeMobile} className="flex items-center rounded-l-full py-2 pl-3.5 pr-1.5 text-[0.68rem] font-medium">{l(item.label)}</Link>
                   <button type="button" data-menu-trigger aria-label={t("Άνοιγμα {label}", { label: l(item.label) })} aria-haspopup="menu" aria-expanded={expanded} onClick={() => setOpenMenu(expanded ? null : item.href)} onKeyDown={(event) => handleMenuKeyDown(event, index)} onFocus={() => setOpenMenu(item.href)} className="flex items-center rounded-r-full py-2 pl-1 pr-3"><Chevron expanded={expanded} /></button>
                 </div>
-                <Dropdown items={item.children} open={expanded} />
+                <Dropdown items={item.children} open={expanded} onSelect={closeMobile} />
               </div>
-            ) : <Link key={item.href} href={item.href} className={activeClass + "rounded-full px-3.5 py-2 text-[0.68rem] font-medium transition hover:bg-plum-100 hover:text-plum-500"}>{l(item.label)}</Link>;
+            ) : <Link key={item.href} href={item.href} onClick={closeMobile} className={activeClass + "rounded-full px-3.5 py-2 text-[0.68rem] font-medium transition hover:bg-plum-100 hover:text-plum-500"}>{l(item.label)}</Link>;
           })}
         </nav>
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher language={language} setLanguage={setLanguage} />
-          <button type="button" aria-label={t(mobileOpen ? "Κλείσιμο μενού" : "Άνοιγμα μενού")} aria-expanded={mobileOpen} onClick={() => setMobileOpen((value) => !value)} className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 text-cream min-[900px]:hidden">
+          <button type="button" aria-label={t(mobileOpen ? "Κλείσιμο μενού" : "Άνοιγμα μενού")} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)} className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 text-cream min-[900px]:hidden">
             <span className="sr-only">{t("Μενού")}</span>
             <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d={mobileOpen ? "M6 6l12 12M18 6 6 18" : "M4 7h16M4 12h16M4 17h16"} /></svg>
           </button>
@@ -137,7 +146,7 @@ function Chevron({ expanded }: { expanded: boolean }) {
   return <svg aria-hidden viewBox="0 0 12 8" className={(expanded ? "rotate-180 " : "") + "h-2 w-3 transition-transform"} fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m1 1 5 5 5-5" /></svg>;
 }
 
-function Dropdown({ items, open }: { items: NavLink[]; open: boolean }) {
+function Dropdown({ items, open, onSelect }: { items: NavLink[]; open: boolean; onSelect: () => void }) {
   const menuRef = useRef<HTMLDivElement>(null);
   const { l } = useLanguage();
 
@@ -151,7 +160,7 @@ function Dropdown({ items, open }: { items: NavLink[]; open: boolean }) {
     links[next]?.focus();
   };
 
-  return <div ref={menuRef} role="menu" aria-hidden={!open} onKeyDown={handleKeyDown} className={(open ? "visible translate-y-0 opacity-100 " : "pointer-events-none invisible -translate-y-1 opacity-0 ") + "absolute right-0 top-[calc(100%+0.6rem)] z-20 w-80 rounded-2xl border border-cream/15 bg-white p-2 shadow-[0_18px_45px_rgba(16,42,67,0.16)] transition-all duration-200"}>{items.map((child) => <Link key={child.href} href={child.href} role="menuitem" tabIndex={open ? 0 : -1} className="block rounded-xl px-3 py-2.5 text-sm leading-snug text-cream transition hover:bg-plum-100 hover:text-plum-500">{l(child.label)}</Link>)}</div>;
+  return <div ref={menuRef} role="menu" aria-hidden={!open} onKeyDown={handleKeyDown} className={(open ? "visible translate-y-0 opacity-100 " : "pointer-events-none invisible -translate-y-1 opacity-0 ") + "absolute right-0 top-[calc(100%+0.6rem)] z-20 w-80 rounded-2xl border border-cream/15 bg-white p-2 shadow-[0_18px_45px_rgba(16,42,67,0.16)] transition-all duration-200"}>{items.map((child) => <Link key={child.href} href={child.href} role="menuitem" tabIndex={open ? 0 : -1} onClick={onSelect} className="block rounded-xl px-3 py-2.5 text-sm leading-snug text-cream transition hover:bg-plum-100 hover:text-plum-500">{l(child.label)}</Link>)}</div>;
 }
 
 function LanguageSwitcher({ language, setLanguage }: { language: Language; setLanguage: (language: Language) => void }) {
