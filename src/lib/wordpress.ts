@@ -14,10 +14,9 @@
 
 import { unstable_noStore } from "next/cache";
 import { categoryKey } from "./text";
-import { parseSongTable, type Song } from "./song-table";
 import { cleanWpHtml, youtubeIds } from "./wp-clean";
+import { youtubeStatus } from "./youtube";
 import { CATEGORY_KEYWORDS, POSTS_SINCE } from "@/content/news";
-import { SONGS_PAGE_SLUG } from "@/content/songs";
 import type { VideoGallery, WpSource } from "@/content/types";
 import type { L } from "@/i18n/l10n";
 
@@ -308,7 +307,7 @@ async function wpFetch<T>(path: string, opts: FetchOptions = {}): Promise<T | nu
  * τελευταία καλή έκδοση της σελίδας (ISR) αντί να τη χαλάσει. Εξαίρεση το
  * build και το dev, όπου μια στιγμιαία αποτυχία δεν πρέπει να σταματά τίποτα.
  */
-function keepLastGoodVersion(what: string): void {
+export function keepLastGoodVersion(what: string): void {
   if (process.env.NEXT_PHASE === "phase-production-build" || process.env.NODE_ENV !== "production") return;
   throw new Error(`[wp] ${what}: το WordPress δεν απαντά — κρατάμε την προηγούμενη έκδοση.`);
 }
@@ -381,26 +380,6 @@ export async function getPageBySlug(slug: string): Promise<{ title: string; html
   return { title: decodeHtml(stripHtml(raw[0].title.rendered)), html: raw[0].content.rendered };
 }
 
-/**
- * «Τραγούδι της ημέρας»: ο πίνακας της σελίδας SONGS_PAGE_SLUG
- * (οδηγίες στο src/content/songs.ts).
- *
- * Σελίδα που λείπει ή είναι άδεια → [] και η κάρτα κρύβεται. Αν όμως το
- * WordPress δεν απαντά, η αρχική κρατά την τελευταία καλή έκδοση
- * (keepLastGoodVersion) αντί να «χαθούν» τα τραγούδια.
- */
-export async function getSongs(): Promise<Song[]> {
-  if (!WP_API_URL) return [];
-  const raw = await wpFetch<Pick<WPRawPost, "content">[]>(
-    `/pages?slug=${encodeURIComponent(SONGS_PAGE_SLUG)}&_fields=content`,
-  );
-  if (raw === null) {
-    keepLastGoodVersion("Τραγούδια");
-    return [];
-  }
-  return raw.length ? parseSongTable(raw[0].content?.rendered ?? "") : [];
-}
-
 export type WpEntry = { title: string; html: string; link: string };
 
 const ENDPOINT: Record<WpSource["type"], string> = { page: "pages", post: "posts", portfolio: "portfolio" };
@@ -470,7 +449,8 @@ export async function getWpVideoGroups(gallery: VideoGallery): Promise<VideoGrou
         videos
           .filter((v) => v.tags.some((t) => groupTags.has(t)))
           .map(async ({ title, videos }) => {
-            const alive = await Promise.all(videos.map(youtubeAvailable));
+            // Σβησμένα ή χωρίς άδεια ενσωμάτωσης βίντεο κρύβονται (ελέγχεται μία φορά τη μέρα).
+            const alive = await Promise.all(videos.map(async (id) => (await youtubeStatus(id)) === "ok"));
             return { title, videos: videos.filter((_, i) => alive[i]) };
           }),
       );
@@ -478,23 +458,6 @@ export async function getWpVideoGroups(gallery: VideoGallery): Promise<VideoGrou
     }),
   );
   return groups.filter((group) => group.items.length);
-}
-
-/**
- * Υπάρχει ακόμη το βίντεο στο YouTube και επιτρέπει ενσωμάτωση; (oEmbed —
- * ελέγχεται μία φορά τη μέρα). Σβησμένα (404) ή ιδιωτικά/χωρίς ενσωμάτωση
- * (401/403) κρύβονται· αν το YouTube δεν απαντά, δεν κρύβουμε τίποτα.
- */
-async function youtubeAvailable(id: string): Promise<boolean> {
-  try {
-    const res = await fetch(
-      "https://www.youtube.com/oembed?format=json&url=" + encodeURIComponent(`https://www.youtube.com/watch?v=${id}`),
-      { next: { revalidate: 86_400 } },
-    );
-    return ![400, 401, 403, 404].includes(res.status);
-  } catch {
-    return true;
-  }
 }
 
 /** true όταν υπάρχει ρυθμισμένο WordPress endpoint. */

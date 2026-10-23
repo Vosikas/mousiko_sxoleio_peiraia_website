@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNow } from "@/hooks/useNow";
 import { useLanguage } from "@/hooks/useLanguage";
+import { intlLocale } from "@/i18n/l10n";
 import { songForDate, type Song } from "@/lib/song-table";
 import { WidgetLabel } from "./ClockWidget";
 
@@ -14,11 +15,19 @@ import { WidgetLabel } from "./ClockWidget";
 export default function SongCard({ songs }: { songs: Song[] }) {
   // Ανά λεπτό: αρκεί για να αλλάξει το τραγούδι τα μεσάνυχτα.
   const now = useNow(60_000);
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   if (!now) return <SongSkeleton />;
-  const song = songForDate(songs, now);
-  if (!song) return null;
+  const pick = songForDate(songs, now);
+  if (!pick) return null;
+  const { song, today } = pick;
+  // Μέρα χωρίς τραγούδι (Σαββατοκύριακο, διακοπές): λέμε τίνος μέρας είναι.
+  const dateLabel =
+    !today && song.year
+      ? new Intl.DateTimeFormat(intlLocale(language), { weekday: "long", day: "numeric", month: "long" }).format(
+          new Date(song.year, song.month! - 1, song.day!),
+        )
+      : null;
 
   return (
     <article className="glass rounded-xl2 p-6">
@@ -28,7 +37,8 @@ export default function SongCard({ songs }: { songs: Song[] }) {
       <Player key={song.url} song={song} />
 
       <div className="mt-4 text-center">
-        {song.day !== undefined && (
+        {/* Ετήσια επέτειος (π.χ. 25/3 χωρίς χρονιά). */}
+        {song.day !== undefined && song.year === undefined && (
           <p className="mb-2 inline-block rounded-full bg-plum-100 px-3 py-1 text-[0.56rem] font-medium uppercase tracking-[0.22em] text-plum-600">
             {t("Αφιέρωμα της ημέρας")}
           </p>
@@ -37,6 +47,7 @@ export default function SongCard({ songs }: { songs: Song[] }) {
         {song.artist && (
           <p className="mt-1 text-[0.66rem] uppercase tracking-[0.18em] text-muted">{song.artist}</p>
         )}
+        {dateLabel && <p className="mt-2 text-[0.66rem] text-muted first-letter:uppercase">{dateLabel}</p>}
       </div>
 
       {song.source !== "link" && (
@@ -65,6 +76,19 @@ function Player({ song }: { song: Song }) {
   const { t } = useLanguage();
 
   if (song.source === "youtube") {
+    const thumbnail = (
+      <>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`https://i.ytimg.com/vi/${song.embedId}/hqdefault.jpg`}
+          alt=""
+          loading="lazy"
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+        <span className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+        <PlayBadge />
+      </>
+    );
     return (
       <div className="relative mt-5 aspect-video overflow-hidden rounded-xl bg-ink-900">
         {playing ? (
@@ -75,6 +99,17 @@ function Player({ song }: { song: Song }) {
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
           />
+        ) : song.noEmbed ? (
+          // Ο κάτοχος δεν επιτρέπει να παίζει εδώ: ίδια εικόνα, ανοίγει στο YouTube.
+          <a
+            href={song.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${t("Άνοιγμα στο YouTube")}: ${song.title}`}
+            className="group absolute inset-0"
+          >
+            {thumbnail}
+          </a>
         ) : (
           <button
             type="button"
@@ -82,15 +117,7 @@ function Player({ song }: { song: Song }) {
             aria-label={t("Αναπαραγωγή: {title}", { title: song.title })}
             className="group absolute inset-0"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`https://i.ytimg.com/vi/${song.embedId}/hqdefault.jpg`}
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-            />
-            <span className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
-            <PlayBadge />
+            {thumbnail}
           </button>
         )}
       </div>

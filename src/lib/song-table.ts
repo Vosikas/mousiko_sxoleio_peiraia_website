@@ -1,15 +1,19 @@
 /**
- * «ΤΡΑΓΟΥΔΙ ΤΗΣ ΗΜΕΡΑΣ» — διαβάζει τον πίνακα της σελίδας του WordPress.
+ * «ΤΡΑΓΟΥΔΙ ΤΗΣ ΗΜΕΡΑΣ» — από τις γραμμές ενός πίνακα (το Excel του σχολείου)
+ * στα τραγούδια, και η επιλογή του τραγουδιού κάθε μέρας.
  * Χωρίς εξαρτήσεις: ασφαλές για server, browser και δοκιμές.
  *
- * Ο πίνακας μπορεί να έχει τις στήλες με όποια σειρά (και επιπλέον στήλες,
- * π.χ. «α/α»). Για κάθε γραμμή:
+ * Οι στήλες μπορούν να είναι με όποια σειρά, και να υπάρχουν κι άλλες
+ * (π.χ. «Ημέρα», «α/α»). Για κάθε γραμμή:
  *   link        → το πρώτο κελί με σύνδεσμο (YouTube, Spotify ή οτιδήποτε)
  *   ημερομηνία  → προαιρετική: 24/12 (κάθε χρόνο) ή 24/12/2026 (μόνο τότε)
- *   τίτλος / καλλιτέχνης → από την επικεφαλίδα, αν υπάρχει· αλλιώς τα δύο
- *                          πρώτα κείμενα της γραμμής
+ *   κομμάτι / καλλιτέχνης → από την επικεφαλίδα, αν υπάρχει· αλλιώς τα δύο
+ *                           πρώτα κείμενα της γραμμής
  * Γραμμές χωρίς σύνδεσμο (π.χ. η επικεφαλίδα) δεν γίνονται τραγούδια.
  */
+
+// Μόνο τύπος — δεν φέρνει τον κώδικα του server (zlib) στον browser.
+import type { Cell } from "./xlsx";
 
 export type SongSource = "youtube" | "spotify" | "link";
 
@@ -20,32 +24,15 @@ export type Song = {
   source: SongSource;
   /** YouTube: το id του βίντεο · Spotify: «track/ID», «album/ID» κ.λπ. */
   embedId?: string;
-  /** Ειδική μέρα: χωρίς `year` ισχύει κάθε χρόνο. */
+  /** Ο κάτοχος του βίντεο δεν επιτρέπει να παίζει σε άλλα sites: ανοίγει στο YouTube. */
+  noEmbed?: boolean;
+  /** Ημερομηνία: χωρίς `year` ισχύει κάθε χρόνο. */
   day?: number;
   month?: number;
   year?: number;
 };
 
-/* ------------------------------------------------------------- κείμενο */
-
-const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", hellip: "…" };
-
-/** Το WordPress γράφει π.χ. το «&» των links ως «&#038;». */
-const decode = (s: string) =>
-  s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
-    if (e[0] !== "#") return NAMED[e.toLowerCase()] ?? m;
-    const code = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : Number(e.slice(1));
-    return code > 0 && code < 0x110000 ? String.fromCodePoint(code) : m;
-  });
-const textOf = (html: string) =>
-  decode(html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, ""))
-    .replace(/\s+/g, " ")
-    .trim();
-const hrefOf = (html: string) => {
-  const m = html.match(/<a\b[^>]*\bhref\s*=\s*["']([^"']+)["']/i);
-  return m ? decode(m[1]).trim() : undefined;
-};
-/** Χωρίς τόνους και κεφαλαία: «Ερμηνευτής» → «ερμηνευτησ». */
+/** Χωρίς τόνους και κεφαλαία: «Συνθέτης» → «συνθετησ». */
 const key = (s: string) =>
   s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/ς/g, "σ").trim();
 
@@ -89,6 +76,7 @@ const monthOf = (word: string) => {
 
 /**
  * 24/12 · 24-12 · 24.12 · 24/12/2026 · 2026-12-24 · 24 Δεκ · 24-Δεκεμβρίου-2026
+ * και οι ημερομηνίες που το Excel αποθηκεύει ως αριθμό (π.χ. 46296)
  * → { day, month, year? }
  */
 export function parseDate(text: string): Pick<Song, "day" | "month" | "year"> | null {
@@ -99,6 +87,11 @@ export function parseDate(text: string): Pick<Song, "day" | "month" | "year"> | 
   if (m) return valid(+m[1], +m[2], year(m[3]));
   m = t.match(/^(\d{1,2})[\s/.\-]+([^\d\s/.\-]{3,})[\s/.\-]*(\d{2}|\d{4})?$/);
   if (m) return valid(+m[1], monthOf(m[2]), year(m[3]));
+  // Αύξων αριθμός ημέρας του Excel (1 = 1/1/1900)· μόνο σε λογικό εύρος (1955–2119).
+  if (/^\d{5}(\.\d+)?$/.test(t) && +t > 20_000 && +t < 80_000) {
+    const d = new Date(Date.UTC(1899, 11, 30) + Math.floor(+t) * 86_400_000);
+    return valid(d.getUTCDate(), d.getUTCMonth() + 1, d.getUTCFullYear());
+  }
   return null;
 }
 
@@ -111,22 +104,22 @@ function valid(day: number, month: number, year?: number) {
 
 /* -------------------------------------------------------------- πίνακας */
 
-const TITLE_WORDS = ["τιτλο", "τραγουδι", "title", "song"];
-const ARTIST_WORDS = ["καλλιτεχν", "ερμηνευτ", "τραγουδιστ", "συνθετ", "artist", "singer"];
+const TITLE_WORDS = ["κομματ", "τιτλο", "τραγουδι", "εργο", "title", "song", "piece"];
+const ARTIST_WORDS = ["καλλιτεχν", "ερμηνευτ", "τραγουδιστ", "συνθετ", "artist", "singer", "composer"];
+const WEEKDAYS = new Set(
+  ["δευτερα", "τριτη", "τεταρτη", "πεμπτη", "παρασκευη", "σαββατο", "κυριακη",
+   "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+);
 const matches = (words: string[]) => (text: string) => words.some((w) => key(text).includes(w));
 
-export function parseSongTable(html: string): Song[] {
-  const rows = [...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((r) =>
-    [...r[1].matchAll(/<t[hd]\b[^>]*>([\s\S]*?)<\/t[hd]>/gi)].map((c) => c[1]),
-  );
-
+export function parseSongRows(rows: Cell[][]): Song[] {
   let titleCol = -1;
   let artistCol = -1;
   const songs: Song[] = [];
 
   for (const cells of rows) {
-    const texts = cells.map(textOf);
-    const linkCol = cells.findIndex((c, i) => hrefOf(c) || /^https?:\/\//i.test(texts[i]));
+    const texts = cells.map((c) => c.text.trim());
+    const linkCol = cells.findIndex((c, i) => c.href || /^https?:\/\//i.test(texts[i]));
 
     if (linkCol === -1) {
       // Επικεφαλίδα: γραμμή χωρίς σύνδεσμο πριν από το πρώτο τραγούδι.
@@ -141,12 +134,14 @@ export function parseSongTable(html: string): Song[] {
       continue;
     }
 
-    const url = hrefOf(cells[linkCol]) ?? texts[linkCol];
+    const url = (cells[linkCol].href ?? texts[linkCol]).trim();
     const dateCol = texts.findIndex((x, i) => i !== linkCol && parseDate(x));
     const date = dateCol === -1 ? null : parseDate(texts[dateCol]);
 
-    // Κείμενα της γραμμής, χωρίς link, ημερομηνία και σκέτους αριθμούς (α/α).
-    const free = texts.filter((x, i) => x && i !== linkCol && i !== dateCol && !/^\d+\.?$/.test(x));
+    // Κείμενα της γραμμής, χωρίς link, ημερομηνία, μέρα της εβδομάδας και σκέτους αριθμούς (α/α).
+    const free = texts.filter(
+      (x, i) => x && i !== linkCol && i !== dateCol && !/^\d+\.?$/.test(x) && !WEEKDAYS.has(key(x)),
+    );
     const at = (col: number) => (col !== -1 && col !== linkCol && col !== dateCol && texts[col]) || undefined;
     const title = at(titleCol) ?? free[0];
     const artist = at(artistCol) ?? free.find((x) => x !== title);
@@ -166,21 +161,30 @@ export function parseSongTable(html: string): Song[] {
 
 /** Αύξων αριθμός της (τοπικής) ημέρας — ίδιος για όλους όλη τη μέρα. */
 const dayNumber = (d: Date) => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86_400_000);
+const dayOf = (s: Song) => Math.floor(Date.UTC(s.year!, s.month! - 1, s.day!) / 86_400_000);
 
 /**
  * Το τραγούδι μιας μέρας:
  *  1. τραγούδι με ΑΚΡΙΒΗ ημερομηνία (24/12/2026),
  *  2. αλλιώς τραγούδι για αυτή τη μέρα κάθε χρόνο (24/12),
  *  3. αλλιώς τα τραγούδια ΧΩΡΙΣ ημερομηνία, ένα τη μέρα, με τη σειρά του
- *     πίνακα και κυκλικά.
+ *     πίνακα και κυκλικά,
+ *  4. αλλιώς (ημερολόγιο σχολικής χρονιάς, όπου όλα έχουν ημερομηνία) σε
+ *     μέρες χωρίς τραγούδι — Σαββατοκύριακα, διακοπές — μένει το τελευταίο
+ *     που πέρασε· πριν ξεκινήσει το ημερολόγιο, το πρώτο. Τότε `today: false`.
  */
-export function songForDate(songs: Song[], d: Date): Song | null {
+export function songForDate(songs: Song[], d: Date): { song: Song; today: boolean } | null {
   const day = d.getDate();
   const month = d.getMonth() + 1;
   const exact = songs.find((s) => s.day === day && s.month === month && s.year === d.getFullYear());
-  if (exact) return exact;
+  if (exact) return { song: exact, today: true };
   const yearly = songs.find((s) => s.day === day && s.month === month && s.year === undefined);
-  if (yearly) return yearly;
+  if (yearly) return { song: yearly, today: true };
   const pool = songs.filter((s) => s.day === undefined);
-  return pool.length ? pool[dayNumber(d) % pool.length] : null;
+  if (pool.length) return { song: pool[dayNumber(d) % pool.length], today: true };
+
+  const dated = songs.filter((s) => s.year !== undefined).sort((a, b) => dayOf(a) - dayOf(b));
+  const before = dated.filter((s) => dayOf(s) <= dayNumber(d));
+  const song = before.at(-1) ?? dated[0];
+  return song ? { song, today: false } : null;
 }

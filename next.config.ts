@@ -17,6 +17,9 @@ const host = wordpressHost();
 const nextConfig: NextConfig = {
   // Ο φάκελος του project είναι η ρίζα του Turbopack (αγνοεί lockfiles γονικών φακέλων).
   turbopack: { root: __dirname },
+  // Τα Excel με τα τραγούδια διαβάζονται από τον server όταν ανανεώνεται η
+  // αρχική (src/lib/songs.ts) — πρέπει να ανεβαίνουν μαζί του στο Vercel.
+  outputFileTracingIncludes: { "/": ["./data/tragoudia/**/*.xlsx"] },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com" },

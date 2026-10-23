@@ -93,13 +93,14 @@ function parse(html: string): Node[] {
 const YOUTUBE = /(?:youtube(?:-nocookie)?\.com\/(?:embed\/|watch\?v=|shorts\/)|youtu\.be\/)([\w-]{11})(?![\w-])/;
 
 export type VideoSource =
-  | { kind: "embed"; src: string }
+  | { kind: "embed"; src: string; tall?: boolean }
   | { kind: "link"; href: string; thumb: string; site: string };
 
 /**
  * Βίντεο μόνο από γνωστές υπηρεσίες, ξαναχτισμένο από το id του· οτιδήποτε
  * άλλο iframe πετιέται.
  *   YouTube, Vimeo → ενσωματωμένος player (το YouTube χωρίς cookies)
+ *   Padlet         → ο πίνακας, ενσωματωμένος (ψηλό πλαίσιο)
  *   Dailymotion    → κάρτα με τη μικρογραφία που ανοίγει το βίντεο στο
  *                    Dailymotion: ο ενσωματωμένος player του απαντά «Forbidden».
  */
@@ -121,6 +122,8 @@ export function videoSource(raw: string | undefined): VideoSource | null {
   }
   const vimeo = raw.match(/^(?:https?:)?\/\/(?:player\.)?vimeo\.com\/(?:video\/)?(\d+)/);
   if (vimeo) return { kind: "embed", src: `https://player.vimeo.com/video/${vimeo[1]}` };
+  const padlet = raw.match(/^(?:https?:)?\/\/padlet\.com\/embed\/([\w-]+)/);
+  if (padlet) return { kind: "embed", src: `https://padlet.com/embed/${padlet[1]}`, tall: true };
   return null;
 }
 
@@ -172,8 +175,14 @@ function clean(node: Node, ctx: Ctx): Node[] {
     const title = a.title?.trim() || "Βίντεο";
     if (!video) return [];
     return video.kind === "embed"
-      ? [{ tag: "iframe", attrs: { src: video.src, title }, children: [] }]
+      ? [{ tag: "iframe", attrs: { src: video.src, title, ...(video.tall ? { tall: "1" } : {}) }, children: [] }]
       : [{ tag: "videolink", attrs: { href: video.href, thumb: video.thumb, site: video.site, title }, children: [] }];
+  }
+  // Βίντεο αρχείο (π.χ. mp4 του WordPress): από το src ή το πρώτο <source>.
+  if (node.tag === "video") {
+    const source = node.children.find((c): c is El => typeof c !== "string" && c.tag === "source");
+    const src = safeUrl(a.src || source?.attrs.src, ctx.base);
+    return src && /^https?:/.test(src) ? [{ tag: "video", attrs: { src }, children: [] }] : [];
   }
   if (DROP.has(node.tag) || a["aria-hidden"] === "true" || "hidden" in a) return [];
   // Βελάκια/τελείες των sliders του Enfold («1 2 3 4»).
@@ -211,7 +220,8 @@ function clean(node: Node, ctx: Ctx): Node[] {
     attrs.href = href;
   } else if (tag === "img") {
     const src = safeUrl(a.src, ctx.base);
-    if (!src || !src.startsWith("http")) return [];
+    // Χωρίς εικόνες-«σήματα» τρίτων (π.χ. «Made with Padlet»).
+    if (!src || !src.startsWith("http") || /^https:\/\/padlet\.net\/embeds\//.test(src)) return [];
     attrs.src = src;
     attrs.alt = a.alt ?? "";
     // Οι μικρότερες εκδοχές που φτιάχνει το WordPress: το κινητό δεν
@@ -269,7 +279,7 @@ function dedupeHeadings(nodes: Node[]): Node[] {
 }
 
 /** Στοιχεία που μετράνε ως περιεχόμενο χωρίς κείμενο. */
-const MEDIA = new Set(["img", "iframe", "videolink"]);
+const MEDIA = new Set(["img", "iframe", "videolink", "video"]);
 
 const meaningful = (n: Node): boolean =>
   typeof n === "string" ? norm(decode(n)) !== "" : MEDIA.has(n.tag) || n.children.some(meaningful);
@@ -357,7 +367,13 @@ function render(nodes: Node[]): string {
       }
       if (n.tag === "br") return "<br>";
       if (n.tag === "iframe") {
-        return `<div class="wp-video"><iframe${attrs} loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+        const frame = ` src="${escapeAttr(n.attrs.src)}" title="${escapeAttr(n.attrs.title)}"`;
+        return n.attrs.tall
+          ? `<div class="wp-embed-tall"><iframe${frame} loading="lazy"></iframe></div>`
+          : `<div class="wp-video"><iframe${frame} loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+      }
+      if (n.tag === "video") {
+        return `<div class="wp-video"><video src="${escapeAttr(n.attrs.src)}" controls preload="metadata" playsinline></video></div>`;
       }
       if (n.tag === "videolink") {
         const { href, thumb, site, title } = n.attrs;
